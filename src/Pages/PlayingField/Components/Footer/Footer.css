@@ -1,0 +1,123 @@
+:root {
+  --padding-footer: clamp(0.5rem, calc(var(--card-width) / 4), 1rem);
+  /* br - border-radius */
+  /* --br-status-bar-footer находится в PlayingField.css */
+  --br-footer-btn: calc(var(--br-status-bar-footer) - var(--padding-footer));
+  --width-footer-btn: clamp(20px, calc(var(--card-width) / 1.2), 80px);
+  /* fs - font-size */
+  --fs-footer-btn: clamp(15px, calc(var(--card-width) / 2), 50px);
+}
+
+.field-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: calc(var(--card-width) / 1.5);
+  width: 100%;
+  background-color: rgba(70, 9, 9, 0.7);
+
+  border-top: outset black;
+  /* background-color: transparent; */
+  /* --br-status-bar-footer находится в PlayingField.css */
+  border-top-left-radius: var(--br-status-bar-footer);
+  border-top-right-radius: var(--br-status-bar-footer);
+  margin: 0;
+  padding: var(--padding-footer);
+
+  /* background: radial-gradient(circle at 15% 25%, #a67b5b 3px, #6f4e37 3px);
+    background-size: 200px 200px; */
+
+  /* background: radial-gradient(circle at 20% 30%, #4a2c2c, #2c1a1a); */
+
+  /* background: repeating-linear-gradient(
+    45deg,
+    #0a3a4f 0px,
+    #0a3a4f calc(var(--card-width) / 6),
+    #1e5f7a calc(var(--card-width) / 6),
+    #1e5f7a calc(var(--card-width) / 3)
+  ); */
+
+  /* background:
+    repeating-linear-gradient(
+      45deg,
+      #a0b0c0 0px,
+      #a0b0c0 3px,
+      #708090 3px,
+      #708090 6px
+    ),
+    linear-gradient(125deg, #e0e8ff, #b0c0d0, #8090a0);
+  background-blend-mode: overlay; */
+
+  /* background: #403020;
+  background-image: radial-gradient(#c0a080 4px, transparent 4px);
+  background-size: 24px 24px; */
+
+  /* background: #2a2a24;
+  background-image:
+    radial-gradient(circle at 13% 24%, #e0d8c0 5px, transparent 5px),
+    radial-gradient(circle at 29% 58%, #e0d8c0 2px, transparent 2px),
+    radial-gradient(circle at 42% 11%, #e0d8c0 3px, transparent 3px),
+    radial-gradient(circle at 53% 76%, #e0d8c0 1px, transparent 1px),
+    radial-gradient(circle at 68% 34%, #e0d8c0 4px, transparent 4px),
+    radial-gradient(circle at 77% 89%, #e0d8c0 2px, transparent 2px),
+    radial-gradient(circle at 88% 46%, #e0d8c0 3px, transparent 3px),
+    radial-gradient(circle at 35% 95%, #e0d8c0 5px, transparent 5px),
+    radial-gradient(circle at 61% 62%, #e0d8c0 2px, transparent 2px),
+    radial-gradient(circle at 18% 82%, #e0d8c0 3px, transparent 3px);
+  background-size: 100% 100%;
+  background-repeat: no-repeat; */
+
+  /* background: #3a3225;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      #b8a890 0px,
+      #b8a890 2px,
+      transparent 2px,
+      transparent 15px
+    ),
+    repeating-linear-gradient(
+      135deg,
+      #b8a890 0px,
+      #b8a890 2px,
+      transparent 2px,
+      transparent 15px
+    ); */
+}
+
+.footer-btn {
+  position: relative;
+  color: yellow !important;
+  background-color: transparent;
+  -webkit-text-fill-color: yellow;
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  text-emphasis-color: black;
+  border: 1px outset black;
+  width: var(--width-footer-btn);
+  height: var(--width-footer-btn);
+  line-height: 1;
+  padding: 0;
+  text-align: center;
+  font-size: var(--fs-footer-btn);
+}
+
+@media (max-height: 600px) {
+  .field-footer {
+    position: static;
+    flex-direction: column;
+    width: fit-content;
+    height: 100%;
+    /* left: auto; */
+    border-top: none;
+    border-top-left-radius: var(--br-status-bar-footer);
+    border-bottom-left-radius: var(--br-status-bar-footer);
+    border-top-right-radius: 0;
+    border-left: outset black;
+  }
+}

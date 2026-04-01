@@ -1,0 +1,22 @@
+:root {
+  --width-footer-btn: clamp(20px, calc(var(--card-width) / 1.2), 80px);
+  /* fs - font-size */
+  --fs-footer-btn: clamp(15px, calc(var(--card-width) / 2), 50px);
+}
+
+.footer-btn {
+  position: relative;
+  color: yellow !important;
+  background-color: transparent;
+  -webkit-text-fill-color: yellow;
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  text-emphasis-color: black;
+  border: 1px outset black;
+  width: var(--width-footer-btn);
+  height: var(--width-footer-btn);
+  line-height: 1;
+  padding: 0;
+  text-align: center;
+  font-size: var(--fs-footer-btn);
+}

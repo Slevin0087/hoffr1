@@ -1,0 +1,110 @@
+.volume-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.volume-control input[type="range"] {
+  flex: 1;
+  max-width: 200px;
+  height: 6px;
+  /* -webkit-appearance: none; */
+  background: linear-gradient(
+    to right,
+    #4caf50 0%,
+    #4caf50 var(--fill-percent),
+    #ddd var(--fill-percent),
+    #ddd 100%
+  );
+  border-radius: 3px;
+}
+
+.volume-control input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #4caf50;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.volume-control input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.span-volume-change {
+  border: 0 solid;
+  background: var(--back-color-settings-el);
+  padding: 0.5em;
+  border-radius: var(--border-radius-btn-input);
+}
+
+.globally-volume {
+  -webkit-appearance: none;
+  appearance: none;
+  width: calc(100% - 28px);
+  height: var(--height-range);
+  background: linear-gradient(
+    to right,
+    #4caf50 var(--fill-percent, 50%),
+    #ddd var(--fill-percent, 50%)
+  );
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.globally-volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: var(--height-width-circle);
+  /* height: var(--height-width-circle); */
+  height: calc(var(--height-range) * 1.5);
+  background:
+    linear-gradient(
+      45deg,
+      transparent 49%,
+      rgba(0, 0, 0, 0.1) 50%,
+      transparent 51%
+    ),
+    linear-gradient(
+      -45deg,
+      transparent 49%,
+      rgba(0, 0, 0, 0.1) 50%,
+      transparent 51%
+    ),
+    linear-gradient(
+      90deg,
+      transparent 49%,
+      rgba(0, 0, 0, 0.05) 50%,
+      transparent 51%
+    ),
+    #4caf50;
+  background-size:
+    5px 5px,
+    5px 5px,
+    3px 3px,
+    auto;
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.2),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.6);
+  /* border-radius: calc(var(--height-width-circle) / 2); */
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.globally-volume::-moz-range-thumb {
+  width: var(--height-width-circle);
+  height: var(--height-width-circle);
+  background: #4caf50;
+  border-radius: calc(var(--height-width-circle) / 2);
+  cursor: pointer;
+}
+
+.globally-volume::-moz-range-track {
+  height: 8px;
+  background: transparent;
+}

@@ -1,0 +1,20 @@
+:root {
+  --width-menu-btn: clamp(200px, 55vmin, 600px);
+  /* fs - font-size */
+  --fs-menu-btn: clamp(1.25rem, 1rem + 2vmin, 1.75rem);
+}
+
+.menu_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: var(--width-menu-btn);
+  font-size: var(--fs-menu-btn);
+  color: rgb(0, 0, 0);
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: rgb(202, 77, 77);
+}

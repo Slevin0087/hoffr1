@@ -1,0 +1,17 @@
+export default {
+  shop_title: "Аткван",
+  balance: "Ахча: ",
+  shop_btn_apply: "Аргылра",
+  shop_btn_buy: "Ахвг|ара",
+  // balanceTextContentH: "",
+  btn_card_face: "Аш|ахъа",
+  btn_card_shirt: "Арубашка",
+  btn_card_fon: "Афон",
+  owned_badge_in_stock: "Йаъаб",
+  no_items_available: "Йгьаъам датша",
+  scroll_to_start: "Ахъа",
+  scroll_to_end: "Ацӏыхъва",
+  scroll_to_left: "Армала",
+  scroll_to_right: "Агъьмала",
+  selected: "Йг|алхп|",
+};

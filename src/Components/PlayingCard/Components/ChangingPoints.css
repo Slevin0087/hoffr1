@@ -1,0 +1,21 @@
+.changing-points {
+  position: absolute;
+  /* top: 50%;
+  left: 50%; */
+  transform: translate(-50%, -50%);
+  background-color: transparent;
+  width: 50%;
+  height: 50%;
+  pointer-events: none;
+}
+
+.score-popup-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.score-value {
+  color: gold;
+  font-size: 1em;
+}

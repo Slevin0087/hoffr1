@@ -1,0 +1,228 @@
+/* Items Carousel */
+.shop-navigation {
+  position: relative;
+}
+
+.all-items-container {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 20px 10px;
+  scrollbar-width: thin;
+}
+
+.all-items-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.all-items-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.all-items-container::-webkit-scrollbar-thumb {
+  background: #ffd966;
+  border-radius: 4px;
+}
+
+.item-container {
+  flex-shrink: 0;
+  width: 180px;
+  cursor: pointer;
+  position: relative;
+}
+
+.fons-item-container {
+  flex-shrink: 0;
+  width: 280px;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Scroll Buttons */
+.scroll-btns-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.scroll-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.scroll-btn:hover:not(:disabled) {
+  background: #ffd966;
+  color: #1a472a;
+  transform: scale(1.1);
+}
+
+.scroll-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Анимации */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.item-container,
+.fons-item-container {
+  animation: slideIn 0.3s ease forwards;
+}
+
+/* Добавьте эти стили к существующим */
+
+/* Группа кнопок скролла */
+.scroll-buttons-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Кнопки скролла */
+.scroll-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: #ffd966;
+}
+
+.scroll-btn:hover:not(:disabled) {
+  background: #ffd966;
+  color: #1a472a;
+  transform: scale(1.1);
+}
+
+.scroll-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: scale(1);
+}
+
+/* Кнопки скролла в начало и конец */
+.scroll-to-start,
+.scroll-to-end {
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Индикатор прокрутки */
+.scroll-indicator {
+  margin-top: 20px;
+  padding: 0 20px;
+}
+
+.scroll-indicator-bar {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.scroll-indicator-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #ffd966, #ffb347);
+  border-radius: 2px;
+  transition: width 0.1s ease;
+}
+
+/* Пустое состояние */
+.empty-items {
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .item-container {
+    width: 140px;
+  }
+  .scroll-buttons-group {
+    gap: 8px;
+  }
+
+  .scroll-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .scroll-to-start,
+  .scroll-to-end {
+    width: 35px;
+    height: 35px;
+  }
+
+  .scroll-indicator {
+    margin-top: 15px;
+    padding: 0 15px;
+  }
+}
+
+/* Анимация появления предметов */
+@keyframes itemAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.item-container,
+.fons-item-container {
+  animation: itemAppear 0.3s ease forwards;
+}
+
+/* Кастомный скроллбар */
+.all-items-container {
+  scrollbar-width: thin;
+  scrollbar-color: #ffd966 rgba(0, 0, 0, 0.2);
+}
+
+.all-items-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.all-items-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.all-items-container::-webkit-scrollbar-thumb {
+  background: #ffd966;
+  border-radius: 4px;
+}
+
+.all-items-container::-webkit-scrollbar-thumb:hover {
+  background: #ffb347;
+}

@@ -1,0 +1,45 @@
+.shop-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(102, 48, 48);
+  padding: 15px 20px;
+  margin-bottom: 30px;
+}
+
+.shop-title {
+  color: #ffd966;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  margin: 0;
+  font-size: 2rem;
+}
+
+.balance {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px 15px;
+  border-radius: 25px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffd966;
+  font-weight: bold;
+}
+
+.balance-icon {
+  color: #ffd966;
+}
+
+.balance-amount {
+  font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .shop-title {
+    font-size: 1.5rem;
+  }
+
+  .balance-amount {
+    font-size: 0.9rem;
+  }
+}

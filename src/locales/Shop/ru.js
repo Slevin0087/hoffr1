@@ -1,0 +1,17 @@
+export default {
+  shop_title: "Магазин",
+  balance: "Баланс: ",
+  shop_btn_apply: "Применить",
+  shop_btn_buy: "Купить",
+  // balanceTextContentH: "",
+  btn_card_face: "Лицо",
+  btn_card_shirt: "Рубашка",
+  btn_card_fon: "Фон",
+  owned_badge_in_stock: "В наличии",
+  no_items_available: "Нет доступных предметов",
+  scroll_to_start: "К началу",
+  scroll_to_end: "К концу",
+  scroll_to_left: "Влево",
+  scroll_to_right: "Вправо",
+  selected: "Выбрано",
+};

@@ -1,0 +1,85 @@
+:root {
+  --padding-status-bar: 5px;
+  --gap-status-bar-cols: 2px;
+}
+
+.status-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: rgba(70, 9, 9, 0.7);
+
+  border-bottom: outset black;
+  /* background-color: transparent; */
+  /* --br-status-bar-footer находится в PlayingField.css */
+  border-bottom-left-radius: var(--br-status-bar-footer);
+  border-bottom-right-radius: var(--br-status-bar-footer);
+  padding: var(--padding-status-bar);
+
+  /* background-image: url("../../../../assets/fons/statusBar.png");
+  background-size: cover;
+  background-position: top;
+  background-repeat: no-repeat; */
+
+  /* background: radial-gradient(circle at 10% 20%, #f4e3c6 5px, #e5d1aa 5px);
+    background-size: 200px 200px; */
+
+  /* background: repeating-linear-gradient(45deg, #e0d6c0 0px, #e0d6c0 2px, #d4c8b0 2px, #d4c8b0 4px); */
+
+  /* background: repeating-linear-gradient(
+    45deg,
+    #1e5f7a 0px,
+    #1e5f7a calc(var(--card-width) / 6),
+    #2a6f8f calc(var(--card-width) / 6),
+    #2a6f8f calc(var(--card-width) / 3)
+  ); */
+
+  /* background:
+    linear-gradient(135deg, #ffffff80 0%, #f0f0fa80 50%, #e0e0ff80 100%),
+    radial-gradient(circle at 10% 20%, #aac8ff 1px, #0000 1px);
+  background-blend-mode: screen;
+  background-size:
+    100% 100%,
+    20px 20px; */
+
+  /* background: #e0d0c0;
+  background-image: radial-gradient(#c0a890 2px, transparent 2px);
+  background-size: 12px 12px; */
+
+  /* background: #f0f0e8;
+  background-image:
+    radial-gradient(circle at 7% 33%, #908880 1px, transparent 1px),
+    radial-gradient(circle at 19% 67%, #908880 4px, transparent 4px),
+    radial-gradient(circle at 36% 22%, #908880 2px, transparent 2px),
+    radial-gradient(circle at 44% 79%, #908880 5px, transparent 5px),
+    radial-gradient(circle at 58% 41%, #908880 2px, transparent 2px),
+    radial-gradient(circle at 67% 94%, #908880 3px, transparent 3px),
+    radial-gradient(circle at 81% 12%, #908880 1px, transparent 1px),
+    radial-gradient(circle at 93% 57%, #908880 4px, transparent 4px),
+    radial-gradient(circle at 27% 48%, #908880 3px, transparent 3px),
+    radial-gradient(circle at 74% 73%, #908880 2px, transparent 2px);
+  background-size: 100% 100%;
+  background-repeat: no-repeat; */
+}
+.status-bar .col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-status-bar-cols);
+}
+
+@media (max-height: 600px) {
+  .status-bar {
+    flex-direction: column;
+    justify-content: space-between;
+    width: fit-content;
+    height: 100%;
+    border-bottom: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: var(--br-status-bar-footer);
+    border-top-right-radius: var(--br-status-bar-footer);
+    border-right: outset black;
+  }
+}

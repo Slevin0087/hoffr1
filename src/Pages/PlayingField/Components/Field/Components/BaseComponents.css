@@ -1,0 +1,46 @@
+:root {
+  --gap-field-cells: 5px;
+}
+
+.pile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: var(--card-width);
+  height: var(--card-height);
+  color: rgb(20, 20, 20);
+  gap: var(--gap-field-cells);
+  background-color: yellow;
+
+  border: 0;
+
+  position: relative;
+
+  text-align: center;
+
+  /* border-radius: var(--card-radius); */
+}
+
+.pile::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.pile-span {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+  color: rgb(16, 3, 71);
+  font-size: 2rem;
+}
+
+.stocks {
+  cursor: pointer;
+}

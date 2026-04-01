@@ -1,0 +1,38 @@
+:root {
+  --border-radius-status-bar-cell: 7px;
+  --padding-status-bar-cell: 2px;
+
+  /* br - border-radius */
+  --br-status-bar-span-br: calc(
+    var(--border-radius-status-bar-cell) - var(--padding-status-bar-cell)
+  );
+
+  --fs-status-bar-cell: clamp(10px, calc(var(--card-width) / 4), 25px);
+}
+
+.status-bar-cell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  background-color: chocolate;
+  border: 1px solid rgb(75, 38, 11);
+  border-radius: var(--border-radius-status-bar-cell);
+  padding: var(--padding-status-bar-cell);
+  font-size: var(--fs-status-bar-cell);
+}
+
+.status-bar-span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+  padding: 0;
+}
+
+.status-bar-span-border {
+  border: 1px solid black;
+  border-radius: var(--br-status-bar-span-br);
+  padding: 1px;
+}

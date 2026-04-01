@@ -1,0 +1,17 @@
+export default {
+  shop_title: "Mağaza",
+  balance: "Denge: ",
+  shop_btn_apply: "Uygula",
+  shop_btn_buy: "Satın almak",
+  // balanceTextContentH: "",
+  btn_card_face: "Yüz",
+  btn_card_shirt: "Gömlek",
+  btn_card_fon: "Arka plan",
+  owned_badge_in_stock: "Stokta var",
+  no_items_available: "Mevcut ürün yok",
+  scroll_to_start: "Başa doğru",
+  scroll_to_end: "Sonuna doğru",
+  scroll_to_left: "Sola",
+  scroll_to_right: "Sağa",
+  selected: "Seçme",
+};

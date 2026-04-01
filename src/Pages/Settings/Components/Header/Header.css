@@ -1,0 +1,21 @@
+:root {
+  --gap-for-flex-settings: 1em;
+  --padding-setting-head: 0.5em;
+}
+
+.settings-page-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-for-flex-settings);
+  width: 100%;
+  background-color: rgb(155, 60, 112);
+  padding: var(--padding-setting-head);
+}
+
+.settings-title {
+  color: #ccc;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  margin: 0;
+  font-size: 2rem;
+}

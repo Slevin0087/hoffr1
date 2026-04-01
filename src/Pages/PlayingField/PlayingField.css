@@ -1,0 +1,34 @@
+:root {
+  --gap-playing-field: 1rem;
+  /* br - означает border-radius */
+  --br-status-bar-footer: 2rem;
+}
+
+.playing-field {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: rgb(29, 157, 216);
+  background-image: url("../../assets/fons/sea.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  gap: var(--gap-playing-field);
+  width: 100%;
+  height: 100%;
+  /* overscroll-behavior: none;
+  overflow: hidden; */
+}
+
+@media (max-height: 600px) {
+  .playing-field {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: calc(var(--gap-playing-field) / 2);
+  }
+}
+
+.dnd-drag-preview {
+  opacity: 1 !important;
+}

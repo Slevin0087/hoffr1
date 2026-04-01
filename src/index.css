@@ -1,4 +1,8 @@
 :root {
+  --primary-green: #40cc16;
+  --primary-orange: #ff6b00;
+  --primary-red: #ff0000;
+
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -44,14 +48,22 @@ h1 {
   line-height: 1.1;
 }
 
-#root button {
-  color: black !important; /* Приоритет над системными стилями */
+#root .pages-btn {
+  color: black; /* Приоритет над системными стилями */
   background-color: yellow;
   -webkit-tap-highlight-color: transparent; /* Убирает синюю подсветку */
   text-emphasis-color: black; /* Для Safari */
   -webkit-text-fill-color: black; /* Для старых версий */
   -webkit-appearance: none;
   appearance: none; /* Отключает системные стили */
+}
+
+#root .btns-links {
+  color: black;
+  border-bottom: #242424;
+  border-bottom: 2px solid black;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 5px;
 }
 
 button:hover {

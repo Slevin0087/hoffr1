@@ -1,0 +1,61 @@
+:root {
+  --gap-stock-waste: 10px;
+  --gap-field-container: 10px;
+  --card-width: min(13.5vw, 10vh);
+  --gap-cards-container-row: 55px;
+  --gap-cards-container-column: 5px;
+  --card-height: calc(var(--card-width) * 1.4);
+}
+
+.field-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-field-container);
+}
+
+/* min-height - означает, что height меньше чем width */
+.field-container-min-height {
+  flex-direction: row;
+}
+
+.cards-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: var(--gap-cards-container-column);
+}
+
+/* swf - означает stock, waste и foundations */
+/* min-height - означает, что height меньше чем width */
+.field-swf-container-min-height {
+  flex-direction: column;
+}
+
+/* swf - означает stock, waste и foundations */
+/* min-height - означает, что height меньше чем width */
+.cards-swf-container-min-height {
+  gap: var(--card-width);
+}
+
+/* @media (orientation: landscape) { */
+@media (max-height: 600px) {
+  .field-container {
+    flex-direction: row;
+    align-items: flex-start;
+    margin-top: calc(var(--card-width) / 2);
+    gap: var(--gap-cards-container-row);
+  }
+  .cards-swf-container-min-height {
+    flex-direction: column;
+    gap: calc(var(--card-height) / 25);
+  }
+  .cards-fns-container {
+    flex-direction: column;
+    gap: calc(var(--card-height) / 25);
+  }
+  :root {
+    --card-width: 12vmin;
+  }
+}

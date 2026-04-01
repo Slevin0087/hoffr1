@@ -1,0 +1,17 @@
+export default {
+  shop_title: "Shop",
+  balance: "Balance: ",
+  shop_btn_apply: "Apply",
+  shop_btn_buy: "Buy",
+  // balanceTextContentH: "",
+  btn_card_face: "Face",
+  btn_card_shirt: "Shirt",
+  btn_card_fon: "Background",
+  owned_badge_in_stock: "In stock",
+  no_items_available: "No items available",
+  scroll_to_start: "Back to the beginning",
+  scroll_to_end: "By the end",
+  scroll_to_left: "To the left",
+  scroll_to_right: "To the right",
+  selected: "Selected",
+};

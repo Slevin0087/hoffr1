@@ -1,0 +1,23 @@
+:root {
+  --cards-sprite-width: calc(var(--card-width) * 13);
+  --cards-sprite-height: calc(var(--card-height) * 4);
+}
+
+.playing-card-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: var(--card-width);
+  height: var(--card-height);
+  color: rgb(20, 20, 20);
+  /* --gap-field-cells находится в Pile.css */
+  gap: var(--gap-field-cells);
+  position: absolute;
+  top: 0;
+  left: 0;
+  user-select: none;
+  touch-action: none;
+  user-select: none;
+  box-sizing: content-box;
+  transform-style: preserve-3d;
+}

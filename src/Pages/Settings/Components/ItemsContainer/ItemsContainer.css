@@ -1,0 +1,46 @@
+:root {
+  --gap-vol-control: 0.5em;
+  --back-color-settings-el: rgba(255, 255, 0, 0.308);
+  --border-radius-btn-input: 0.3em;
+}
+
+.setting-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: black;
+  border: 1px solid #c5b310;
+  border-bottom: 0;
+}
+
+.container-setting-item {
+  /* padding-left: var(--settings-padding-left-right);
+  padding-right: var(--settings-padding-left-right); */
+  /* padding: var(--settings-padding-left-right); */
+  padding: calc(var(--card-width) / 10) calc(var(--card-width) / 5);
+  border-bottom: 1px solid #c5b310;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--gap-vol-control);
+  width: 100%;
+}
+
+.container-setting-item:nth-child(even) {
+  background-color: rgb(211, 127, 67);
+}
+
+.setting-item-description-div {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.setting-item-description-label {
+  border: 0 solid;
+  background: var(--back-color-settings-el);
+  padding: 0.5em;
+  border-radius: var(--border-radius-btn-input);
+  width: fit-content;
+}

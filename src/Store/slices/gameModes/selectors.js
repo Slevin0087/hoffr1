@@ -1,0 +1,1 @@
+export const selectGameModeActiveId = (state) => state.gameModes.activeId;

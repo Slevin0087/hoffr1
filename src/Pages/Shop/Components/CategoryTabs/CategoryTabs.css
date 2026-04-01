@@ -1,0 +1,37 @@
+.category-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.category-buttons .btn {
+  padding: 10px 30px;
+  font-size: 1.1rem;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+}
+
+.category-buttons .btn-primary {
+  background: #ffd966;
+  border-color: #ffd966;
+  color: #1a472a;
+  box-shadow: 0 4px 15px rgba(255, 217, 102, 0.3);
+}
+
+.category-buttons .btn-outline-primary {
+  border-color: #ffd966;
+  color: #ffd966;
+}
+
+.category-buttons .btn-outline-primary:hover {
+  background: #ffd966;
+  color: #1a472a;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .category-buttons .btn {
+    padding: 8px 20px;
+    font-size: 0.9rem;
+  }
+}

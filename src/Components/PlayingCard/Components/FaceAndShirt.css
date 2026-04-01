@@ -1,0 +1,26 @@
+.playing-card-side-face,
+.playing-card-side-shirt {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: var(--card-width);
+  height: var(--card-height);
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-origin: padding-box;
+  background-repeat: no-repeat;
+  background-clip: content-box;
+  backface-visibility: hidden;
+  border: 1px solid black;
+  touch-action: none;
+  pointer-events: none;
+}
+
+.playing-card-side-shirt {
+  transform: rotateY(180deg);
+}
+
+/* .playing-card-side-face {
+  transform: rotateY(0deg);
+} */
