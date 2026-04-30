@@ -18,6 +18,7 @@ import {
   field_components_type_ids,
   field_components_types,
 } from "../Configs/FieldComponentsConfigs";
+import { orientations } from "../Configs/UIConfigs";
 
 // Создание колоды
 export const createDeck = () => {
@@ -39,18 +40,12 @@ export const shuffle = (array) => {
   return array;
 };
 
-// Взятие карты из колоды
 export const dealCard = (cards) => {
   if (cards.length === 0) return { cards: [], card: null };
   const newCards = [...cards];
   const card = newCards.pop();
   return { cards: newCards, card };
 };
-
-// Получить верхние n карт
-// export const getTopCards = (cards, n) => {
-//   return cards.slice(-n);
-// };
 
 export const getNTopCardsIds = (cardsIds, n) => {
   return cardsIds.slice(-n);
@@ -70,12 +65,18 @@ export const getPrevTopCardId = (cardsIds) => {
   return cardsIds[cardsIds.length - 2];
 };
 
+export const getPrevCardId = (cardsIds, currentCardId) => {
+  const faceCardIndex = cardsIds.indexOf(currentCardId);
+  return cardsIds[faceCardIndex - 1] || null;
+};
+
 export const getTopCard = (cards) => {
   return cards[cards.length - 1];
 };
 
 export const getTopCardId = (cardsIds) => {
-  return cardsIds[cardsIds.length - 1];
+  if (!cardsIds?.length) return null;
+  return cardsIds[cardsIds.length - 1] || null;
 };
 
 export const createDeckAndShuffle = () => {
@@ -83,26 +84,35 @@ export const createDeckAndShuffle = () => {
   return shuffle(deck);
 };
 
-export const canMoveToFoundation = (card, foundationCards) => {
+export const canMoveToFoundation = (card, foundationPile) => {
+  if (!card?.pileId || !card?.side) return false;
+  if (!foundationPile?.cardsIds || !foundationPile?.cards) return false;
   if (card.side === sides.shirt) return false;
   const isFoundation = field_components_type_ids.foundations.includes(
     card.pileId,
   );
   if (isFoundation) return false;
-  if (foundationCards.length === 0) {
+  if (foundationPile.cardsIds.length === 0) {
     return isAce(card);
   }
-  const topCard = getTopCard(foundationCards);
+  const topCardId = getTopCardId(foundationPile.cardsIds);
+  if (!topCardId) return false;
+  const topCard = foundationPile.cards[topCardId];
+  if (!topCard) return false;
   return isSameSuit(card, topCard) && isPreviousInSequence(card, topCard);
 };
 
-export const canMoveToTableau = (card, tableauCards) => {
+export const canMoveToTableau = (card, tableauPile) => {
   if (card.side === sides.shirt) return false;
   if (isAce(card)) return false;
-  if (tableauCards.length === 0) {
+  if (tableauPile.cardsIds?.length === 0) {
     return isKing(card);
   }
-  const topCard = getTopCard(tableauCards);
+  const topCardId = getTopCardId(tableauPile.cardsIds);
+  console.log("canMoveToTableau topCardId: ", topCardId);
+  if (!topCardId) return false;
+  const topCard = tableauPile.cards[topCardId];
+  console.log("canMoveToTableau topCard", topCard);
   return isOppositeColor(card, topCard) && isNextInSequence(card, topCard);
 };
 
@@ -116,7 +126,13 @@ export const canMoveMapping = {
   tableau: canMoveToTableau,
 };
 
-export const getCardOffset = (card, cardsIds, objCards, height = 0) => {
+export const getCardOffset = (
+  card,
+  cardsIds,
+  objCards,
+  height = 0,
+  isGhost = false,
+) => {
   const result = { overlapX: 0, overlapY: 0 };
   const cardIdIndex = cardsIds?.indexOf(card.id);
   if (cardIdIndex === -1) return result;
@@ -132,6 +148,7 @@ export const getCardOffset = (card, cardsIds, objCards, height = 0) => {
         objCards,
         baseOverlap,
         height,
+        isGhost,
       );
       result.overlapX = x;
       result.overlapY = y;
@@ -151,47 +168,19 @@ export const getCardOffset = (card, cardsIds, objCards, height = 0) => {
           : baseOverlap.maxOverlapCardsY / resultOverlap;
       return result;
     }
+    case field_components_types.foundations: {
+      const foundationsOverlap =
+        height < 600 ? pile?.overlap.landscape : pile?.overlap.portrait;
+      result.overlapX = foundationsOverlap.x * cardPosition;
+      result.overlapY = foundationsOverlap.y * cardPosition;
+      return result;
+    }
     default:
       result.overlapX = baseOverlap.x * cardPosition;
       result.overlapY = baseOverlap.y * cardPosition;
       return result;
   }
 };
-
-// export const getCardOffset = (id, type, card, cards, height = 0) => {
-//   const cardIndex = cards.indexOf(card);
-//   if (cardIndex === -1) return { x: 0, y: 0 };
-//   const pile = field_components_default_state[type];
-//   const baseOverlap = pile.entities[id].overlap;
-//   const cardPosition = card.position;
-//   const result = { x: baseOverlap.x, y: baseOverlap.y };
-//   switch (type) {
-//     case field_components_types.tableaus: {
-//       const { x, y } = getTableausOffset(cardIndex, cards, baseOverlap, height);
-//       result.x = x;
-//       result.y = y;
-//       return result;
-//     }
-//     case field_components_types.wastes: {
-//       const cardsLength = cards.length;
-//       const positionFromEnd = cardsLength - 1 - cardPosition;
-//       const resultOverlap = height < 600 ? 2 : 1;
-//       result.x =
-//         positionFromEnd < baseOverlap.maxVisibleCards
-//           ? (baseOverlap.x * positionFromEnd) / resultOverlap
-//           : baseOverlap.maxOverlapCardsX / resultOverlap;
-//       result.y =
-//         positionFromEnd < baseOverlap.maxVisibleCards
-//           ? (baseOverlap.y * positionFromEnd) / resultOverlap
-//           : baseOverlap.maxOverlapCardsY / resultOverlap;
-//       return result;
-//     }
-//     default:
-//       result.x = baseOverlap.x * cardPosition;
-//       result.y = baseOverlap.y * cardPosition;
-//       return result;
-//   }
-// };
 
 export const getCardsFacesUpAndDown = (cards) => {
   let cardsFaceUp = [];
@@ -225,11 +214,10 @@ export const getTableausOffset = (
   objCards,
   baseOverlap,
   windowHeight,
+  isGhost = false,
 ) => {
   const cardSideShirtDecrementY = windowHeight < 600 ? 15 : 10;
   const cardSideFaceIncrementY = windowHeight < 600 ? -10 : 2;
-  // console.log("cardSideShirtDecrementY: ", cardSideShirtDecrementY);
-
   const result = { x: 0, y: 0 };
   for (let i = 0; i <= cardIdIndex; i++) {
     const sideShirtY = baseOverlap.y - cardSideShirtDecrementY;
@@ -238,36 +226,12 @@ export const getTableausOffset = (
     if (prevCard) {
       const isSideFace = prevCard.side === sides.face;
       const resultSideFaceY = isSideFace ? sideFaceY : sideShirtY;
-      result.x += baseOverlap.x * i;
+      result.x += isGhost ? 0 : baseOverlap.x * i;
       result.y += resultSideFaceY;
     }
   }
   return result;
 };
-
-// export const getTableausOffset = (
-//   cardIndex,
-//   cards,
-//   baseOverlap,
-//   windowHeight,
-// ) => {
-//   const cardFaceDownDecrementY = windowHeight < 600 ? 15 : 10;
-//   const cardFaceUpIncrementY = windowHeight < 600 ? -10 : 2;
-//   // console.log("cardFaceDownDecrementY: ", cardFaceDownDecrementY);
-
-//   const initialValue = { x: 0, y: 0 };
-//   for (let i = 0; i <= cardIndex; i++) {
-//     const faceDounY = baseOverlap.y - cardFaceDownDecrementY;
-//     const faceUpY = baseOverlap.y + cardFaceUpIncrementY;
-//     const prevCard = cards[i - 1];
-//     if (prevCard) {
-//       const resultFaceUpY = prevCard.faceUp ? faceUpY : faceDounY;
-//       initialValue.x += baseOverlap.x * i;
-//       initialValue.y += resultFaceUpY;
-//     }
-//   }
-//   return initialValue;
-// };
 
 export const splitTableauCardsForDrag = (cards, draggedCard) => {
   if (!cards?.length && !draggedCard?.id) {
@@ -294,4 +258,110 @@ export const splitTableauCardsForDrag = (cards, draggedCard) => {
     cardsBelow: cards.slice(index),
     draggedIndex: index,
   };
+};
+
+export const getCanMoveCardToPileEmpty = (card, emptyPileType, emptyPileId) => {
+  if (!card || !emptyPileId) return false;
+  if (card.side === sides.shirt) return false;
+  if (emptyPileType === field_components_types.foundations) {
+    return isAce(card);
+  } else if (emptyPileType === field_components_types.tableaus) {
+    return isKing(card);
+  }
+};
+
+export const calculateHintShowTableauCard = (
+  hintsShowCarsIds,
+  pileId,
+  height,
+) => {
+  const orientation =
+    height >= 600 ? orientations.portrait : orientations.landscape;
+  const pileConfig = field_components_default_state[pileId];
+  const overlapConfig = pileConfig?.overlap;
+  const config = overlapConfig[orientation];
+  const offsets = {};
+
+  let accumulatedX = 0;
+  let accumulatedY = 0;
+  for (let i = 0; i < hintsShowCarsIds.length; i++) {
+    const cardId = hintsShowCarsIds[i];
+    offsets[cardId] = { x: accumulatedX, y: accumulatedY };
+    accumulatedX += config.x;
+    accumulatedY += config.faceY;
+  }
+
+  return offsets;
+};
+
+export const calculateAllPileOffsets = (pile, height) => {
+  const offsets = {};
+  if (!pile?.cardsIds?.length) return offsets;
+
+  const orientation =
+    height >= 600 ? orientations.portrait : orientations.landscape;
+  const pileConfig = field_components_default_state[pile.id];
+  const overlapConfig = pileConfig?.overlap;
+  if (!overlapConfig) {
+    pile.cardsIds.forEach((id) => {
+      offsets[id] = { x: 0, y: 0 };
+    });
+    return offsets;
+  }
+
+  let accumulatedX = 0;
+  let accumulatedY = 0;
+
+  switch (pile.type) {
+    case field_components_types.tableaus: {
+      const config = overlapConfig[orientation];
+      for (let i = 0; i < pile.cardsIds.length; i++) {
+        const cardId = pile.cardsIds[i];
+        offsets[cardId] = { x: accumulatedX, y: accumulatedY };
+        const card = pile.cards[cardId];
+        accumulatedX += config.x;
+        accumulatedY += card.side === sides.face ? config.faceY : config.shirtY;
+      }
+      break;
+    }
+
+    case field_components_types.wastes: {
+      const config = overlapConfig[orientation];
+      const totalCards = pile.cardsIds.length;
+      const cardsToShow = config.maxVisibleCards;
+      const hiddenOffsetX = config.maxOverlapCardsX;
+      const hiddenOffsetY = config.maxOverlapCardsY;
+      for (let i = totalCards - 1; i >= 0; i--) {
+        const cardId = pile.cardsIds[i];
+        const indexFromEnd = totalCards - 1 - i;
+        if (indexFromEnd >= cardsToShow) {
+          offsets[cardId] = { x: hiddenOffsetX, y: hiddenOffsetY };
+        } else {
+          offsets[cardId] = {
+            x: indexFromEnd * config.x,
+            y: indexFromEnd * config.y,
+          };
+        }
+      }
+      break;
+    }
+
+    default: {
+      const config = overlapConfig[orientation];
+      pile.cardsIds.forEach((cardId, i) => {
+        offsets[cardId] = { x: i * config.x, y: i * config.y };
+      });
+      break;
+    }
+  }
+
+  return offsets;
+};
+
+export const getCardOffset2 = (cardId, pile, height = 0) => {
+  if (!cardId || !pile) return { x: 0, y: 0 };
+  // Рассчитываем смещения для всей стопки и берем нужное
+  const allOffsets = calculateAllPileOffsets(pile, height);
+  const offset = allOffsets[cardId] || { x: 0, y: 0 };
+  return { x: offset.x, y: offset.y };
 };

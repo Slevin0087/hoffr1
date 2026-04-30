@@ -1,23 +1,24 @@
 import { Button } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { undoUse } from "../../../../../../Store/slices/undo/thunks";
+import { useDispatch, useSelector } from "react-redux";
+import { handleUndo } from "../../../../../../Store/slices/game/thunks/undo";
 import { useTranslation } from "react-i18next";
+import { selectIsCanUseUndo } from "../../../../../../Store/slices/game/selectors/undo";
 
 function Undo() {
-  const dispatch = useDispatch();
   const { t } = useTranslation();
-  const ariaLabel = t("playingField.footer_undo");
-  const undoClick = () => {
-    console.log("undoClick");
+  const dispatch = useDispatch();
+  const isCanUse = useSelector(selectIsCanUseUndo);
 
-    dispatch(undoUse());
-  };
+  const ariaLabel = t("playingField.footer_undo");
+
   return (
     <Button
+      variant="info"
       className="footer-btn"
-      onClick={undoClick}
+      onClick={() => dispatch(handleUndo())}
       title={ariaLabel}
       aria-label={ariaLabel}
+      disabled={!isCanUse}
     >
       ↩
     </Button>

@@ -14,6 +14,7 @@ export const selectAnimationsEnabled = createSelector(
     (state) => selectReducedMotion(state),
     (state) => selectSettingsByType(state, gameSettingsTypes.animations),
   ],
-  (isReducedMotion, animationsSetting) =>
-    !isReducedMotion && animationsSetting?.value,
+  (isReducedMotion, animationsSetting) => {
+    return !isReducedMotion && animationsSetting?.value;
+  },
 );

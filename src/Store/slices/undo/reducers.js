@@ -1,11 +1,13 @@
-import { UNDO_STORAGE_KEYS } from "../../../Configs/UndoConfigs";
 import storage from "../../../utils/Storage";
+import { UNDO_STORAGE_KEYS } from "../../../Configs/UndoConfigs";
 
 export const addUndo = (state, action) => {
-  const undoId = `undo-${state.stack.length}`;
+  const id = `undo-${state.stack.length}`;
+  const { type, data } = action.payload;
   console.log("addUndo: ", action.payload);
-  const undo = { ...action.payload, undoId };
+  const undo = { id, type, data };
   state.stack.push(undo);
+  state.canUndo = state.stack.length > 0;
   storage.setItem(UNDO_STORAGE_KEYS.UNDO, state);
 };
 
@@ -15,12 +17,19 @@ export const clearUndo = (state) => {
 };
 
 export const removeUndo = (state, action) => {
-  const { undoId } = action.payload;
-  state.stack = state.stack.filter((undo) => undo.undoId !== undoId);
+  const { id } = action.payload;
+  state.stack = state.stack.filter((undo) => undo.id !== id);
+  state.canUndo = state.stack.length > 0;
+  storage.setItem(UNDO_STORAGE_KEYS.UNDO, state);
+};
+
+export const updateUndoUsedCounter = (state) => {
+  state.undoUsedCounter += 1;
   storage.setItem(UNDO_STORAGE_KEYS.UNDO, state);
 };
 
 export const reducers = {
   addUndo,
   removeUndo,
+  updateUndoUsedCounter,
 };

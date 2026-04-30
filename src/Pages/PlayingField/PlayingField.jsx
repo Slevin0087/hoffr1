@@ -2,19 +2,20 @@ import "./PlayingField.css";
 import StatusBar from "./Components/StatusBar/StatusBar";
 import Field from "./Components/Field/Field";
 import Footer from "./Components/Footer/Footer";
+import { isMobile } from "react-device-detect";
 import { useSelector } from "react-redux";
-import { FONS_ITEMS } from "../../Configs/FonsConfigs";
-import { useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { isMobile } from "react-device-detect";
 import { CustomDragLayer } from "../../Components/CustomDragLayer";
 import { selectAppearancesSelectedIdByType } from "../../Store/slices/appearances/selectors";
 import {
   APPEARANCES_TYPES,
   fonsAppearancesObj,
 } from "../../Configs/AppearancesConfigs";
+import ModalsComponent from "./Components/ModalsComponent";
+import GameOverAndWin from "../Modals/GameOverAndWin/GameOverAndWin";
+import RestartGameModal from "../Modals/RestartGame/RestartGameModal";
 
 const backend = isMobile ? TouchBackend : HTML5Backend;
 const options = isMobile
@@ -32,12 +33,6 @@ function PlayingField() {
     selectAppearancesSelectedIdByType(state, APPEARANCES_TYPES.FONS),
   );
   const activeFonAppearance = fonsAppearancesObj[activeFonId];
-  useEffect(() => {
-    console.log("Field MOUNTED");
-    return () => {
-      console.log("Field UNMOUNTED");
-    };
-  }, []);
   return (
     <div
       className="playing-field"
@@ -49,6 +44,9 @@ function PlayingField() {
         <Field />
       </DndProvider>
       <Footer />
+      <ModalsComponent />
+      <GameOverAndWin />
+      <RestartGameModal />
     </div>
   );
 }

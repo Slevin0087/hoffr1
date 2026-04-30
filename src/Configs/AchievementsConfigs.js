@@ -6,8 +6,17 @@ export const ACHIEVEMENTS_STORAGE_KEYS = {
   ACHIEVEMENTS: "achievements",
 };
 
-export const ACHIEVEMENTS_DEFAULT_STATE = {
-  activeId: "newbie",
+export const achievements_start_ids = {
+  newbie: "newbie",
+};
+
+export const achStateTypes = {
+  game: "game",
+  deck: "deck",
+  lifetime: "lifetime",
+  session: "session",
+  all: "all",
+  mode: "mode",
 };
 
 export const currency = {
@@ -41,23 +50,19 @@ export const achCheckName = {
   CARDS_FLIPPED: "cardsFlipped",
 };
 
-export const achievements_start_ids = {
-  newbie: "newbie",
-};
-
 export const achievements_session_ids = {
-  score_breaker_test: "score_breaker_test",
-  card_flipper_test: "card_flipper_test",
-  foundation_master: "foundation_master",
+  // score_breaker_test: "score_breaker_test",
+  // card_flipper_test: "card_flipper_test",
+  // foundation_master: "foundation_master",
   score_breaker: "score_breaker",
-  vegas_score_breaker: "vegas_score_breaker",
-  card_flipper: "card_flipper",
-  tableau_cleaner: "tableau_cleaner",
-  foundation_perfect: "foundation_perfect",
-  card_counter: "card_counter",
-  ace_finder: "ace_finder",
-  tableau_tamer: "tableau_tamer",
-  foundation_chain: "foundation_chain",
+  // vegas_score_breaker: "vegas_score_breaker",
+  // card_flipper: "card_flipper",
+  // tableau_cleaner: "tableau_cleaner",
+  // foundation_perfect: "foundation_perfect",
+  // card_counter: "card_counter",
+  // ace_finder: "ace_finder",
+  // tableau_tamer: "tableau_tamer",
+  // foundation_chain: "foundation_chain",
   //   foundation_master_test: "foundation_master_test",
   //   cards_to_foundation_test: "cards_to_foundation_test",
 };
@@ -65,30 +70,49 @@ export const achievements_session_ids = {
 export const achievements_win_ids = {
   first_win: "first_win",
   fast_win: "fast_win",
-  perfect_game: "perfect_game",
+  // perfect_game: "perfect_game",
   hint_saver: "hint_saver",
-  win_streak: "win_streak",
+  // win_streak: "win_streak",
   undo_avoider: "undo_avoider",
   king_of_cards: "king_of_cards",
   timed_master: "timed_master",
-  expert_challenge: "expert_challenge",
+  // expert_challenge: "expert_challenge",
   relaxed_collector: "relaxed_collector",
-  vegas_king: "vegas_king",
+  // vegas_king: "vegas_king",
   classic_legend: "classic_legend",
   mode_master: "mode_master",
   quick_thinking: "quick_thinking",
-  no_hint_expert: "no_hint_expert",
-  streak_master: "streak_master",
-  early_bird: "early_bird",
-  midnight_gamer: "midnight_gamer",
+  // no_hint_expert: "no_hint_expert",
+  // streak_master: "streak_master",
+  // early_bird: "early_bird",
+  // midnight_gamer: "midnight_gamer",
   hintless_streak: "hintless_streak",
-  perfect_vegas: "perfect_vegas",
+  // perfect_vegas: "perfect_vegas",
 };
 
 export const achievements_restart_and_win_ids = {
   persistent_player: "persistent_player",
   veteran_player: "veteran_player",
-  weekend_warrior: "weekend_warrior",
+  // weekend_warrior: "weekend_warrior",
+};
+
+export const all_achs_ids_arr = [
+  ...Object.values(achievements_start_ids),
+  ...Object.values(achievements_session_ids),
+  ...Object.values(achievements_win_ids),
+  ...Object.values(achievements_restart_and_win_ids),
+];
+
+export const default_locked_achs_ids_arr = [
+  ...Object.values(achievements_session_ids),
+  ...Object.values(achievements_win_ids),
+  ...Object.values(achievements_restart_and_win_ids),
+];
+
+export const ACHIEVEMENTS_DEFAULT_STATE = {
+  activeId: "newbie",
+  unlockedIds: [achievements_start_ids.newbie],
+  lockedIds: default_locked_achs_ids_arr,
 };
 
 export const achievements_start = {
@@ -101,9 +125,13 @@ export const achievements_start = {
     icon: "👶",
     reward: 0,
     currency: currency.NONE,
-    condition: (stats) => stats.gamesPlayed >= 1,
+    condition: (state) => state.played >= 1,
     rarity: "common",
     hidden: false,
+    getProgress: (state) => ({
+      current: state.played,
+      target: 1,
+    }),
   },
 };
 
@@ -176,14 +204,19 @@ export const achievements_session = {
   },
   [achievements_session_ids.score_breaker]: {
     id: achievements_session_ids.score_breaker,
+    stateType: achStateTypes.session,
     type: achievementsTypes.session,
-    life: achievements_lifes.many,
+    life: achievements_lifes.one,
     title: "Рекордсмен",
     description: "Набрать 1000 очков в одной игре",
     icon: "💯",
     reward: 300,
     currency: currency.SCORE,
-    condition: (stats) => stats.score >= 1000,
+    condition: (state) => {
+      const currentModeId = state.modes[state.currentModeId];
+      const currentDealing = currentModeId.currentDealing;
+      return currentModeId[currentDealing].points.current >= 1000;
+    },
     modes: [
       GAME_MODES_IDS.CLASSIC,
       GAME_MODES_IDS.TIMED,
@@ -191,6 +224,12 @@ export const achievements_session = {
     ],
     rarity: "rare",
     hidden: false,
+    getProgress: (state) => {
+      const currentMode = state.modes[state.currentModeId];
+      const currentDealing = currentMode.currentDealing;
+      const current = currentMode[currentDealing].points.current;
+      return Math.floor((current / 1000) * 100);
+    },
   },
   [achievements_session_ids.vegas_score_breaker]: {
     id: achievements_session_ids.vegas_score_breaker,
@@ -310,6 +349,10 @@ export const achievements_session = {
     ],
     rarity: "uncommon",
     hidden: true,
+    getProgress: (stats) => ({
+      current: stats.acesFoundEarly || 0,
+      target: 4,
+    }),
   },
   [achievements_session_ids.tableau_tamer]: {
     id: achievements_session_ids.tableau_tamer,
@@ -331,6 +374,7 @@ export const achievements_session = {
   },
   [achievements_session_ids.foundation_chain]: {
     id: achievements_session_ids.foundation_chain,
+    stateType: achStateTypes.deck,
     type: achievementsTypes.session,
     life: achievements_lifes.many,
     title: "Цепочка фундаментов",
@@ -346,12 +390,17 @@ export const achievements_session = {
     ],
     rarity: "rare",
     hidden: true,
+    getProgress: (stats) => ({
+      current: stats.fastFoundationChain || 0,
+      target: 1,
+    }),
   },
 };
 
 export const achievements_win = {
   [achievements_win_ids.first_win]: {
     id: achievements_win_ids.first_win,
+    stateType: achStateTypes.lifetime,
     type: achievementsTypes.win,
     life: achievements_lifes.one,
     title: "Первая победа",
@@ -359,7 +408,7 @@ export const achievements_win = {
     icon: "🏆",
     reward: 5,
     currency: currency.COINS,
-    condition: (stats) => stats.wins >= 1,
+    condition: (state) => state.wins >= 1,
     modes: [
       GAME_MODES_IDS.CLASSIC,
       GAME_MODES_IDS.VEGAS,
@@ -369,17 +418,27 @@ export const achievements_win = {
     ],
     rarity: "common",
     hidden: false,
+    getProgress: (state) => (state.wins >= 1 ? 100 : 0),
   },
   [achievements_win_ids.fast_win]: {
     id: achievements_win_ids.fast_win,
+    stateType: achStateTypes.session,
     type: achievementsTypes.win,
-    life: achievements_lifes.many,
+    life: achievements_lifes.one,
     title: "Скоростная игра",
     description: "Победить менее чем за 5 минут",
     icon: "⏱️",
     reward: 5,
     currency: currency.COINS,
-    condition: (stats) => stats.fastestWin <= 300,
+    condition: (state) => {
+      const currentModeId = state.modes[state.currentModeId];
+      const currentDealing = currentModeId.currentDealing;
+      const time = currentModeId[currentDealing].time;
+      const wins = currentModeId[currentDealing].wins;
+      if (wins.total < 1 || wins.time === 0) return false;
+      if (time.limit === null) return wins.time <= 300;
+      if (time.limit) return time.limit - wins.time <= 300;
+    },
     modes: [
       GAME_MODES_IDS.CLASSIC,
       GAME_MODES_IDS.TIMED,
@@ -388,6 +447,15 @@ export const achievements_win = {
     ],
     rarity: "uncommon",
     hidden: false,
+    getProgress: (state) => {
+      const currentModeId = state.modes[state.currentModeId];
+      const currentDealing = currentModeId.currentDealing;
+      const time = currentModeId[currentDealing].time;
+      const wins = currentModeId[currentDealing].wins;
+      if (wins.total < 1 || wins.time === 0) return 0;
+      if (time.limit === null) return Math.floor((wins.time / 300) * 100);
+      if (time.limit) return Math.floor(((time.limit - wins.time) / 300) * 100);
+    },
   },
   [achievements_win_ids.perfect_game]: {
     id: achievements_win_ids.perfect_game,
@@ -408,17 +476,27 @@ export const achievements_win = {
     ],
     rarity: "rare",
     hidden: true,
+    getProgress: (stats) => ({
+      current: stats.moves || 0,
+      target: stats.minPossibleMoves || 0,
+    }),
   },
   [achievements_win_ids.hint_saver]: {
     id: achievements_win_ids.hint_saver,
+    stateType: achStateTypes.session,
     type: achievementsTypes.win,
-    life: achievements_lifes.many,
+    life: achievements_lifes.one,
     title: "Экономный",
     description: "Победить, не используя подсказки",
     icon: "💡",
     reward: 180,
     currency: currency.SCORE,
-    condition: (stats) => stats.winsWithoutHints >= 1,
+    condition: (state) => {
+      const currentMode = state.modes[state.currentModeId];
+      const currentDealing = currentMode.currentDealing;
+      const wins = currentMode[currentDealing].wins;
+      return wins.no_hints >= 1;
+    },
     modes: [
       GAME_MODES_IDS.CLASSIC,
       GAME_MODES_IDS.TIMED,
@@ -426,9 +504,16 @@ export const achievements_win = {
     ],
     rarity: "rare",
     hidden: true,
+    getProgress: (state) => {
+      const currentMode = state.modes[state.currentModeId];
+      const currentDealing = currentMode.currentDealing;
+      const wins = currentMode[currentDealing].wins;
+      return wins.no_hints >= 1 ? 100 : 0;
+    },
   },
   [achievements_win_ids.win_streak]: {
     id: achievements_win_ids.win_streak,
+    stateType: achStateTypes.lifetime,
     type: achievementsTypes.win,
     life: achievements_lifes.one,
     title: "Серия побед",
@@ -436,7 +521,7 @@ export const achievements_win = {
     icon: "🔥",
     reward: 10,
     currency: currency.COINS,
-    condition: (stats) => stats.currentWinStreak >= 3,
+    condition: (state) => state.wins >= 3,
     modes: [
       GAME_MODES_IDS.CLASSIC,
       GAME_MODES_IDS.VEGAS,
@@ -446,13 +531,14 @@ export const achievements_win = {
     ],
     rarity: "rare",
     hidden: true,
-    getProgress: (stats) => ({
-      current: stats.currentWinStreak,
+    getProgress: (state) => ({
+      current: state.wins || 0,
       target: 3,
     }),
   },
   [achievements_win_ids.undo_avoider]: {
     id: achievements_win_ids.undo_avoider,
+    stateType: achStateTypes.session,
     type: achievementsTypes.win,
     life: achievements_lifes.many,
     title: "Решительный",
@@ -460,7 +546,12 @@ export const achievements_win = {
     icon: "⏮️",
     reward: 200,
     currency: currency.SCORE,
-    condition: (stats) => stats.winsWithoutUndo >= 1,
+    condition: (state) => {
+      const currentMode = state.modes[state.currentModeId];
+      const currentDealing = currentMode.currentDealing;
+      const wins = currentMode[currentDealing].wins;
+      return wins.no_undo >= 1;
+    },
     modes: [
       GAME_MODES_IDS.CLASSIC,
       GAME_MODES_IDS.TIMED,
@@ -468,9 +559,16 @@ export const achievements_win = {
     ],
     rarity: "uncommon",
     hidden: true,
+    getProgress: (state) => {
+      const currentMode = state.modes[state.currentModeId];
+      const currentDealing = currentMode.currentDealing;
+      const wins = currentMode[currentDealing].wins;
+      return wins.no_undo >= 1 ? 100 : 0;
+    },
   },
   [achievements_win_ids.king_of_cards]: {
     id: achievements_win_ids.king_of_cards,
+    stateType: achStateTypes.lifetime,
     type: achievementsTypes.win,
     life: achievements_lifes.one,
     title: "Король карт",
@@ -478,7 +576,7 @@ export const achievements_win = {
     icon: "👑",
     reward: 100,
     currency: currency.COINS,
-    condition: (stats) => stats.wins >= 50,
+    condition: (state) => state.wins >= 50,
     modes: [
       GAME_MODES_IDS.CLASSIC,
       GAME_MODES_IDS.VEGAS,
@@ -488,13 +586,11 @@ export const achievements_win = {
     ],
     rarity: "epic",
     hidden: false,
-    getProgress: (stats) => ({
-      current: stats.wins,
-      target: 50,
-    }),
+    getProgress: (state) => Math.floor((state.wins / 50) * 100),
   },
   [achievements_win_ids.timed_master]: {
     id: achievements_win_ids.timed_master,
+    stateType: achStateTypes.mode,
     type: achievementsTypes.win,
     life: achievements_lifes.one,
     title: "Мастер времени",
@@ -502,14 +598,18 @@ export const achievements_win = {
     icon: "⏰",
     reward: 30,
     currency: currency.COINS,
-    condition: (stats) => stats.timedWins >= 10,
+    condition: (state) => {
+      if (state.currentModeId !== GAME_MODES_IDS.TIMED) return false;
+      return state.modes[state.currentModeId].wins >= 10;
+    },
     modes: [GAME_MODES_IDS.TIMED],
     rarity: "rare",
     hidden: false,
-    getProgress: (stats) => ({
-      current: stats.timedWins || 0,
-      target: 10,
-    }),
+    getProgress: (state) => {
+      if (state.currentModeId !== GAME_MODES_IDS.TIMED) return 0;
+      const wins = state.modes[state.currentModeId].wins;
+      return wins >= 10 ? 100 : Math.floor((wins / 10) * 100);
+    },
   },
   [achievements_win_ids.expert_challenge]: {
     id: achievements_win_ids.expert_challenge,
@@ -527,21 +627,25 @@ export const achievements_win = {
   },
   [achievements_win_ids.relaxed_collector]: {
     id: achievements_win_ids.relaxed_collector,
+    stateType: achStateTypes.mode,
     type: achievementsTypes.win,
     life: achievements_lifes.one,
     title: "Коллекционер релакса",
-    description: "Одержать 5 побед в расслабленном режиме",
+    description: "Одержать 10 побед в расслабленном режиме",
     icon: "😌",
     reward: 15,
     currency: currency.COINS,
-    condition: (stats) => stats.relaxedWins >= 5,
+    condition: (state) => {
+      if (state.currentModeId !== GAME_MODES_IDS.RELAXED) return false;
+      return state.modes[state.currentModeId].wins >= 10;
+    },
     modes: [GAME_MODES_IDS.RELAXED],
     rarity: "uncommon",
     hidden: false,
-    getProgress: (stats) => ({
-      current: stats.relaxedWins || 0,
-      target: 5,
-    }),
+    getProgress: (state) => {
+      if (state.currentModeId !== GAME_MODES_IDS.RELAXED) return 0;
+      return Math.floor((state.modes[state.currentModeId].wins / 10) * 100);
+    },
   },
   [achievements_win_ids.vegas_king]: {
     id: achievements_win_ids.vegas_king,
@@ -563,6 +667,7 @@ export const achievements_win = {
   },
   [achievements_win_ids.classic_legend]: {
     id: achievements_win_ids.classic_legend,
+    stateType: achStateTypes.mode,
     type: achievementsTypes.win,
     life: achievements_lifes.one,
     title: "Легенда классики",
@@ -570,50 +675,65 @@ export const achievements_win = {
     icon: "♠️",
     reward: 35,
     currency: currency.COINS,
-    condition: (stats) => stats.classicWins >= 30,
+    condition: (state) => {
+      if (state.currentModeId !== GAME_MODES_IDS.CLASSIC) return false;
+      return state.modes[state.currentModeId].wins >= 30;
+    },
     modes: [GAME_MODES_IDS.CLASSIC],
     rarity: "epic",
     hidden: false,
-    getProgress: (stats) => ({
-      current: stats.classicWins || 0,
-      target: 30,
-    }),
+    getProgress: (state) => {
+      if (state.currentModeId !== GAME_MODES_IDS.CLASSIC) return 0;
+      return Math.floor((state.modes[state.currentModeId].wins / 30) * 100);
+    },
   },
   [achievements_win_ids.mode_master]: {
     id: achievements_win_ids.mode_master,
+    stateType: achStateTypes.mode,
     type: achievementsTypes.win,
     life: achievements_lifes.one,
     title: "Мастер всех режимов",
-    description: "Одержать по 5 побед в каждом режиме",
+    description: "Одержать 5 побед в каждом режиме",
     icon: "🌟",
     reward: 100,
     currency: currency.COINS,
-    condition: (stats) => {
+    condition: (state) => {
       const requiredWins = 5;
       const modes = [
         GAME_MODES_IDS.CLASSIC,
-        GAME_MODES_IDS.VEGAS,
         GAME_MODES_IDS.TIMED,
-        GAME_MODES_IDS.EXPERT,
         GAME_MODES_IDS.RELAXED,
       ];
       return modes.every((mode) => {
-        const wins = stats[`${mode.toLowerCase()}Wins`] || 0;
+        const wins = state.modes[mode].wins || 0;
         return wins >= requiredWins;
       });
     },
     modes: [
       GAME_MODES_IDS.CLASSIC,
-      GAME_MODES_IDS.VEGAS,
       GAME_MODES_IDS.TIMED,
-      GAME_MODES_IDS.EXPERT,
       GAME_MODES_IDS.RELAXED,
     ],
     rarity: "legendary",
     hidden: true,
+    getProgress: (state) => {
+      let current = 0;
+      const requiredWins = 5;
+      const modes = [
+        GAME_MODES_IDS.CLASSIC,
+        GAME_MODES_IDS.TIMED,
+        GAME_MODES_IDS.RELAXED,
+      ];
+      for (const mode of modes) {
+        const hasRequiredWins = state.modes[mode].wins >= requiredWins;
+        current += hasRequiredWins ? requiredWins : state.modes[mode].wins || 0;
+      }
+      return Math.floor((current / 15) * 100);
+    },
   },
   [achievements_win_ids.quick_thinking]: {
     id: achievements_win_ids.quick_thinking,
+    stateType: achStateTypes.mode,
     type: achievementsTypes.win,
     life: achievements_lifes.many,
     title: "Быстрое мышление",
@@ -621,10 +741,28 @@ export const achievements_win = {
     icon: "⚡",
     reward: 40,
     currency: currency.COINS,
-    condition: (stats) => stats.fastestTimedWin <= 120,
+    condition: (state) => {
+      if (state.currentModeId !== GAME_MODES_IDS.TIMED) return false;
+      const currentMode = state.modes[state.currentModeId];
+      const currentDealing = currentMode.currentDealing;
+      const time = currentMode[currentDealing].time;
+      const wins = currentMode[currentDealing].wins;
+      if (wins.total < 1 && wins.time === 0) return false;
+      return time.limit - wins.time <= 120;
+    },
     modes: [GAME_MODES_IDS.TIMED],
     rarity: "epic",
     hidden: true,
+    getProgress: (state) => {
+      if (state.currentModeId !== GAME_MODES_IDS.TIMED) return 0;
+      const currentMode = state.modes[state.currentModeId];
+      const currentDealing = currentMode.currentDealing;
+      const time = currentMode[currentDealing].time;
+      const wins = currentMode[currentDealing].wins;
+      if (wins.total < 1 && wins.time === 0) return 0;
+      const resultTime = time.limit - wins.time;
+      return Math.floor((resultTime / 120) * 100);
+    },
   },
   [achievements_win_ids.no_hint_expert]: {
     id: achievements_win_ids.no_hint_expert,
@@ -642,6 +780,7 @@ export const achievements_win = {
   },
   [achievements_win_ids.streak_master]: {
     id: achievements_win_ids.streak_master,
+    stateType: achStateTypes.lifetime,
     type: achievementsTypes.win,
     life: achievements_lifes.one,
     title: "Мастер серий",
@@ -649,7 +788,7 @@ export const achievements_win = {
     icon: "🔥🔥",
     reward: 75,
     currency: currency.COINS,
-    condition: (stats) => stats.currentWinStreak >= 10,
+    condition: (state) => state.wins >= 10,
     modes: [
       GAME_MODES_IDS.CLASSIC,
       GAME_MODES_IDS.VEGAS,
@@ -659,13 +798,14 @@ export const achievements_win = {
     ],
     rarity: "legendary",
     hidden: true,
-    getProgress: (stats) => ({
-      current: stats.currentWinStreak,
+    getProgress: (state) => ({
+      current: state.wins || 0,
       target: 10,
     }),
   },
   [achievements_win_ids.early_bird]: {
     id: achievements_win_ids.early_bird,
+    stateType: achStateTypes.lifetime,
     type: achievementsTypes.win,
     life: achievements_lifes.many,
     title: "Ранняя пташка",
@@ -673,7 +813,7 @@ export const achievements_win = {
     icon: "🐦",
     reward: 25,
     currency: currency.COINS,
-    condition: (stats) => stats.morningWins >= 1,
+    condition: (state) => state.time >= 1,
     modes: [
       GAME_MODES_IDS.CLASSIC,
       GAME_MODES_IDS.VEGAS,
@@ -683,9 +823,14 @@ export const achievements_win = {
     ],
     rarity: "uncommon",
     hidden: true,
+    getProgress: (state) => ({
+      current: state.time || 0,
+      target: 1,
+    }),
   },
   [achievements_win_ids.midnight_gamer]: {
     id: achievements_win_ids.midnight_gamer,
+    stateType: achStateTypes.lifetime,
     type: achievementsTypes.win,
     life: achievements_lifes.many,
     title: "Полуночный игрок",
@@ -693,7 +838,7 @@ export const achievements_win = {
     icon: "🌙",
     reward: 30,
     currency: currency.COINS,
-    condition: (stats) => stats.nightWins >= 1,
+    condition: (state) => state.wins >= 1,
     modes: [
       GAME_MODES_IDS.CLASSIC,
       GAME_MODES_IDS.VEGAS,
@@ -703,9 +848,14 @@ export const achievements_win = {
     ],
     rarity: "uncommon",
     hidden: true,
+    getProgress: (state) => ({
+      current: state.wins || 0,
+      target: 1,
+    }),
   },
   [achievements_win_ids.hintless_streak]: {
     id: achievements_win_ids.hintless_streak,
+    stateType: achStateTypes.lifetime,
     type: achievementsTypes.win,
     life: achievements_lifes.one,
     title: "Серия без подсказок",
@@ -713,7 +863,12 @@ export const achievements_win = {
     icon: "🚫💡",
     reward: 120,
     currency: currency.SCORE,
-    condition: (stats) => stats.hintlessWinStreak >= 5,
+    condition: (state) => {
+      const currentMode = state.modes[state.currentModeId];
+      const currentDealing = currentMode.currentDealing;
+      const wins = currentMode[currentDealing].wins;
+      return wins.no_hints >= 5;
+    },
     modes: [
       GAME_MODES_IDS.CLASSIC,
       GAME_MODES_IDS.TIMED,
@@ -721,10 +876,12 @@ export const achievements_win = {
     ],
     rarity: "epic",
     hidden: true,
-    getProgress: (stats) => ({
-      current: stats.hintlessWinStreak || 0,
-      target: 5,
-    }),
+    getProgress: (state) => {
+      const currentMode = state.modes[state.currentModeId];
+      const currentDealing = currentMode.currentDealing;
+      const wins = currentMode[currentDealing].wins;
+      return Math.floor((wins.no_hints / 5) * 100);
+    },
   },
   [achievements_win_ids.perfect_vegas]: {
     id: achievements_win_ids.perfect_vegas,
@@ -745,6 +902,7 @@ export const achievements_win = {
 export const achievements_restart_and_win = {
   [achievements_restart_and_win_ids.persistent_player]: {
     id: achievements_restart_and_win_ids.persistent_player,
+    stateType: achStateTypes.lifetime,
     type: achievementsTypes.restart_and_win,
     life: achievements_lifes.one,
     title: "Упорный игрок",
@@ -752,7 +910,7 @@ export const achievements_restart_and_win = {
     icon: "🎮",
     reward: 20,
     currency: currency.COINS,
-    condition: (stats) => stats.gamesPlayed >= 20,
+    condition: (state) => state.played >= 20,
     modes: [
       GAME_MODES_IDS.CLASSIC,
       GAME_MODES_IDS.VEGAS,
@@ -762,13 +920,11 @@ export const achievements_restart_and_win = {
     ],
     rarity: "uncommon",
     hidden: false,
-    getProgress: (stats) => ({
-      current: stats.gamesPlayed,
-      target: 20,
-    }),
+    getProgress: (state) => Math.floor((state.played / 20) * 100),
   },
   [achievements_restart_and_win_ids.veteran_player]: {
     id: achievements_restart_and_win_ids.veteran_player,
+    stateType: achStateTypes.lifetime,
     type: achievementsTypes.restart_and_win,
     life: achievements_lifes.one,
     title: "Ветеран",
@@ -776,7 +932,7 @@ export const achievements_restart_and_win = {
     icon: "👴",
     reward: 50,
     currency: currency.COINS,
-    condition: (stats) => stats.gamesPlayed >= 100,
+    condition: (state) => state.played >= 100,
     modes: [
       GAME_MODES_IDS.CLASSIC,
       GAME_MODES_IDS.VEGAS,
@@ -786,21 +942,20 @@ export const achievements_restart_and_win = {
     ],
     rarity: "epic",
     hidden: false,
-    getProgress: (stats) => ({
-      current: stats.gamesPlayed,
-      target: 100,
-    }),
+    getProgress: (state) => Math.floor((state.played / 100) * 100),
   },
   [achievements_restart_and_win_ids.weekend_warrior]: {
     id: achievements_restart_and_win_ids.weekend_warrior,
+    stateType: achStateTypes.lifetime,
     type: achievementsTypes.restart_and_win,
     life: achievements_lifes.one,
     title: "Воин выходного дня",
-    description: "Сыграть 7 дней подряд",
+    // description: "Сыграть 7 дней подряд",
+    description: "Сыграть 5 игр в выходные",
     icon: "📅",
     reward: 35,
     currency: currency.COINS,
-    condition: (stats) => stats.consecutiveDaysPlayed >= 7,
+    condition: (state) => state.played >= 7,
     modes: [
       GAME_MODES_IDS.CLASSIC,
       GAME_MODES_IDS.VEGAS,
@@ -810,8 +965,8 @@ export const achievements_restart_and_win = {
     ],
     rarity: "rare",
     hidden: true,
-    getProgress: (stats) => ({
-      current: stats.consecutiveDaysPlayed || 0,
+    getProgress: (state) => ({
+      current: state.played || 0,
       target: 7,
     }),
   },

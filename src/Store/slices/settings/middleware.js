@@ -1,9 +1,9 @@
-import { createListenerMiddleware } from "@reduxjs/toolkit";
-import { updateSettingByType } from "./slice";
-import { gameSettingsTypes } from "../../../Configs/SettingsConfigs";
 import i18next from "i18next";
+import { gameSettingsTypes } from "../../../Configs/SettingsConfigs";
+import { updateSettingByType } from "./slice";
+import { createListenerMiddleware } from "@reduxjs/toolkit";
 
-const settingsListeners = createListenerMiddleware();
+export const settingsListeners = createListenerMiddleware();
 
 // settingsListeners.startListening({
 //   actionCreator: updateSettingByType.pending,
@@ -22,5 +22,3 @@ settingsListeners.startListening({
     }
   },
 });
-
-export default settingsListeners;

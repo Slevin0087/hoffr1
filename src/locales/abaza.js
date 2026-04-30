@@ -7,6 +7,10 @@ import menuAbaza from "./Menu/abaza.js";
 import shopAbaza from "./Shop/abaza.js";
 import playingFieldAbaza from "./PlayingField/abaza.js";
 import btnToMenuAbaza from "./BtnToMenu/abaza.js";
+import playerStatsAbaza from "./PlayerStats/abaza.js";
+import gameOverAndWinAbaza from "./GameOverAndWin/abaza.js";
+import achievementsAbaza from "./Achievements/abaza.js";
+import notificationsAbaza from "./Notifications/abaza.js";
 
 export default {
   translation: {
@@ -19,5 +23,9 @@ export default {
     shop: { ...shopAbaza },
     playingField: { ...playingFieldAbaza },
     btnToMenu: { ...btnToMenuAbaza },
+    playerStats: { ...playerStatsAbaza },
+    gameOverAndWin: { ...gameOverAndWinAbaza },
+    achievements: { ...achievementsAbaza },
+    notifications: { ...notificationsAbaza },
   },
 };

@@ -1,5 +1,4 @@
 import BaseTableau from "./BaseTableau";
-// import BaseTableau2 from "./BaseTableau2";
 import {
   field_components_type_ids,
   field_components_names,
@@ -13,6 +12,7 @@ function Tableaus() {
   const type = field_components_types.tableaus;
   const ids = field_components_type_ids[type];
   const spanText = span_text[field_components_names.tableau];
+
   return (
     <>
       {ids?.map((id) => {
@@ -20,6 +20,7 @@ function Tableaus() {
           <BaseTableau
             key={id}
             id={id}
+            type={type}
             classNames={classNames}
             spanText={spanText}
           />

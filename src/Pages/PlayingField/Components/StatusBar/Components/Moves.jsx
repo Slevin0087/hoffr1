@@ -1,18 +1,17 @@
 import StatusBarBaseComponent from "./StatusBarBaseComponent";
 import { useSelector } from "react-redux";
-import { selectSessionByType } from "../../../../../Store/slices/game/selectors";
-import { gameSessionStateTypes } from "../../../../../Configs/GameConfigs";
 import { useTranslation } from "react-i18next";
+import { selectCurrentMoves } from "../../../../../Store/slices/game/selectors/moves";
 
 function Moves() {
-  const movesLeftText = "👣";
-  const sessionMoves = useSelector((state) =>
-    selectSessionByType(state, gameSessionStateTypes.moves),
-  );
-  console.log('Session Moves:', sessionMoves?.count);
-  const movesRightText = `: ${sessionMoves?.count || 0}`;
   const { t } = useTranslation();
+  const sessionMoves = useSelector(selectCurrentMoves);
+  console.log('Moves sessionMoves', sessionMoves);
+  const movesLeftText = "👣";
+  const movesRightText = `: ${sessionMoves || 0}`;
+
   const ariaLabel = t("playingField.status_bar_moves");
+
   return (
     <StatusBarBaseComponent
       leftText={movesLeftText}

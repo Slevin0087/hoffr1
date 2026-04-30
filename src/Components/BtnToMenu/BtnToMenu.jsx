@@ -12,9 +12,11 @@ function BtnToMenu() {
   const { t } = useTranslation();
   const ariaLable = t("btnToMenu.aria_label");
   const onClickMenu = () => {
+    console.log('BtnToMenu');
     dispatch(setActivePageId(PAGES_IDS.MENU));
     dispatch(setGameStatus(GAME_STATUSES.PAUSED));
   };
+  
   return (
     <Button
       className="btn-to-menu"

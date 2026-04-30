@@ -1,10 +1,19 @@
 import { field_components_types } from "./FieldComponentsConfigs";
+import { directionsTypes } from "./GameConfigs";
 
 export const GAME_MODES_SLICE_NAME = "gameModes";
 
 export const GameModesStateNamesKeys = {
   STOCK_DRAW_COUNT: "stock-draw-count",
   MAX_REDEALS: "max-redeals",
+};
+
+export const gameModesRulesTypes = {
+  redeals: "redeals",
+  undo: "undo",
+  hints: "hints",
+  time: "time",
+  move: "move",
 };
 
 export const GAME_MODES_IDS = {
@@ -23,32 +32,10 @@ export const GAME_MODES_STORAGE_KEYS = {
   GAME_MODES: "game-modes",
 };
 
-export const scoreOperations = {
-  increment: "increment",
-  decrement: "decrement",
-};
-
 export const GAME_MODE_CLASSIC = {
   id: GAME_MODES_IDS.CLASSIC,
   name: "Классический",
   description: "Стандартные правила пасьянса",
-  rules: {
-    redeals: {
-      limit: 5,
-    },
-    undo: {
-      limit: 3,
-    },
-    hints: {
-      limit: 3,
-    },
-    time: {
-      limit: null,
-    },
-    move: {
-      limit: null,
-    },
-  },
   scoring: {
     moved: {
       to: {
@@ -56,11 +43,11 @@ export const GAME_MODE_CLASSIC = {
           from: {
             [field_components_types.wastes]: {
               count: 10,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
             [field_components_types.tableaus]: {
               count: 10,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
           },
         },
@@ -68,25 +55,23 @@ export const GAME_MODE_CLASSIC = {
           from: {
             [field_components_types.wastes]: {
               count: 3,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
             [field_components_types.foundations]: {
               count: 10,
-              operation: scoreOperations.decrement,
+              isWithCardPoints: true,
             },
             [field_components_types.tableaus]: {
               count: 3,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
           },
         },
       },
     },
-    complete: {
-      foundation: 100,
-    },
+    complete: { foundation: 100 },
     flipped: {
-      [field_components_types.tableaus]: { count: 5, operation: scoreOperations.increment },
+      [field_components_types.tableaus]: { count: 5, isWithCardPoints: true },
     },
     win: {
       husynki: {
@@ -102,12 +87,6 @@ export const GAME_MODE_CLASSIC = {
         achievementBonus: 0,
       },
     },
-    undo: {
-      penalty: -10,
-    },
-    hint: {
-      penalty: -10,
-    },
   },
 };
 
@@ -116,21 +95,11 @@ export const GAME_MODE_VEGAS = {
   name: "Вегасский",
   description: "Режим с накопительным счетом и ставками",
   rules: {
-    redeals: {
-      limit: 1,
-    },
-    undo: {
-      limit: 2,
-    },
-    hints: {
-      limit: 0,
-    },
-    time: {
-      limit: null,
-    },
-    move: {
-      limit: null,
-    },
+    [gameModesRulesTypes.redeals]: { limit: 1 },
+    [gameModesRulesTypes.undo]: { limit: 2, penalty: 20 },
+    [gameModesRulesTypes.hints]: { limit: 0, penalty: 10 },
+    [gameModesRulesTypes.time]: { limit: null },
+    [gameModesRulesTypes.move]: { limit: null },
   },
   scoring: {
     moved: {
@@ -139,11 +108,11 @@ export const GAME_MODE_VEGAS = {
           from: {
             [field_components_types.wastes]: {
               count: 10,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
             [field_components_types.tableaus]: {
               count: 10,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
           },
         },
@@ -151,25 +120,23 @@ export const GAME_MODE_VEGAS = {
           from: {
             [field_components_types.wastes]: {
               count: 2,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
             [field_components_types.foundations]: {
               count: 10,
-              operation: scoreOperations.decrement,
+              isWithCardPoints: true,
             },
             [field_components_types.tableaus]: {
               count: 2,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
           },
         },
       },
     },
-    complete: {
-      foundation: 50,
-    },
+    complete: { foundation: 50 },
     flipped: {
-      [field_components_types.tableaus]: { count: 5, operation: scoreOperations.increment },
+      [field_components_types.tableaus]: { count: 5, isWithCardPoints: true },
     },
     win: {
       husynki: {
@@ -185,12 +152,6 @@ export const GAME_MODE_VEGAS = {
         achievementBonus: 0,
       },
     },
-    undo: {
-      penalty: -20,
-    },
-    hint: {
-      penalty: 0,
-    },
   },
 };
 
@@ -198,23 +159,6 @@ export const GAME_MODE_TIMED = {
   id: GAME_MODES_IDS.TIMED,
   name: "На время",
   description: "Гонка против времени",
-  rules: {
-    redeals: {
-      limit: 2,
-    },
-    undo: {
-      limit: 2,
-    },
-    hints: {
-      limit: 1,
-    },
-    time: {
-      limit: 180,
-    },
-    move: {
-      limit: null,
-    },
-  },
   scoring: {
     moved: {
       to: {
@@ -222,11 +166,11 @@ export const GAME_MODE_TIMED = {
           from: {
             [field_components_types.wastes]: {
               count: 12,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
             [field_components_types.tableaus]: {
               count: 12,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
           },
         },
@@ -234,25 +178,23 @@ export const GAME_MODE_TIMED = {
           from: {
             [field_components_types.wastes]: {
               count: 3,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
             [field_components_types.foundations]: {
               count: 12,
-              operation: scoreOperations.decrement,
+              isWithCardPoints: true,
             },
             [field_components_types.tableaus]: {
               count: 3,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
           },
         },
       },
     },
-    complete: {
-      foundation: 75,
-    },
+    complete: { foundation: 75 },
     flipped: {
-      [field_components_types.tableaus]: { count: 8, operation: scoreOperations.increment },
+      [field_components_types.tableaus]: { count: 8, isWithCardPoints: true },
     },
     win: {
       husynki: {
@@ -268,12 +210,6 @@ export const GAME_MODE_TIMED = {
         achievementBonus: 0,
       },
     },
-    undo: {
-      penalty: -15,
-    },
-    hint: {
-      penalty: -10,
-    },
   },
 };
 
@@ -282,21 +218,11 @@ export const GAME_MODE_EXPERT = {
   name: "Эксперт",
   description: "Максимальная сложность для профессионалов",
   rules: {
-    redeals: {
-      limit: 2,
-    },
-    undo: {
-      limit: 3,
-    },
-    hints: {
-      limit: 2,
-    },
-    time: {
-      limit: null,
-    },
-    move: {
-      limit: 200,
-    },
+    [gameModesRulesTypes.redeals]: { limit: 2 },
+    [gameModesRulesTypes.undo]: { limit: 3, penalty: 25 },
+    [gameModesRulesTypes.hints]: { limit: 2, penalty: 15 },
+    [gameModesRulesTypes.time]: { limit: null },
+    [gameModesRulesTypes.move]: { limit: 200 },
   },
   scoring: {
     moved: {
@@ -305,11 +231,11 @@ export const GAME_MODE_EXPERT = {
           from: {
             [field_components_types.wastes]: {
               count: 8,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
             [field_components_types.tableaus]: {
               count: 8,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
           },
         },
@@ -317,25 +243,23 @@ export const GAME_MODE_EXPERT = {
           from: {
             [field_components_types.wastes]: {
               count: 2,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
             [field_components_types.foundations]: {
               count: 8,
-              operation: scoreOperations.decrement,
+              isWithCardPoints: true,
             },
             [field_components_types.tableaus]: {
               count: 2,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
           },
         },
       },
     },
-    complete: {
-      foundation: 150,
-    },
+    complete: { foundation: 150 },
     flipped: {
-      [field_components_types.tableaus]: { count: 4, operation: scoreOperations.increment },
+      [field_components_types.tableaus]: { count: 4, isWithCardPoints: true },
     },
     win: {
       husynki: {
@@ -351,12 +275,6 @@ export const GAME_MODE_EXPERT = {
         achievementBonus: 0,
       },
     },
-    undo: {
-      penalty: -25,
-    },
-    hint: {
-      penalty: -15,
-    },
   },
 };
 
@@ -364,23 +282,6 @@ export const GAME_MODE_RELAXED = {
   id: GAME_MODES_IDS.RELAXED,
   name: "Расслабленный",
   description: "Для обучения и отдыха",
-  rules: {
-    redeals: {
-      limit: Infinity,
-    },
-    undo: {
-      limit: Infinity,
-    },
-    hints: {
-      limit: Infinity,
-    },
-    time: {
-      limit: null,
-    },
-    move: {
-      limit: null,
-    },
-  },
   scoring: {
     moved: {
       to: {
@@ -388,11 +289,11 @@ export const GAME_MODE_RELAXED = {
           from: {
             [field_components_types.wastes]: {
               count: 5,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
             [field_components_types.tableaus]: {
               count: 5,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
           },
         },
@@ -400,25 +301,23 @@ export const GAME_MODE_RELAXED = {
           from: {
             [field_components_types.wastes]: {
               count: 1,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
             [field_components_types.foundations]: {
               count: 5,
-              operation: scoreOperations.decrement,
+              isWithCardPoints: true,
             },
             [field_components_types.tableaus]: {
               count: 1,
-              operation: scoreOperations.increment,
+              isWithCardPoints: true,
             },
           },
         },
       },
     },
-    complete: {
-      foundation: 25,
-    },
+    complete: { foundation: 25 },
     flipped: {
-      [field_components_types.tableaus]: { count: 2, operation: scoreOperations.increment },
+      [field_components_types.tableaus]: { count: 2, isWithCardPoints: true },
     },
     win: {
       husynki: {
@@ -433,12 +332,6 @@ export const GAME_MODE_RELAXED = {
         timeAttackBonus: 0,
         achievementBonus: 5,
       },
-    },
-    undo: {
-      penalty: 0,
-    },
-    hint: {
-      penalty: 0,
     },
   },
 };

@@ -1,7 +1,36 @@
-const offsetForWasteCards = {
+import { orientations } from "./UIConfigs";
+
+const wastePortraitConfig = {
   x: 20,
   y: -11.5,
   maxVisibleCards: 3,
+};
+
+const wasteLandscapeConfig = {
+  x: 20,
+  y: -11.5,
+  maxVisibleCards: 3,
+};
+
+const offsetForWasteCards = {
+  [orientations.portrait]: {
+    x: wastePortraitConfig.x,
+    y: wastePortraitConfig.y,
+    maxVisibleCards: wastePortraitConfig.maxVisibleCards,
+    maxOverlapCardsX:
+      (wastePortraitConfig.maxVisibleCards - 1) * wastePortraitConfig.x,
+    maxOverlapCardsY:
+      (wastePortraitConfig.maxVisibleCards - 1) * wastePortraitConfig.y,
+  },
+  [orientations.landscape]: {
+    x: wasteLandscapeConfig.x,
+    y: wasteLandscapeConfig.y,
+    maxVisibleCards: wasteLandscapeConfig.maxVisibleCards,
+    maxOverlapCardsX:
+      (wasteLandscapeConfig.maxVisibleCards - 1) * wasteLandscapeConfig.x,
+    maxOverlapCardsY:
+      (wasteLandscapeConfig.maxVisibleCards - 1) * wasteLandscapeConfig.y,
+  },
 };
 
 export const field_components_names = {
@@ -71,7 +100,10 @@ export const span_text = {
 export const field_components_default_state = {
   [field_components_type_ids.stocks[0]]: {
     id: field_components_type_ids.stocks[0],
-    overlap: { x: -0.2, y: -0.2 },
+    overlap: {
+      [orientations.portrait]: { x: -0.2, y: -0.2 },
+      [orientations.landscape]: { x: -0.2, y: -0.2 },
+    },
     type: field_components_types.stocks,
     divisionСoefficient: {
       x: 100,
@@ -82,11 +114,12 @@ export const field_components_default_state = {
   [field_components_type_ids.wastes[0]]: {
     id: field_components_type_ids.wastes[0],
     overlap: {
-      ...offsetForWasteCards,
-      maxOverlapCardsX:
-        (offsetForWasteCards.maxVisibleCards - 1) * offsetForWasteCards.x,
-      maxOverlapCardsY:
-        (offsetForWasteCards.maxVisibleCards - 1) * offsetForWasteCards.y,
+      [orientations.portrait]: {
+        ...offsetForWasteCards.portrait,
+      },
+      [orientations.landscape]: {
+        ...offsetForWasteCards.landscape,
+      },
     },
     type: field_components_types.wastes,
     divisionСoefficient: {
@@ -97,31 +130,78 @@ export const field_components_default_state = {
 
   [field_components_type_ids.foundations[0]]: {
     id: field_components_type_ids.foundations[0],
-    overlap: { x: -0.5, y: -1 },
+    overlap: {
+      [orientations.portrait]: {
+        x: -1,
+        y: -1,
+      },
+      [orientations.landscape]: {
+        x: -0.5,
+        y: 0,
+      },
+    },
     type: field_components_types.foundations,
     divisionСoefficient: { x: null, y: 100 },
   },
   [field_components_type_ids.foundations[1]]: {
     id: field_components_type_ids.foundations[1],
-    overlap: { x: 0.25, y: -1 },
+    overlap: {
+      [orientations.portrait]: {
+        x: -0.25,
+        y: -1,
+      },
+      [orientations.landscape]: {
+        x: -0.5,
+        y: 0,
+      },
+    },
     type: field_components_types.foundations,
     divisionСoefficient: { x: null, y: 100 },
   },
   [field_components_type_ids.foundations[2]]: {
     id: field_components_type_ids.foundations[2],
-    overlap: { x: -0.25, y: -1 },
+    overlap: {
+      [orientations.portrait]: {
+        x: 0.25,
+        y: -1,
+      },
+      [orientations.landscape]: {
+        x: -0.5,
+        y: 0,
+      },
+    },
     type: field_components_types.foundations,
     divisionСoefficient: { x: null, y: 100 },
   },
   [field_components_type_ids.foundations[3]]: {
     id: field_components_type_ids.foundations[3],
-    overlap: { x: 0.5, y: -1 },
+    overlap: {
+      [orientations.portrait]: {
+        x: 1,
+        y: -1,
+      },
+      [orientations.landscape]: {
+        x: -0.5,
+        y: 0,
+      },
+    },
     type: field_components_types.foundations,
     divisionСoefficient: { x: null, y: 100 },
   },
   [field_components_type_ids.tableaus[0]]: {
     id: field_components_type_ids.tableaus[0],
-    overlap: { x: -0.5, y: 25 },
+    overlap: {
+      [orientations.portrait]: {
+        x: -0.5,
+        shirtY: 25,
+        faceY: 30,
+      },
+      [orientations.landscape]: {
+        x: -0.5,
+        shirtY: 15,
+        faceY: 20,
+      },
+    },
     type: field_components_types.tableaus,
     divisionСoefficient: {
       x: null,
@@ -130,7 +210,18 @@ export const field_components_default_state = {
   },
   [field_components_type_ids.tableaus[1]]: {
     id: field_components_type_ids.tableaus[1],
-    overlap: { x: -0.25, y: 25 },
+    overlap: {
+      [orientations.portrait]: {
+        x: -0.25,
+        shirtY: 25,
+        faceY: 30,
+      },
+      [orientations.landscape]: {
+        x: -0.25,
+        shirtY: 15,
+        faceY: 20,
+      },
+    },
     type: field_components_types.tableaus,
     divisionСoefficient: {
       x: null,
@@ -139,7 +230,18 @@ export const field_components_default_state = {
   },
   [field_components_type_ids.tableaus[2]]: {
     id: field_components_type_ids.tableaus[2],
-    overlap: { x: -0.1, y: 25 },
+    overlap: {
+      [orientations.portrait]: {
+        x: -0.1,
+        shirtY: 25,
+        faceY: 30,
+      },
+      [orientations.landscape]: {
+        x: -0.1,
+        shirtY: 15,
+        faceY: 20,
+      },
+    },
     type: field_components_types.tableaus,
     divisionСoefficient: {
       x: null,
@@ -148,7 +250,18 @@ export const field_components_default_state = {
   },
   [field_components_type_ids.tableaus[3]]: {
     id: field_components_type_ids.tableaus[3],
-    overlap: { x: 0, y: 25 },
+    overlap: {
+      [orientations.portrait]: {
+        x: 0,
+        shirtY: 25,
+        faceY: 30,
+      },
+      [orientations.landscape]: {
+        x: 0,
+        shirtY: 15,
+        faceY: 20,
+      },
+    },
     type: field_components_types.tableaus,
     divisionСoefficient: {
       x: null,
@@ -157,7 +270,18 @@ export const field_components_default_state = {
   },
   [field_components_type_ids.tableaus[4]]: {
     id: field_components_type_ids.tableaus[4],
-    overlap: { x: 0.1, y: 25 },
+    overlap: {
+      [orientations.portrait]: {
+        x: 0.1,
+        shirtY: 25,
+        faceY: 30,
+      },
+      [orientations.landscape]: {
+        x: 0.1,
+        shirtY: 15,
+        faceY: 20,
+      },
+    },
     type: field_components_types.tableaus,
     divisionСoefficient: {
       x: null,
@@ -166,7 +290,18 @@ export const field_components_default_state = {
   },
   [field_components_type_ids.tableaus[5]]: {
     id: field_components_type_ids.tableaus[5],
-    overlap: { x: 0.25, y: 25 },
+    overlap: {
+      [orientations.portrait]: {
+        x: 0.25,
+        shirtY: 25,
+        faceY: 30,
+      },
+      [orientations.landscape]: {
+        x: 0.25,
+        shirtY: 15,
+        faceY: 20,
+      },
+    },
     type: field_components_types.tableaus,
     divisionСoefficient: {
       x: null,
@@ -175,7 +310,18 @@ export const field_components_default_state = {
   },
   [field_components_type_ids.tableaus[6]]: {
     id: field_components_type_ids.tableaus[6],
-    overlap: { x: 0.5, y: 25 },
+    overlap: {
+      [orientations.portrait]: {
+        x: 0.5,
+        shirtY: 25,
+        faceY: 30,
+      },
+      [orientations.landscape]: {
+        x: 0.5,
+        shirtY: 15,
+        faceY: 20,
+      },
+    },
     type: field_components_types.tableaus,
     divisionСoefficient: {
       x: null,
@@ -183,6 +329,8 @@ export const field_components_default_state = {
     },
   },
 };
+
+export const highlightDuration = 3000;
 
 // export const field_components_default_state = {
 //   [field_components_types.stocks]: {

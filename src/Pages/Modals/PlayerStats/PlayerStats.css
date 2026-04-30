@@ -1,0 +1,52 @@
+.player-stats-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px;
+  overflow-y: auto;
+}
+
+.player-stats-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.player-stats-container::-webkit-scrollbar-track {
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 3px;
+}
+
+.player-stats-container::-webkit-scrollbar-thumb {
+  background: #ffd700;
+  border-radius: 3px;
+}
+
+.player-stats-table {
+  width: 100%;
+  margin-bottom: 20px;
+  /* background-color: brown; */
+  height: 100%;
+}
+
+.player-stats-table {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.player-stats-achievement-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.player-stats-achievement-section .achievement-btn {
+  border: none;
+  padding: 10px 30px;
+  font-weight: bold;
+  font-size: 16px;
+  color: #1a1a2e;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}

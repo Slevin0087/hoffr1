@@ -1,9 +1,10 @@
 import "./StatusBar.css";
-import Achievement from "./Components/Achievement";
-import Points from "./Components/Points";
-import Moves from "./Components/Moves";
 import Time from "./Components/Time";
+import Moves from "./Components/Moves";
+import Points from "./Components/Points";
+import Achievement from "./Components/Achievement";
 import { Row, Col } from "react-bootstrap";
+import Notifications from "./Components/Notifications";
 
 function StatusBar() {
   return (
@@ -12,7 +13,9 @@ function StatusBar() {
         <Points />
         <Time />
       </Col>
-      <Col>Col2</Col>
+      <Col>
+        <Notifications />
+      </Col>
       <Col>
         <Moves />
         <Achievement />

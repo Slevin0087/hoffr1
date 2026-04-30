@@ -7,6 +7,10 @@ import menuRu from "./Menu/ru.js";
 import shopRu from "./Shop/ru.js";
 import playingFieldRu from "./PlayingField/ru.js";
 import btnToMenuRu from "./BtnToMenu/ru.js";
+import playerStatsRu from "./PlayerStats/ru.js";
+import gameOverAndWinRu from "./GameOverAndWin/ru.js";
+import achievementsRu from "./Achievements/ru.js";
+import notificationsRu from "./Notifications/ru.js";
 
 export default {
   translation: {
@@ -19,5 +23,9 @@ export default {
     shop: { ...shopRu },
     playingField: { ...playingFieldRu },
     btnToMenu: { ...btnToMenuRu },
+    playerStats: { ...playerStatsRu },
+    gameOverAndWin: { ...gameOverAndWinRu },
+    achievements: { ...achievementsRu },
+    notifications: { ...notificationsRu },
   },
 };

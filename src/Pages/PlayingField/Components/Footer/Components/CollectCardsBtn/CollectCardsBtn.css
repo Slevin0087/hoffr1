@@ -1,0 +1,21 @@
+.collect-cards-btn {
+  color: black;
+  background-color: brown;
+  font-size: calc(var(--fs-footer-btn) / 4);
+  /* width: calc(var(--card-width) / 10);
+  height: calc(var(--card-height) / 10); */
+  line-height: 1;
+  padding: 0;
+  text-align: center;
+}
+
+.collect-cards-btn-span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  line-height: 1;
+  text-align: center;
+  top: 35%;
+  left: 50;
+}

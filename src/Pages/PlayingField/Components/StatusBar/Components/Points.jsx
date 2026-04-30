@@ -1,28 +1,31 @@
-import { useSelector } from "react-redux";
 import StatusBarBaseComponent from "./StatusBarBaseComponent";
-import {
-  selectLifetimeByType,
-  selectSessionByType,
-} from "../../../../../Store/slices/game/selectors";
-import {
-  gameLifetimeStateTypes,
-  gameSessionStateTypes,
-} from "../../../../../Configs/GameConfigs";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import {
+  selectCurrentPoints,
+  selectPrevCurrentPoints,
+} from "../../../../../Store/slices/game/selectors/points";
+import { selectGameCurrentDealing } from "../../../../../Store/slices/game/selectors";
+import { scoreOperations } from "../../../../../Configs/GameConfigs";
 
 function Points() {
-  const pointsLeftText = "🌟";
-  const dealingCardsCount = useSelector((state) =>
-    selectLifetimeByType(state, gameLifetimeStateTypes.deallingCardsCount),
-  );
-  const pointsSession = useSelector((state) =>
-    selectSessionByType(state, gameSessionStateTypes.points),
-  );
-  console.log("pointsSession: ", pointsSession);
-  const pointsCenterText = `x${dealingCardsCount?.count || 1}`;
-  const pointsRightText = `: ${pointsSession?.count || 0}`;
+  console.log('Points render');
   const { t } = useTranslation();
+  const pointsSession = useSelector(selectCurrentPoints);
+  const prevPointsSession = useSelector(selectPrevCurrentPoints);
+  const dealingCardsCount = useSelector(selectGameCurrentDealing);
+
+  const operation =
+    pointsSession > prevPointsSession
+      ? scoreOperations.increment
+      : scoreOperations.decrement;
+
+  const pointsLeftText = "🌟";
+  const pointsCenterText = `x${dealingCardsCount || 1}`;
+  const pointsRightText = `: ${pointsSession || 0}`;
+
   const ariaLabel = t("playingField.status_bar_points");
+
   return (
     <StatusBarBaseComponent
       leftText={pointsLeftText}
@@ -30,7 +33,7 @@ function Points() {
       rightText={pointsRightText}
       ariaLabel={ariaLabel}
       isAnimationComponent={true}
-      operation={pointsSession.data.operation}
+      operation={operation}
     />
   );
 }

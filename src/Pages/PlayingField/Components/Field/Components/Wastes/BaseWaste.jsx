@@ -11,6 +11,7 @@ function BaseWaste(props) {
   const topCardId = cardsIds?.[cardsIds.length - 1];
   const isSpanText = cardsIds?.length === 0;
   const classes = cn("pile", classNames);
+  
   return (
     <Card id={id} className={classes}>
       {isSpanText && <span className="pile-span">{spanText}</span>}

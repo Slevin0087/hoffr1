@@ -1,0 +1,116 @@
+.modals-component2 .modal {
+  justify-content: center;
+  gap: 5vh;
+}
+
+.modal-h80 {
+  height: 80%;
+}
+
+.modals-component2 .modal-dialog-centered {
+  justify-content: center;
+  overflow: hidden;
+}
+
+.modals-component2 .modal-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: linear-gradient(135deg, #076324, #0a8a2f);
+  border: 2px solid #ffd700;
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  width: 60%;
+  height: 80%;
+  padding: 0;
+}
+
+.modals-component2 .modal-header {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5vh;
+  width: 100%;
+  padding: 0 0 80px 0;
+  flex: 1;
+}
+
+.modals-component2 .modal-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* min-height: 0; */
+  height: 100%;
+  overflow: hidden;
+}
+
+.modals-component2 .modal-body.body-jc-start {
+  justify-content: flex-start;
+}
+
+.modals-component2 .modal-header.header-jc-between {
+  justify-content: space-between;
+}
+
+.modals-component2 .modal-header .modal-title {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  color: #ffd700;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  /* text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); */
+  white-space: nowrap;
+}
+
+.modals-component2 .modal-header .btn-primary,
+.modals-component2 .modal-header .btn-secondary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #076324, #0a8a2f);
+  border: 2px solid #ffd700;
+  border-radius: 50%;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  font-size: 2rem;
+  padding: 0;
+  white-space: nowrap;
+  width: 4rem;
+  height: 4rem;
+  line-height: 0;
+  padding-bottom: 4px;
+  position: absolute;
+  z-index: 50;
+}
+
+.modals-component2 .modal-header .btn-primary {
+  left: -0.5rem;
+  top: -0.5rem;
+}
+
+.modals-component2 .modal-header .btn-secondary {
+  right: -0.5rem;
+  top: -0.5rem;
+}
+
+.modals-component2 .modal-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5vh;
+  width: 100%;
+  flex: 1;
+  font-size: 2rem;
+  color: rgb(30, 183, 210);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1;
+}

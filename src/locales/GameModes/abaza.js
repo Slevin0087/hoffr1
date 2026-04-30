@@ -1,7 +1,7 @@
 export default {
-  classic_name: "Ак|лассическа",
+  classic_name: "Ак|лассическ|а",
   vegas_name: "Авегас",
-  timed_name: "Заманла",
-  expert_name: "Амч",
-  relaxed_name: "Арасслабленна",
+  timed_name: "П|атлала",
+  expert_name: "Аэксперт",
+  relaxed_name: "Тшырльальа",
 };

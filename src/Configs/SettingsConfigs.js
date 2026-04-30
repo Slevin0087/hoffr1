@@ -1,12 +1,8 @@
+import { dealingCounts } from "./GameConfigs";
 import { GAME_MODES_IDS } from "./GameModes";
 import { LANGUAGES } from "./TranslationConfigs";
 
 export const SETTINGS_SLICE_NAME = "settings";
-
-export const dealingCardsCounts = {
-  one: "1",
-  three: "3",
-};
 
 export const gameSettingsTypes = {
   gameMode: "gameMode",
@@ -49,7 +45,7 @@ export const defaultSettingsAnimations = {
 };
 
 export const defaultSettingDealingCards = {
-  value: dealingCardsCounts.one,
+  value: dealingCounts.one,
 };
 
 export const defaultSettingsAssistanceInCollection = {

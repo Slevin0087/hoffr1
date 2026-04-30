@@ -1,7 +1,7 @@
 export default {
   welcome_h1: "У(б)г|айгва!",
-  game_mode_choice_h4: "Ахъвмарра арежим у(б)сахуашма?",
-  game_rules_btn: "Ахъвмарра аправилаква",
-  other_settings_btn: "Анырг|алра датшаква",
-  game_play: "Ахъвмарра алагара",
+  game_mode_choice_h4: "Ахъвмарра аргӏапсща у(б)псахра у(б)тахъума?",
+  game_rules_btn: "Ахъвмарра ахабзаква",
+  other_settings_btn: "Арахьарат анастройкаква",
+  game_play: "Ахъвмарра джвыквцӏара",
 };

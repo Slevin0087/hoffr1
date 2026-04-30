@@ -1,0 +1,31 @@
+:root {
+  --width-menu-btn: clamp(200px, 55vmin, 600px);
+  /* fs - font-size */
+  --fs-menu-btn: clamp(1.25rem, 1rem + 2vmin, 1.75rem);
+}
+
+.menu_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  font-size: var(--fs-menu-btn);
+  color: rgb(70, 197, 53);
+  border: 3px solid black;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: rgb(97, 80, 80);
+}
+
+.menu_btn:hover {
+  /* background-color: rgb(255, 0, 0); */
+  background-color: rgb(20, 189, 5);
+  border-color: rgb(146, 5, 5);
+}
+.menu-btns-container .menu_btn:active {
+  /* background-color: rgb(255, 0, 0); */
+  background-color: rgb(20, 189, 5);
+  border-color: rgb(146, 5, 5);
+}

@@ -1,21 +1,43 @@
+:root {
+  /* --fn-score-value: "Press Start 2P", cursive; */
+  --fn-score-value: 2rem;
+}
+
 .changing-points {
   position: absolute;
-  /* top: 50%;
-  left: 50%; */
-  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
   background-color: transparent;
-  width: 50%;
-  height: 50%;
   pointer-events: none;
+  z-index: 9999;
+  white-space: nowrap;
+  transform-style: preserve-3d;
+  /* backface-visibility: hidden; */
 }
 
 .score-popup-content {
   display: flex;
   flex-direction: row;
   align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .score-value {
-  color: gold;
-  font-size: 1em;
+  font-size: var(--fn-score-value);
+  font-weight: bold;
+  text-align: center;
+  white-space: nowrap;
+  -webkit-text-stroke: 1px rgba(0, 0, 0);
+  letter-spacing: 1px;
+}
+
+.score-value.positive {
+  color: #ffd700;
+  text-shadow: 0 0 25px #ffd700;
+}
+
+.score-value.negative {
+  color: #ff4444;
+  text-shadow: 0 0 25px #ff4444;
 }

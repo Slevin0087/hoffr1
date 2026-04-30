@@ -3,6 +3,8 @@ import Undo from "./Components/Undo/Undo";
 import Menu from "./Components/Menu/Menu";
 import Hints from "./Components/Hints/Hints";
 import GameRestart from "./Components/GameRestart/GameRestart";
+import CollectCardsBtn from "./Components/CollectCardsBtn/CollectCardsBtn";
+import ShuffleStock from "./Components/ShuffleStock/ShuffleStock";
 
 function Footer() {
   return (
@@ -11,6 +13,8 @@ function Footer() {
       <Undo />
       <Hints />
       <Menu />
+      <CollectCardsBtn />
+      <ShuffleStock />
     </div>
   );
 }

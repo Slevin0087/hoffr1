@@ -1,29 +1,74 @@
 import cn from "classnames";
 import PlayingCard from "../../../../../../Components/PlayingCard/PlayingCard";
 import { Card } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { selectPileCardsIds } from "../../../../../../Store/slices/decks/selectors";
-import { useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectHintShowColorPileById,
+  selectPileCardsIds,
+} from "../../../../../../Store/slices/decks/selectors";
+import {
+  dndAccepts,
+  dropTypes,
+} from "../../../../../../Configs/PlayingCardsConfigs/DecksConfigs";
+import { useDrop } from "react-dnd";
+import { selectIsEventsInDeck } from "../../../../../../Store/slices/game/selectors";
+import { useEffect } from "react";
+import { setHintShowColorPileById } from "../../../../../../Store/slices/decks/slice";
+import { highlightDuration } from "../../../../../../Configs/FieldComponentsConfigs";
 
 function BaseFoundation(props) {
   console.log("BaseFoundation re-render");
-  const { id, classNames, spanText } = props;
-  const elementRef = useRef(null);
-  const cardsIds = useSelector((state) =>
-    selectPileCardsIds(state, id),
+  const dispatch = useDispatch();
+  const { id, type, classNames, spanText } = props;
+  const cardsIds = useSelector((state) => selectPileCardsIds(state, id));
+  const hintShowColor = useSelector((state) =>
+    selectHintShowColorPileById(state, id),
   );
+  const isEventsInDeck = useSelector(selectIsEventsInDeck);
   const topCardId = cardsIds?.[cardsIds.length - 1];
-  console.log("BaseFoundation cardsIds: ", cardsIds);
+  const isEmpty = cardsIds?.length === 0;
+  const dropData = { id, type, dropType: dropTypes.PILE, isCanDrop: isEmpty };
 
-  const isSpanText = cardsIds?.length === 0;
-  const classes = cn("pile", classNames);
+  const [dropOutput, drop] = useDrop({
+    accept: dndAccepts.CARD,
+    drop: () => dropData,
+    canDrop: () => isEmpty,
+    collect: (monitor) => {
+      const isOver = monitor.isOver();
+      const canDrop = monitor.canDrop();
+      return { isOver, canDrop };
+    },
+  });
+
+  useEffect(() => {
+    if (!hintShowColor) return;
+    const payload = { pileId: id, value: "" };
+    if (isEventsInDeck) {
+      dispatch(setHintShowColorPileById(payload));
+    } else {
+      const timer = setTimeout(() => {
+        dispatch(setHintShowColorPileById(payload));
+      }, highlightDuration);
+      return () => clearTimeout(timer);
+    }
+  }, [hintShowColor, isEventsInDeck, id, dispatch]);
+
+  const isClassCanDrop = dropOutput.isOver && isEmpty;
+  const classes = cn("pile", ...classNames, { "can-drop": isClassCanDrop });
+  const boxShadow = hintShowColor ? `0 0 0 3px ${hintShowColor}` : "";
+  
   return (
-    <Card id={id} ref={elementRef} className={classes}>
-      {isSpanText && <span className="pile-span">{spanText}</span>}
+    <Card id={id} ref={drop} className={classes} style={{ boxShadow }}>
+      {isEmpty && <span className="pile-span">{spanText}</span>}
       {cardsIds?.map((cardId) => {
         const isTopCardId = cardId === topCardId;
         return cardId ? (
-          <PlayingCard key={cardId} cardId={cardId} pileId={id} isTopCard={isTopCardId}/>
+          <PlayingCard
+            key={cardId}
+            cardId={cardId}
+            pileId={id}
+            isTopCard={isTopCardId}
+          />
         ) : null;
       })}
     </Card>

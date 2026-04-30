@@ -8,17 +8,22 @@
   align-items: center;
   width: var(--card-width);
   height: var(--card-height);
-  color: rgb(20, 20, 20);
+  color: rgb(0, 0, 0);
   gap: var(--gap-field-cells);
-  background-color: yellow;
+  /* background-color: yellow; */
 
-  border: 0;
+  border: 1px solid #1a1a2e;
+  border-radius: 3px;
 
   position: relative;
 
   text-align: center;
-
+  background: transparent;
   /* border-radius: var(--card-radius); */
+}
+
+.pile.can-drop {
+  border: 5px solid green;
 }
 
 .pile::before {

@@ -1,92 +1,182 @@
 import "./PlayingCard.css";
-// eslint-disable-next-line no-unused-vars
-import { motion, useMotionValue, useSpring } from "motion/react";
-import { memo, useEffect, useMemo } from "react";
+import FaceAndShirt from "./Components/FaceAndShirt";
+import ChangingPoints from "./Components/ChangingPoints";
+import {
+  // eslint-disable-next-line no-unused-vars
+  motion,
+  useMotionValue,
+  useSpring,
+} from "motion/react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { clickCard } from "../../Store/slices/decks/thunks";
 import { useDoubleTap } from "../../hooks/useDoubleTap";
 import { useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
-import {
-  selectCard,
-  selectIsCardDragged,
-  selectOverlap,
-} from "../../Store/slices/decks/selectors";
+import { selectCard, selectOverlap } from "../../Store/slices/decks/selectors";
 import {
   getIsCanDnD,
   getIsPointerEvents,
+  getMoveAnimation,
+  getMoveAnimationData,
   getIsMoveAnimation,
-  setDnDInputs,
+  getIsAnimationByName,
+  getAnimationByName,
+  getAnimationDataByName,
 } from "../../utils/playingCardUtils";
 import {
+  animationsData,
   cardContainerClassName,
   sides,
 } from "../../Configs/PlayingCardsConfigs/PlayingCardsConfigs";
-import FaceAndShirt from "./Components/FaceAndShirt";
 import { useWindowSize } from "../../hooks/useWindowSize";
-import { cardAnimations } from "../../Configs/PlayingCardsConfigs/PlayingCardsConfigs";
-import ChangingPoints from "./Components/ChangingPoints";
 import { selectAnimationsEnabled } from "../../Store/slices/settings/selectors";
+import { handleCardClick, handleDrop } from "../../Store/slices/game/thunks";
+import {
+  dndAccepts,
+  dropTypes,
+} from "../../Configs/PlayingCardsConfigs/DecksConfigs";
+import {
+  resetIsDraggingCardsByPileId,
+  setIsDraggingCardsByCardId,
+  updateCardOne,
+} from "../../Store/slices/decks/slice";
+import { highlightDuration } from "../../Configs/FieldComponentsConfigs";
+import { selectIsEventsInDeck } from "../../Store/slices/game/selectors";
+import { setIsEventsInDeck } from "../../Store/slices/game/slice";
 
-const ItemTypes = { CARD: "card" };
+const moveAnimaTransition = animationsData.move.types.standart.transition;
+const hoverAnimation = animationsData.hover.types.standart.animation;
 
-const PlayingCard = ({ cardId, pileId, isTopCard, isGhost = false }) => {
+const PlayingCard = (props) => {
   const dispatch = useDispatch();
-  const { height } = useWindowSize();
+  const { height, width } = useWindowSize();
+  const {
+    cardId,
+    pileId,
+    isTopCard = false,
+    isGhost = false,
+    isHintShowCardInTableauPile = false,
+    isHintShowCardInTableauPileOverlapY = 0,
+  } = props;
+  const innerRef = useRef(null);
+  const isEventsInDeck = useSelector(selectIsEventsInDeck);
   const card = useSelector(
     (state) => selectCard(state, pileId, cardId),
     shallowEqual,
   );
   const overlap = useSelector(
-    (state) => selectOverlap(state, card, height, isGhost),
+    (state) => selectOverlap(state, pileId, cardId, height),
     shallowEqual,
   );
-  const isDraggedCard = useSelector((state) =>
-    selectIsCardDragged(state, cardId),
-  );
-  const isAnimationsEnabled = useSelector(selectAnimationsEnabled);
-  console.log("isAnimationsEnabled: ", isAnimationsEnabled);
-  const isMoveAnimation = getIsMoveAnimation(card, isAnimationsEnabled);
 
+  const [shuffleOffset] = useState(() => ({
+    x: ((Math.random() - 0.5) * width) / 6,
+    y: ((Math.random() - 0.5) * height) / 6,
+  }));
+
+  const isAnimationsEnabled = useSelector(selectAnimationsEnabled);
+  const isMoveAnimation = getIsMoveAnimation(card, isAnimationsEnabled);
+  const moveAnimation = getMoveAnimation(card, isAnimationsEnabled);
+  const moveAnimationConfig = getMoveAnimationData(moveAnimation);
+  const isShuffleAnimation = getIsAnimationByName(
+    card,
+    isAnimationsEnabled,
+    animationsData.shuffle.name,
+  );
+  const shuffleAnimation = getAnimationByName(
+    card,
+    isAnimationsEnabled,
+    animationsData.shuffle.name,
+  );
+  const shuffleAnimationConfig = getAnimationDataByName(
+    shuffleAnimation,
+    shuffleAnimation?.type,
+  );
   const { isCanDrag, isCanDrop } = getIsCanDnD(card, isTopCard, isGhost);
   const isPointerEvents = getIsPointerEvents(card, isTopCard);
-  const dragData = {
-    card,
-    isCanDrag,
-    height,
-  };
-  const dropData = { cardId, isCanDrop };
-  const onDoubleClick = () => {
-    if (!isGhost) dispatch(clickCard(card));
-  };
+
+  const onDoubleClick = () => dispatch(handleCardClick({ card }));
   const { onTouchStart, onTouchEnd } = useDoubleTap(onDoubleClick, 300);
-  const { dragInputs, dropInputs } = setDnDInputs(ItemTypes.CARD);
+
   // ---------------------- DRAG -----------------------
-  const [dragOutput, drag, preview] = useDrag(dragInputs(dragData));
+  const [_, drag, preview] = useDrag({
+    type: dndAccepts.CARD,
+    item: () => {
+      dispatch(setIsEventsInDeck(true));
+      dispatch(setIsDraggingCardsByCardId({ cardId, pileId, value: true }));
+      return { card, height };
+    },
+    end: (item, monitor) => {
+      dispatch(setIsEventsInDeck(false));
+      if (!monitor.didDrop()) {
+        dispatch(resetIsDraggingCardsByPileId({ pileId }));
+        return;
+      }
+      const dropResult = monitor.getDropResult();
+      if (dropResult) {
+        dispatch(handleDrop({ item, dropResult }));
+        return;
+      }
+    },
+    canDrag: () => isCanDrag,
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+      dragItem: monitor.getItem(),
+    }),
+  });
+
   // -------------------- DROP -------------------------
-  const [dropOutput, drop] = useDrop(dropInputs(dropData));
+  const [dropOutput, drop] = useDrop({
+    accept: dndAccepts.CARD,
+    drop: () => ({ dropType: dropTypes.CARD, card }),
+    canDrop: (item) => isCanDrop && item.card.id !== card.id,
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  });
+
+  const highZIndex = 100 + card?.position;
+  const isOpacity = !card.isDragging && !isGhost;
+  const isHighZIndex = isMoveAnimation || isShuffleAnimation;
+  const isBorder = dropOutput.isOver && isCanDrop;
 
   const style = useMemo(() => {
-    if (isGhost) return {};
+    if (isHintShowCardInTableauPile)
+      return {
+        top: isHintShowCardInTableauPileOverlapY,
+        pointerEvents: isPointerEvents ? "auto" : "none",
+        cursor: isPointerEvents ? "grab" : "auto",
+        zIndex: card?.position,
+      };
     return {
-      top: overlap.overlapY,
-      left: overlap.overlapX,
+      top: isShuffleAnimation ? overlap.y + shuffleOffset.y : overlap.y,
+      left: isShuffleAnimation ? overlap.x + shuffleOffset.x : overlap.x,
       pointerEvents: isPointerEvents ? "auto" : "none",
       cursor: isPointerEvents ? "grab" : "auto",
-      border: dropOutput.isOver && isCanDrop && "5px solid green",
-      opacity: isDraggedCard && !isGhost ? 0 : 1,
-      zIndex: isMoveAnimation ? 100 + card?.position : card?.position,
+      boxShadow: isBorder
+        ? "0 0 0 5px green"
+        : card.hintShowColor && !isHintShowCardInTableauPile
+          ? `0 0 0 5px ${card.hintShowColor}`
+          : "none",
+      opacity: isOpacity ? 1 : 0,
+      zIndex: isHighZIndex ? highZIndex : card?.position,
     };
   }, [
-    card?.position,
-    overlap.overlapX,
-    overlap.overlapY,
+    card.position,
     isPointerEvents,
-    dropOutput.isOver,
-    isCanDrop,
-    isDraggedCard,
-    isMoveAnimation,
-    isGhost,
+    card.hintShowColor,
+    isOpacity,
+    isHighZIndex,
+    highZIndex,
+    isBorder,
+    overlap.x,
+    overlap.y,
+    isShuffleAnimation,
+    shuffleOffset.x,
+    shuffleOffset.y,
+    isHintShowCardInTableauPile,
+    isHintShowCardInTableauPileOverlapY,
   ]);
 
   useEffect(() => {
@@ -104,14 +194,22 @@ const PlayingCard = ({ cardId, pileId, isTopCard, isGhost = false }) => {
     rotation.set(card.side === sides.face ? 0 : 180);
   }, [card.side, rotation]);
 
+  useEffect(() => {
+    if (!card.hintShowColor) return;
+    const payload = { cardId, pileId, changes: { hintShowColor: "" } };
+    if (isEventsInDeck) {
+      dispatch(updateCardOne(payload));
+    } else {
+      const timer = setTimeout(() => {
+        dispatch(updateCardOne(payload));
+      }, highlightDuration);
+      return () => clearTimeout(timer);
+    }
+  }, [card.hintShowColor, isEventsInDeck, dispatch, cardId, pileId]);
+
   if (isGhost) {
     return (
-      <motion.div
-        ref={(el) => drag(drop(el))}
-        id={card.id}
-        className={cardContainerClassName}
-        style={style}
-      >
+      <motion.div id={card.id} className={cardContainerClassName}>
         <FaceAndShirt cardSuit={card.suit} cardValue={card.value} />
       </motion.div>
     );
@@ -119,22 +217,34 @@ const PlayingCard = ({ cardId, pileId, isTopCard, isGhost = false }) => {
 
   return (
     <motion.div
-      ref={(el) => drag(drop(el))}
+      ref={(el) => {
+        drag(drop(el));
+        innerRef.current = el;
+      }}
       id={card.id}
       className={cardContainerClassName}
       style={{ ...style, rotateY: springRotation }}
       onDoubleClick={onDoubleClick}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
-      whileHover={isPointerEvents && cardAnimations.hover.animation}
+      whileHover={
+        isPointerEvents && hoverAnimation && !isHintShowCardInTableauPile
+      }
       layout="position"
       layoutId={card.id}
+      animate={{ x: 0, y: 0 }}
       transition={{
-        layout: cardAnimations.move.transition,
+        layout: isShuffleAnimation
+          ? shuffleAnimationConfig?.transition
+          : moveAnimationConfig?.transition || moveAnimaTransition,
       }}
     >
       <FaceAndShirt cardSuit={card.suit} cardValue={card.value} />
-      {isAnimationsEnabled && <ChangingPoints cardId={card.id} />}
+      <ChangingPoints
+        cardId={card.id}
+        cardSide={card.side}
+        isAnimationsEnabled={isAnimationsEnabled}
+      />
     </motion.div>
   );
 };

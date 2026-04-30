@@ -2,35 +2,64 @@ import "./ChangingPoints.css";
 // eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from "motion/react";
 import { useSelector } from "react-redux";
-import { gameSessionStateTypes } from "../../../Configs/GameConfigs";
-import { selectSessionDataByType } from "../../../Store/slices/game/selectors";
-import { scoreOperations } from "../../../Configs/GameModes";
-import { selectAnimationsEnabled } from "../../../Store/slices/settings/selectors";
+import { scoreOperations } from "../../../Configs/GameConfigs";
+import { selectCurrentUpPointsByCardId } from "../../../Store/slices/ui/selectors";
+import {
+  animationsTypes,
+  sides,
+} from "../../../Configs/PlayingCardsConfigs/PlayingCardsConfigs";
+import { getAnimationFlipDuration } from "../../../utils/playingCardUtils";
 
 function ChangingPoints(props) {
-  const { cardId } = props;
-  const sessionStateData = useSelector((state) =>
-    selectSessionDataByType(state, gameSessionStateTypes.points),
+  const { cardId, cardSide, isAnimationsEnabled } = props;
+  const upPointsData = useSelector((state) =>
+    selectCurrentUpPointsByCardId(state, cardId),
   );
-  console.log("sessionStateData: ", sessionStateData);
-  const isCardChangingPoints = sessionStateData.cardId === cardId;
-  const isAnimationsEnabled = useSelector(selectAnimationsEnabled);
+
+  if (upPointsData.count === 0) return null;
+
+  const isFaceSide = cardSide === sides.face;
+  const isIncrement = upPointsData.operation === scoreOperations.increment;
+  const duration = getAnimationFlipDuration(animationsTypes.standart) / 500;
+  const baseAnimation = {
+    opacity: 1,
+    y: "-200%",
+    scale: 1.2,
+    rotateY: isFaceSide ? 0 : 180,
+  };
+
+  const initial = isAnimationsEnabled
+    ? {
+        opacity: 0,
+        scale: 0.5,
+        x: "-50%",
+        y: "-50%",
+        rotateY: isFaceSide ? 0 : 180,
+      }
+    : baseAnimation;
+
+  const animate = baseAnimation;
+  const exit = isAnimationsEnabled
+    ? { opacity: 0, y: "-200%", scale: 0.8, rotateY: isFaceSide ? 0 : 180 }
+    : baseAnimation;
+
+  const transition = isAnimationsEnabled ? { duration } : { duration: 0 };
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
         className="changing-points"
-        initial={
-          isAnimationsEnabled && { opacity: 0, x: "50%", y: "50%", scale: 0.5 }
-        }
-        animate={
-          isCardChangingPoints &&
-          isAnimationsEnabled && { opacity: 1, y: "-300%", scale: 1.2 }
-        }
-        exit={isAnimationsEnabled && { opacity: 0, y: "-300%", scale: 0.8 }}
-        transition={isAnimationsEnabled && { duration: 2 }}
+        initial={initial}
+        animate={animate}
+        exit={exit}
+        transition={transition}
       >
         <div className="score-popup-content">
-          <span className="score-value">{`${sessionStateData.operation === scoreOperations.increment ? "+" : "-"} ${sessionStateData.value}`}</span>
+          <span
+            className={`score-value ${isIncrement ? "positive" : "negative"}`}
+          >
+            {`${isIncrement ? "+" : "-"} ${upPointsData.count}`}
+          </span>
         </div>
       </motion.div>
     </AnimatePresence>

@@ -7,6 +7,8 @@ import { PAGES_IDS } from "../Configs/UIConfigs.js";
 import { GAME_STATUSES } from "../Configs/GameConfigs.js";
 import { useFullscreen, useToggle } from "react-use";
 import { setActivePageId, setReducedMotion } from "../Store/slices/ui/slice.js";
+import { selectGameStatus } from "../Store/slices/game/selectors.js";
+import { selectActivePageId } from "../Store/slices/ui/selectors.js";
 
 function App() {
   const dispatch = useDispatch();
@@ -15,8 +17,8 @@ function App() {
   const isFullscreen = useFullscreen(ref, show, {
     onClose: () => toggle(false),
   });
-  const gameStatus = useSelector((state) => state.game.status);
-  const activePageId = useSelector((state) => state.ui.activePageId);
+  const gameStatus = useSelector(selectGameStatus);
+  const activePageId = useSelector(selectActivePageId);
   const prefersReducedMotion = useReducedMotion();
   useEffect(() => {
     dispatch(setReducedMotion(prefersReducedMotion));
@@ -25,10 +27,7 @@ function App() {
     }
   }, [dispatch, gameStatus, prefersReducedMotion]);
   return (
-    <div
-      ref={ref}
-      style={{ backgroundColor: "white", width: "100%", height: "100%" }}
-    >
+    <div className="app-page" ref={ref}>
       <button
         style={{
           position: "absolute",

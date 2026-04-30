@@ -3,7 +3,7 @@ import {
   field_components_types,
 } from "../Configs/FieldComponentsConfigs";
 import {
-  animationsTypes,
+  animationsNames,
   cardAnimations,
   PLAYING_CARD_NAME,
   PLAYING_CARD_SUITS,
@@ -79,8 +79,11 @@ export const createPlayingCard = (suit, value, side = sides.shirt) => {
     value,
     side,
     color: getCardColor(suit),
+    isDragging: false,
+    isDropping: false,
     isAnimating: false,
     activeAnimations: [],
+    hintShowColor: "",
     flipping: false,
     moving: false,
   };
@@ -98,7 +101,8 @@ export const generateDeck = () => {
 };
 
 export const getIsPointerEvents = (card, isTopCard) => {
-  if (card.side === sides.shirt) return false;
+  const isCardSideShirt = card.side === sides.shirt;
+  if (isCardSideShirt || card.isAnimating) return false;
   const pileType = field_components_default_state[card.pileId]?.type;
   const isTableauPile = pileType === field_components_types.tableaus;
   if (isTableauPile) return true;
@@ -106,48 +110,47 @@ export const getIsPointerEvents = (card, isTopCard) => {
 };
 
 export const getIsCanDnD = (card, isTopCard) => {
-  const result = { isCanDrag: false, isCanDrop: false };
-  if (card.side === sides.shirt) return result;
+  const isCardSideShirt = card.side === sides.shirt;
+  if (isCardSideShirt) return { isCanDrag: false, isCanDrop: false };
+
   const pileType = field_components_default_state[card.pileId]?.type;
   const isTableauPile = pileType === field_components_types.tableaus;
-  if (isTableauPile) {
-    result.isCanDrag = true;
-    result.isCanDrop = isTopCard;
-    return result;
-  }
+  if (isTableauPile) return { isCanDrag: true, isCanDrop: isTopCard };
+
   const isWastePile = pileType === field_components_types.wastes;
-  if (isWastePile) {
-    result.isCanDrag = isTopCard;
-    result.isCanDrop = false;
-    return result;
-  }
-  result.isCanDrag = isTopCard;
-  result.isCanDrop = isTopCard;
-  return result;
+  if (isWastePile) return { isCanDrag: isTopCard, isCanDrop: false };
+
+  return { isCanDrag: isTopCard, isCanDrop: isTopCard };
 };
 
 export const setDnDInputs = (typeAndAccept) => {
   const dragInputs = (dragData) => ({
     type: typeAndAccept,
-    item: () => {
-      return dragData;
+    item: () => dragData,
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult();
+      if (dropResult) dropResult;
     },
     canDrag: () => dragData.isCanDrag,
     collect: (monitor) => {
-      return {
-        isDragging: monitor.isDragging(),
-        dragItem: monitor.getItem(),
-      };
+      const isDragging = monitor.isDragging();
+      const dragItem = monitor.getItem();
+      return { isDragging, dragItem };
     },
   });
   const dropInputs = (dropData) => ({
     accept: typeAndAccept,
-    canDrop: (item) => dropData.isCanDrop && item.card.d !== dropData.cardId,
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-    }),
+    drop: (item, monitor) => {
+      console.log("item, monitor", item, monitor);
+      return dropData;
+    },
+    canDrop: (item) => dropData.isCanDrop && item.card.id !== dropData.card.id,
+    collect: (monitor) => {
+      const isOver = monitor.isOver();
+      const canDrop = monitor.canDrop();
+      return { isOver, canDrop };
+    },
   });
-
   return { dragInputs, dropInputs };
 };
 
@@ -168,17 +171,93 @@ export const getAnimationsData = (card, isAnimationsEnabled) => {
   };
 };
 
+export const getIsAnimationByName = (
+  card,
+  isAnimationsEnabled,
+  animationName,
+) => {
+  if (
+    !isAnimationsEnabled ||
+    !card ||
+    !card.isAnimating ||
+    !card.activeAnimations
+  )
+    return false;
+  const callback = (animation) => animation.name === animationName;
+  return card.activeAnimations.some(callback);
+};
+
+export const getAnimationByName = (
+  card,
+  isAnimationsEnabled,
+  animationName,
+) => {
+  if (
+    !isAnimationsEnabled ||
+    !card ||
+    !card.isAnimating ||
+    !card.activeAnimations
+  )
+    return null;
+  const callback = (animation) => animation.name === animationName;
+  return card.activeAnimations.find(callback);
+};
+
+export const getAnimationDataByName = (animation, type) => {
+  if (!animation || !animation.name) return null;
+  const animationConfig = cardAnimations[animation.name];
+  if (!animationConfig) return null;
+  const animationData = animationConfig.types[type];
+  if (!animationData) return null;
+  return animationData;
+};
+
 export const getIsMoveAnimation = (card, isAnimationsEnabled) => {
   if (!isAnimationsEnabled || !card || !card.isAnimating) return false;
-  return card.activeAnimations.includes(animationsTypes.move);
+  console.log("card.activeAnimations", card.activeAnimations);
+  const callback = (animation) => animation.name === animationsNames.move;
+  return card.activeAnimations.some(callback);
+};
+
+export const getMoveAnimation = (card, isAnimationsEnabled) => {
+  if (!isAnimationsEnabled || !card || !card.isAnimating) return null;
+  const callback = (animation) => animation.name === animationsNames.move;
+  return card.activeAnimations.find(callback);
+};
+
+export const getMoveAnimationData = (moveAnimation) => {
+  if (!moveAnimation) return null;
+  const animation = cardAnimations[moveAnimation.name];
+  if (!animation) return null;
+  const animationData = animation.types[moveAnimation.type];
+  if (!animationData) return null;
+  return animationData;
 };
 
 export const getIsFlipAnimation = (card, isAnimationsEnabled) => {
   if (!isAnimationsEnabled || !card || !card.isAnimating) return false;
-  return card.activeAnimations.includes(animationsTypes.flip);
+  return card.activeAnimations.includes(animationsNames.flip);
 };
 
 export const getIsFlipBackAnimation = (card, isAnimationsEnabled) => {
   if (!isAnimationsEnabled || !card || !card.isAnimating) return false;
-  return card.activeAnimations.includes(animationsTypes.flipBack);
+  return card.activeAnimations.includes(animationsNames.flipBack);
+};
+
+export const getAnimationFlipDuration = (type) => {
+  const animationFlipDuration =
+    cardAnimations[animationsNames.flip].types[type].transition.duration;
+  return animationFlipDuration * 1000;
+};
+
+export const getAnimationMoveDuration = (type) => {
+  const animationMoveDuration =
+    cardAnimations[animationsNames.move].types[type].transition.duration;
+  return animationMoveDuration * 1000;
+};
+
+export const getAnimationShuffleDuration = (type) => {
+  const animationShuffleDuration =
+    cardAnimations[animationsNames.shuffle].types[type].transition.duration;
+  return animationShuffleDuration * 1000;
 };

@@ -1,43 +1,35 @@
-import {
-  setPlayerName,
-  skipPlayerName,
-} from "../../Store/slices/pages/ipnStore.js";
-import { Form, ButtonGroup, Button } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { useTranslation } from "react-i18next";
+import "./InputPlayerName.css";
+import { useState } from "react";
 import { useFormik } from "formik";
 import { PAGES_IDS } from "../../Configs/UIConfigs.js";
-import { useState } from "react";
-import "./InputPlayerName.css";
+import { setPlayerName } from "../../Store/slices/game/slice.js";
+import { useTranslation } from "react-i18next";
 import { setActivePageId } from "../../Store/slices/ui/slice.js";
+import { selectPlayerName } from "../../Store/slices/game/selectors.js";
+import { useDispatch, useSelector } from "react-redux";
+import { Form, ButtonGroup, Button } from "react-bootstrap";
+import { handleGameInit } from "../../Store/slices/game/thunks.js";
 
 function InputPlayerName() {
-  console.log("в InputPlayerName");
-
   const dispatch = useDispatch();
-  const playerName = useSelector((state) => state.inputPlayerName.playerName);
-  const [disabled, setDisabled] = useState(false);
-  console.log("disabled: ", disabled);
-
   const { t } = useTranslation();
-
+  const playerName = useSelector(selectPlayerName);
+  const [disabled, setDisabled] = useState(false);
   const placeholder = playerName || t("inputPlayerName.input_name_placeholder");
-
   const formik = useFormik({
     initialValues: { playerName },
     onSubmit: (values) => {
       setDisabled(true);
-      dispatch(setPlayerName(values.playerName));
-      dispatch(setActivePageId(PAGES_IDS.GREETINGS));
+      const name = values.playerName.trim();
+      dispatch(setPlayerName({ name }));
+      dispatch(setActivePageId(PAGES_IDS.PLAYING_FIELD));
+      dispatch(handleGameInit());
       setDisabled(false);
     },
   });
-
   const onClickSkip = () => {
-    console.log("skip");
-
-    dispatch(skipPlayerName());
-    dispatch(setActivePageId(PAGES_IDS.GREETINGS));
+    dispatch(setActivePageId(PAGES_IDS.PLAYING_FIELD));
+    dispatch(handleGameInit());
   };
   return (
     <div className="inputPlayerName-page">
@@ -52,8 +44,8 @@ function InputPlayerName() {
           </Form.Label>
           <Form.Control
             placeholder={placeholder}
-            name="playerName"
             id="playerName"
+            name="playerName"
             onChange={formik.handleChange}
             value={formik.values.playerName}
             required

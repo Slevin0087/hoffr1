@@ -4,7 +4,7 @@ import { motion, useAnimation } from "motion/react";
 import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { selectAnimationsEnabled } from "../../../../../Store/slices/settings/selectors";
-import { scoreOperations } from "../../../../../Configs/GameModes";
+import { scoreOperations } from "../../../../../Configs/GameConfigs";
 
 function StatusBarBaseComponent(props) {
   const {
@@ -29,7 +29,6 @@ function StatusBarBaseComponent(props) {
     const isAnimation = isAnimationComponent && isAnimationsEnabled;
     const isChangeValue = prevValue.current !== rightText;
     if (isChangeValue && isAnimation) {
-      console.log('operation: ', operation, operation === scoreOperations.increment);
       const upColor =
         colorChange && operation === scoreOperations.increment
           ? "#ffd700"

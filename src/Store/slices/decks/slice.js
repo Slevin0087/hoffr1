@@ -5,38 +5,33 @@ import {
   DECK_STORAGE_KEYS,
 } from "../../../Configs/PlayingCardsConfigs/DecksConfigs";
 import { reducers } from "./reducers";
-import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-import { dealCardsFromStockToTableaus } from "./thunks";
+import { createSlice } from "@reduxjs/toolkit";
 
-const deckAdapter = createEntityAdapter({
-  selectId: (deck) => deck.id,
-});
-
-const defaultState =
+export const initialState =
   storage.getItem(DECK_STORAGE_KEYS.DECK) || DECKS_DEFAULT_STATE;
-
-export const initialState = deckAdapter.getInitialState(defaultState);
 
 const decksSlice = createSlice({
   name: DECKS_SLICE_NAME,
   initialState,
   reducers,
-  extraReducers: (builder) => {
-    builder.addCase(dealCardsFromStockToTableaus.fulfilled, (state) => {
-      storage.setItem(DECK_STORAGE_KEYS.DECK, state);
-    });
-  },
 });
 
 export const {
   initStockCards,
-  incrementRedeals,
   addCardOne,
   updateCardOne,
-  cleaningCurrentDeck,
-  setDraggedCards,
-  clearDraggedCards,
-  setIsEventsInDeck,
+  resetIsDraggingCardsByPileId,
+  resetDeck,
+  setDraggingCards,
+  clearDraggingCards,
+  setTabsShirtCardsIds,
+  addTabsShirtCardIdOne,
+  removeTabsShirtCardsIds,
+  removeTabsShirtCardIdOne,
+  shuffleStockCardsIds,
+  setIsDraggingCardsByCardId,
+  setHintShowColorPileById,
+  setHintShowColor,
 } = decksSlice.actions;
 
 export default decksSlice.reducer;

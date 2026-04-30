@@ -5,8 +5,8 @@ import {
   UI_SLICE_NAME,
   UI_STORE_KEYS,
 } from "../../../Configs/UIConfigs.js";
-import { flipTopCardOne } from "../decks/thunks.js";
 import { reducers } from "./reducers.js";
+import { extraReducers } from "./extraReducers.js";
 
 const initialState = storage.getItem(UI_STORE_KEYS.UI) || UI_DEFAULTS_STATE;
 
@@ -14,13 +14,27 @@ const uiSlice = createSlice({
   name: UI_SLICE_NAME,
   initialState,
   reducers,
-  extraReducers: (builder) => {
-    builder.addCase(flipTopCardOne.pending, (state, action) => {
-      // storage.setItem(UI_STORE_KEYS.UI, state);
-    });
-  },
+  extraReducers,
 });
 
-export const { setActivePageId, setReducedMotion } = uiSlice.actions;
+export const {
+  setActivePageId,
+  setReducedMotion,
+  addUpPointsByCardId,
+  removeUpPointsByCardId,
+  openRestartModal,
+  closeRestartModal,
+  openGameRulesModal,
+  closeGameRulesModal,
+  setActivePFModalId,
+  resetActivePFModalId,
+  showPFModalById,
+  hidePFModalById,
+  setIsCollectCardsBtnVisible,
+  addNotification,
+  showNextNotification,
+  clearCurrentNotification,
+  clearNotificationsQueue,
+} = uiSlice.actions;
 
 export default uiSlice.reducer;

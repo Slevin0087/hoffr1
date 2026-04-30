@@ -1,5 +1,3 @@
-import { animationsData } from "../MotionAnimationsConfigs.js/cards";
-
 export const sides = {
   face: "face",
   shirt: "shirt",
@@ -58,7 +56,7 @@ export const faceAndShirtClassNames = {
 
 export const cardContainerClassName = "playing-card-container";
 
-export const animationsTypes = {
+export const animationsNames = {
   flip: "flip",
   move: "move",
   hover: "hover",
@@ -66,7 +64,209 @@ export const animationsTypes = {
   exit: "exit",
   drag: "drag",
   drop: "drop",
+  shuffle: "shuffle",
 };
+
+export const animationsTypes = {
+  dealsFromStockToTableaus: "dealsFromStockToTableaus",
+  standart: "standart",
+  stockToWaste: "stockToWaste",
+  wasteToStock: "wasteToStock",
+  undoStandart: "undoStandart",
+  undoStockToWaste: "undoStockToWaste",
+  undoWasteToStock: "undoWasteToStock",
+  shuffleStock: "shuffleStock",
+};
+
+export const animationsData = {
+  [animationsNames.flip]: {
+    name: animationsNames.flip,
+    types: {
+      [animationsTypes.dealsFromStockToTableaus]: {
+        transition: {
+          duration: 0.01,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+      [animationsTypes.standart]: {
+        transition: {
+          duration: 0.5,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+      [animationsTypes.stockToWaste]: {
+        transition: {
+          duration: 0.1,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+      [animationsTypes.wasteToStock]: {
+        transition: {
+          duration: 0.05,
+          type: "tween",
+          ease: "easeInOut",
+        },
+      },
+      [animationsTypes.undoStandart]: {
+        transition: {
+          duration: 0.2,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+      [animationsTypes.undoStockToWaste]: {
+        transition: {
+          duration: 0.1,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+      [animationsTypes.undoWasteToStock]: {
+        transition: {
+          duration: 0.1,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+    },
+  },
+  [animationsNames.move]: {
+    name: animationsNames.move,
+    types: {
+      [animationsTypes.dealsFromStockToTableaus]: {
+        transition: {
+          duration: 0.05,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+      [animationsTypes.standart]: {
+        transition: {
+          duration: 0.25,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+      [animationsTypes.stockToWaste]: {
+        transition: {
+          duration: 0.2,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+      [animationsTypes.wasteToStock]: {
+        transition: {
+          duration: 0.05,
+          type: "spring",
+          ease: "anticipate",
+        },
+      },
+      [animationsTypes.undoStandart]: {
+        transition: {
+          duration: 0.25,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+      [animationsTypes.undoStockToWaste]: {
+        transition: {
+          duration: 0.1,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+      [animationsTypes.undoWasteToStock]: {
+        transition: {
+          duration: 0.1,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+      [animationsTypes.shuffleStock]: {
+        transition: {
+          duration: 0.1,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+    },
+  },
+  [animationsNames.hover]: {
+    name: animationsNames.hover,
+    types: {
+      [animationsTypes.dealsFromStockToTableaus]: {
+        animation: {
+          scale: 1.05,
+        },
+      },
+      [animationsTypes.standart]: {
+        animation: {
+          scale: 1.05,
+        },
+      },
+      [animationsTypes.stockToWaste]: {
+        animation: {
+          scale: 1.05,
+        },
+      },
+      [animationsTypes.wasteToStock]: {
+        animation: {
+          scale: 1.05,
+        },
+      },
+      [animationsTypes.undoStandart]: {
+        animation: {
+          scale: 1.05,
+        },
+      },
+      [animationsTypes.undoStockToWaste]: {
+        animation: {
+          scale: 1.05,
+        },
+      },
+      [animationsTypes.undoWasteToStock]: {
+        animation: {
+          scale: 1.05,
+        },
+      },
+    },
+  },
+  [animationsNames.initial]: {
+    name: animationsNames.initial,
+    types: {},
+  },
+  [animationsNames.exit]: {
+    name: animationsNames.exit,
+    types: {},
+  },
+  [animationsNames.drag]: {
+    name: animationsNames.drag,
+    types: {},
+  },
+  [animationsNames.drop]: {
+    name: animationsNames.drop,
+    types: {},
+  },
+  [animationsNames.shuffle]: {
+    name: animationsNames.shuffle,
+    types: {
+      [animationsTypes.shuffleStock]: {
+        transition: {
+          duration: 0.05,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+    },
+  },
+};
+
+export const dndReturningDuration =
+  animationsData[animationsNames.move].types[animationsTypes.standart]
+    .transition.duration * 1000;
 
 export const cardAnimations = {
   initial: animationsData.initial,
@@ -76,4 +276,5 @@ export const cardAnimations = {
   move: animationsData.move,
   drop: animationsData.drop,
   flip: animationsData.flip,
+  shuffle: animationsData.shuffle,
 };

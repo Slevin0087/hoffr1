@@ -4,13 +4,11 @@ import Wastes from "./Components/Wastes/Wastes";
 import Stocks from "./Components/Stocks/Stocks";
 import Tableaus from "./Components/Tableaus/Tableaus";
 import Foundations from "./Components/Foundations/Foundations";
-// import { useDnD } from "../../../../hooks/useDnd";
 import { LayoutGroup } from "motion/react";
 import { Container, Stack } from "react-bootstrap";
 
 function Field() {
   console.log("Field re-render");
-  // const { handleDragStart, handleDragEnd } = useDnD();
   return (
     <LayoutGroup>
       <Container fluid className="field-container">

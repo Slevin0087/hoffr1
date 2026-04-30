@@ -1,0 +1,51 @@
+:root {
+  --padding-status-bar-notifications: clamp(0.5rem, calc(var(--card-width) / 4), 0.5rem);
+}
+
+.notifications-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  backdrop-filter: blur(10px);
+  white-space: nowrap;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  background-color: chocolate;
+  border: 1px solid rgb(75, 38, 11);
+  border-radius: var(--border-radius-status-bar-cell);
+  padding: var(--padding-status-bar-notifications);
+  font-size: var(--fs-status-bar-cell);
+}
+
+.notifications-container.success {
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.9),
+    rgba(56, 142, 60, 0.9)
+  );
+  /* color: white; */
+  border-left: 4px solid #4caf50;
+}
+
+.notifications-container.error {
+  background: linear-gradient(
+    135deg,
+    rgba(244, 67, 54, 0.9),
+    rgba(211, 47, 47, 0.9)
+  );
+  /* color: white; */
+  border-left: 4px solid #f44336;
+}
+
+.notification-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.notification-message {
+  letter-spacing: 0.5px;
+  color: gold;
+  line-height: 1;
+}

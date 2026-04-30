@@ -1,0 +1,59 @@
+.game-rules-container {
+  /* max-width: 1200px; */
+  /* z-index: 1000; */
+  overflow-y: auto;
+  background-color: chocolate;
+  /* height: 100%; */
+  padding: 0;
+  }
+
+.game-rules-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.game-rules-container::-webkit-scrollbar-track {
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 3px;
+}
+
+.game-rules-container::-webkit-scrollbar-thumb {
+  background: #ffd700;
+  border-radius: 3px;
+}
+
+.luck-message {
+  font-weight: bold;
+  color: #198754;
+}
+
+.game-rules-container .accordion-button {
+  color: black; /* Приоритет над системными стилями */
+  background-color: yellow;
+  -webkit-tap-highlight-color: transparent; /* Убирает синюю подсветку */
+  text-emphasis-color: black; /* Для Safari */
+  -webkit-text-fill-color: black; /* Для старых версий */
+  -webkit-appearance: none;
+  appearance: none; /* Отключает системные стили */
+}
+
+/* Анимации для аккордеона */
+.accordion-button:not(.collapsed) {
+  background-color: rgba(13, 110, 253, 0.1);
+}
+
+/* Кастомные стили для карточек */
+/* .card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+} */
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .game-rules-container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}

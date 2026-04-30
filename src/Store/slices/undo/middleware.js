@@ -1,38 +1,74 @@
+import storage from "../../../utils/Storage";
+import { undoMoveStockWaste, handleUndo } from "../game/thunks/undo";
+import { addUndo } from "./slice";
+import { setIsEventsInDeck } from "../game/slice";
+import { UNDO_STORAGE_KEYS } from "../../../Configs/UndoConfigs";
 import { createListenerMiddleware } from "@reduxjs/toolkit";
-import { undoUse } from "./thunks";
+import { moveStockWaste, standartMove } from "../game/thunks";
+import { moveEventsTypes } from "../../../Configs/GameConfigs";
+import { decrementRedeals } from "../decks/slice";
 import {
-  selectAnimationsEnabled,
-  selectSettingsByType,
-} from "../settings/selectors";
-import { gameSettingsTypes } from "../../../Configs/SettingsConfigs";
-import { delay, getAnimationMoveDuration } from "../../../utils/helpers";
-import { animationsTypes } from "../../../Configs/PlayingCardsConfigs/PlayingCardsConfigs";
-import { setIsEventsInDeck } from "../decks/slice";
+  selectPileCardsIds,
+  selectStockRedeals,
+  selectWasteId,
+} from "../decks/selectors";
 
-const undoListeners = createListenerMiddleware();
+export const undoListeners = createListenerMiddleware();
 
 undoListeners.startListening({
-  actionCreator: undoUse.pending,
+  actionCreator: handleUndo.pending,
   effect: async (action, listenerApi) => {
     listenerApi.dispatch(setIsEventsInDeck(true));
   },
 });
 
 undoListeners.startListening({
-  actionCreator: undoUse.fulfilled,
+  actionCreator: handleUndo.fulfilled,
   effect: async (action, listenerApi) => {
     const state = listenerApi.getState();
-    const isAnimationsEnabled = selectAnimationsEnabled(state);
-    const activeGameModeState = selectSettingsByType(
-      state,
-      gameSettingsTypes.gameMode,
-    );
-    console.log("activeGameModeState: ", activeGameModeState);
-    if (isAnimationsEnabled) {
-      await delay(getAnimationMoveDuration(animationsTypes.move) / 2);
-    }
     listenerApi.dispatch(setIsEventsInDeck(false));
+    storage.setItem(UNDO_STORAGE_KEYS.UNDO, state.undo);
   },
 });
 
-export default undoListeners;
+undoListeners.startListening({
+  actionCreator: moveStockWaste.fulfilled,
+  effect: async (action, listenerApi) => {
+    const args = action.meta.arg;
+    const payload = {
+      type: args.type,
+      data: {
+        fromPileId: args.fromPileId,
+        toPileId: args.toPileId,
+        cardsIds: args.cardsIds,
+      },
+    };
+    console.log("undoListeners.moveStockWaste.fulfilled: ", args, action);
+    listenerApi.dispatch(addUndo(payload));
+  },
+});
+
+undoListeners.startListening({
+  actionCreator: standartMove.fulfilled,
+  effect: async (action, listenerApi) => {
+    const payload = action.payload;
+    console.log("undoListeners.standartMove.fulfilled: ", action);
+    listenerApi.dispatch(addUndo(payload));
+  },
+});
+
+undoListeners.startListening({
+  actionCreator: undoMoveStockWaste.fulfilled,
+  effect: async (action, listenerApi) => {
+    const { type } = action.meta.arg;
+    if (type === moveEventsTypes.stockToWaste) {
+      const state = listenerApi.getState();
+      const wasteId = selectWasteId(state);
+      const wasteCards = selectPileCardsIds(state, wasteId);
+      if (wasteCards.length === 0) {
+        if (selectStockRedeals(state) === 0) return;
+        listenerApi.dispatch(decrementRedeals());
+      }
+    }
+  },
+});

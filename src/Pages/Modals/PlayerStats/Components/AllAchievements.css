@@ -1,0 +1,96 @@
+.all-ach-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.all-ach-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.all-ach-container::-webkit-scrollbar-track {
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 3px;
+}
+
+.all-ach-container::-webkit-scrollbar-thumb {
+  background: #ffd700;
+  border-radius: 3px;
+}
+
+.ach-close-btn {
+  margin-bottom: 10px;
+}
+
+.all-ach-container .ach-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(218, 196, 175, 0.4);
+  border-radius: 12px;
+  padding: 15px;
+  transition: all 0.3s ease;
+  position: relative;
+  width: 300px;
+  height: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  opacity: 0.5;
+}
+
+.all-ach-container .ach-item-unlocked {
+  opacity: 1;
+  box-shadow:
+    0 0 0 2px #ffd966,
+    0 0 0 4px rgba(255, 217, 102, 0.3);
+}
+
+.all-ach-container .ach-item-icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.all-ach-container .ach-item p {
+  margin: 0;
+  text-align: center;
+}
+
+.ach-item-progress-container {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.ach-item-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4caf50, #8bc34a);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.ach-item-progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.ach-item-progress-unlocked-text {
+  color: yellow;
+}
