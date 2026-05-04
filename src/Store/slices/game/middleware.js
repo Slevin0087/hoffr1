@@ -1,8 +1,10 @@
 import {
+  addComboBonusTime,
   addUndo,
   endedGame,
   incrementMoves,
   incrementRedeals,
+  resetCombo,
   setGameStatus,
   setIsEventsInDeck,
   setIsFirstCardsEvent,
@@ -27,8 +29,15 @@ import {
   GAME_STORAGE_KEYS,
   moveEventsTypes,
 } from "../../../Configs/GameConfigs";
+import { GAME_MODES_IDS } from "../../../Configs/GameModes";
 import {
-  selectIsFirstCardsEvent,
+  COMBO_WINDOW,
+  COMBO_BONUS_TIMES,
+  COMBO_MAX_COUNT,
+} from "../../../Configs/ComboConfigs";
+import { notifications_ids } from "../../../Configs/NotificationsConfigs";
+import {
+  // selectIsFirstCardsEvent,
   selectIsGameStarted,
   selectIsTimeStarted,
 } from "./selectors";
@@ -41,11 +50,17 @@ import {
   selectWasteId,
 } from "../decks/selectors";
 import { removeTabsShirtCardIdOne } from "../decks/slice";
-import { setIsCollectCardsBtnVisible } from "../ui/slice";
+import {
+  setIsCollectCardsBtnVisible,
+  setActiveNotification,
+} from "../ui/slice";
 import { handleHints } from "./thunks/hints";
 import { selectIsCanUpTime } from "./selectors/time";
 
 let intervalId = null;
+let comboTimeoutId = null;
+let startTimeForCombo = 0;
+let fastMovesCountForCombo = 0;
 
 export const gameListeners = createListenerMiddleware();
 
@@ -60,8 +75,6 @@ gameListeners.startListening({
   effect: async (_, listenerApi) => {
     const state = listenerApi.getState();
     const dispatch = listenerApi.dispatch;
-    console.log('gameListeners selectIsFirstCardsEvent(state)', selectIsFirstCardsEvent(state));
-    // if (selectIsFirstCardsEvent(state)) return;
     const isGameStarted = selectIsGameStarted(state);
     if (!isGameStarted) dispatch(setIsGameStarted(true));
     dispatch(setIsFirstCardsEvent(true));
@@ -96,7 +109,6 @@ gameListeners.startListening({
       type,
       data: { fromPileId, toPileId, cardsIds },
     };
-    console.log("undoListeners.moveStockWaste.fulfilled: ", action);
     dispatch(addUndo(payload));
     if (type === moveEventsTypes.stockToWaste) {
       const state = listenerApi.getState();
@@ -114,6 +126,110 @@ gameListeners.startListening({
     handleShuffle.fulfilled,
   ),
   effect: (_, listenerApi) => listenerApi.dispatch(incrementMoves()),
+});
+
+// ===== COMBO LOGIC =====
+// combo считаются только пользовательские ходы: handleCardClick и handleDrop
+gameListeners.startListening({
+  actionCreator: standartMove.fulfilled,
+  effect: async (action, listenerApi) => {
+    console.log("gameListeners action.payload: ", action.payload.data);
+    const { moveData, isDropping, isUserMove } = action.payload.data;
+    if (!moveData.isMoves || (!isUserMove && !isDropping)) return;
+    const state = listenerApi.getState();
+    const dispatch = listenerApi.dispatch;
+    const { currentModeId } = state.game;
+    if (currentModeId !== GAME_MODES_IDS.TIMED) return;
+
+    const currentTime = Date.now();
+    console.log("gameListeners: ", currentTime, startTimeForCombo);
+    if (startTimeForCombo === 0) {
+      startTimeForCombo = currentTime;
+      return;
+    }
+
+    const timeSinceLastMove = currentTime - startTimeForCombo;
+    if (timeSinceLastMove < COMBO_WINDOW) {
+      fastMovesCountForCombo += 1;
+      startTimeForCombo = currentTime;
+
+      // Сразу устанавливаем уведомление combo_increment с актуальным значением
+      dispatch(
+        setActiveNotification({
+          id: notifications_ids.combo_increment,
+          params: { value: fastMovesCountForCombo },
+        }),
+      );
+
+      // Сбросить предыдущий таймер сброса комбо
+      if (comboTimeoutId) clearTimeout(comboTimeoutId);
+      // Через COMBO_WINDOW сбросить комбо, если не было нового хода
+      comboTimeoutId = setTimeout(() => {
+        const bonusSec = COMBO_BONUS_TIMES[fastMovesCountForCombo] || 0;
+        dispatch(
+          setActiveNotification({
+            id: notifications_ids.combo_bonus_time,
+            params: { seconds: bonusSec },
+          }),
+        );
+        dispatch(addComboBonusTime({ seconds: bonusSec }));
+        comboTimeoutId = null;
+        startTimeForCombo = 0;
+        fastMovesCountForCombo = 0;
+      }, COMBO_WINDOW);
+    } else {
+      if (fastMovesCountForCombo > 0) {
+        const bonusSec = COMBO_BONUS_TIMES[fastMovesCountForCombo] || 0;
+        dispatch(addComboBonusTime({ seconds: bonusSec }));
+        dispatch(
+          setActiveNotification({
+            id: notifications_ids.combo_bonus_time,
+            params: { seconds: bonusSec },
+          }),
+        );
+        fastMovesCountForCombo = 0;
+      }
+      startTimeForCombo = currentTime;
+    }
+  },
+});
+
+// handleCollectCards сбрасывает combo (не считая его за пользовательский ход)
+gameListeners.startListening({
+  actionCreator: handleCollectCards.fulfilled,
+  effect: async (action, listenerApi) => {
+    const dispatch = listenerApi.dispatch;
+    const state = listenerApi.getState();
+
+    if (comboTimeoutId) {
+      clearTimeout(comboTimeoutId);
+      comboTimeoutId = null;
+    }
+
+    const prevComboCount = state.game?.combo?.current || 0;
+    const bonusSeconds = COMBO_BONUS_TIMES[prevComboCount] || 0;
+    if (prevComboCount > 0) {
+      dispatch(
+        setActiveNotification({
+          id: notifications_ids.combo_bonus_time,
+          params: { seconds: bonusSeconds },
+        }),
+      );
+    }
+    dispatch(resetCombo());
+  },
+});
+
+// Сброс комбо при перезапуске/инициализации игры
+gameListeners.startListening({
+  actionCreator: handleGameInit.pending,
+  effect: async (action, listenerApi) => {
+    if (comboTimeoutId) {
+      clearTimeout(comboTimeoutId);
+      comboTimeoutId = null;
+    }
+    listenerApi.dispatch(resetCombo());
+  },
 });
 
 gameListeners.startListening({

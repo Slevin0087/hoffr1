@@ -6,7 +6,9 @@ import {
   scoreOperations,
 } from "../../../Configs/GameConfigs";
 import { GAME_MODES_IDS } from "../../../Configs/GameModes";
-import { current } from "@reduxjs/toolkit";
+import { COMBO_MAX_COUNT, COMBO_WINDOW } from "../../../Configs/ComboConfigs";
+
+const COMBO_INITIAL = { current: 0, lastTimestamp: 0 };
 
 export const setGameStatus = (state, action) => {
   state.status = action.payload;
@@ -190,6 +192,40 @@ export const addUndo = (state, action) => {
   storage.setItem(GAME_STORAGE_KEYS.GAME, state);
 };
 
+export const updateCombo = (state, action) => {
+  if (state.currentModeId !== GAME_MODES_IDS.TIMED) return;
+  const { count = 1 } = action.payload;
+  const currentDealing = state.modes[state.currentModeId].currentDealing;
+  const comboState = state.modes[state.currentModeId][currentDealing].combo;
+
+  // Сбросом combo управляет middleware через setTimeout (comboTimeoutId)
+  comboState.current = Math.min(comboState.current + count, COMBO_MAX_COUNT);
+  comboState.lastTimestamp = Date.now();
+  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
+};
+
+export const addComboBonusTime = (state, action) => {
+  if (state.currentModeId !== GAME_MODES_IDS.TIMED) return;
+  const { seconds = 0 } = action.payload;
+  const currentDealing = state.modes[state.currentModeId].currentDealing;
+  const direction =
+    state.modes[state.currentModeId][currentDealing].time.direction;
+  // Прибавляем время только если таймер идёт на убывание (как в TIMED)
+  if (direction === directionsTypes.decrement) {
+    state.modes[state.currentModeId][currentDealing].time.current += seconds;
+  }
+  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
+};
+
+export const resetCombo = (state) => {
+  if (state.currentModeId !== GAME_MODES_IDS.TIMED) return;
+  const currentDealing = state.modes[state.currentModeId].currentDealing;
+  const comboState = state.modes[state.currentModeId][currentDealing].combo;
+  comboState.current = 0;
+  comboState.lastTimestamp = 0;
+  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
+};
+
 export const reducers = {
   setGameStatus,
   setPlayerName,
@@ -207,4 +243,7 @@ export const reducers = {
   addUndo,
   removeUndo,
   incrementUndoUsed,
+  updateCombo,
+  addComboBonusTime,
+  resetCombo,
 };

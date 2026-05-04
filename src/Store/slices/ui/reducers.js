@@ -67,26 +67,14 @@ export const hidePFModalById = (state, action) => {
   storage.setItem(UI_STORE_KEYS.UI, state);
 };
 
-export const addNotification = (state, action) => {
+export const setActiveNotification = (state, action) => {
   const { id, params } = action.payload;
-  state.notifications.queue.push({ id, params, createdAt: Date.now() });
-  storage.setItem(UI_STORE_KEYS.UI, state);
-};
-export const showNextNotification = (state) => {
-  if (state.notifications.queue.length > 0) {
-    state.notifications.active = state.notifications.queue.shift();
-  } else {
-    state.notifications.active = null;
-  }
-  storage.setItem(UI_STORE_KEYS.UI, state);
-};
-export const clearCurrentNotification = (state) => {
-  state.notifications.active = null;
+  state.notifications.active = { id, params, createdAt: Date.now() };
   storage.setItem(UI_STORE_KEYS.UI, state);
 };
 
-export const clearNotificationsQueue = (state) => {
-  state.notifications.queue = [];
+export const clearCurrentNotification = (state) => {
+  state.notifications.active = null;
   storage.setItem(UI_STORE_KEYS.UI, state);
 };
 
@@ -113,8 +101,7 @@ export const reducers = {
   showPFModalById,
   hidePFModalById,
   setIsCollectCardsBtnVisible,
-  addNotification,
-  showNextNotification,
   clearCurrentNotification,
-  clearNotificationsQueue,
+  updateActiveNotification,
+  setActiveNotification,
 };

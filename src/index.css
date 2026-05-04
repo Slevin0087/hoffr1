@@ -17,6 +17,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -ms-user-select: none !important;
+  -webkit-tap-highlight-color: transparent;
+  /* -webkit-user-drag: none; */
+  -webkit-touch-callout: none;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -39,6 +48,8 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: pan-x pan-y;
 }
 
 h1 {

@@ -6,4 +6,9 @@ export default {
   points_state: "Очк|оква:",
   time_state: "Азаман:",
   moves_state: "Цараква:",
+  modes_classic: "Ак|лассическ|а",
+  modes_timed: "П|атлала",
+  modes_relax: "Тшырльальа",
+  game_over_and_win_text_left: "Хъвмарра ргӏапсща:",
+  dealing_cards_count: "Ак|артаква ашара:",
 };

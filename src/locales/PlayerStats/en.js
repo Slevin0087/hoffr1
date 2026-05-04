@@ -21,4 +21,7 @@ export default {
   modes_classic: "Classical",
   modes_timed: "For a while",
   modes_relax: "Relaxed",
+  wins_text: "Victories:",
+  losses_text: "Defeats:",
+  game_mode_text_left: 'Game mode:',
 };

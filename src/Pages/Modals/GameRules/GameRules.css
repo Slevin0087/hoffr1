@@ -1,11 +1,35 @@
+.game-rules-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
 .game-rules-container {
   /* max-width: 1200px; */
   /* z-index: 1000; */
-  overflow-y: auto;
-  background-color: chocolate;
+  background-color: transparent;
   /* height: 100%; */
+  overflow-y: auto;
   padding: 0;
-  }
+  flex: 1;
+  min-height: 0;
+}
+
+.game-rules-container .shadow {
+  height: 100%;
+  border: none;
+}
+
+
+.game-rules-container .shadow,
+.game-rules-container .shadow .card-body,
+.game-rules-container .shadow .card-body .card,
+.game-rules-container .shadow .card-body .accordion,
+.game-rules-container .shadow .card-body .accordion-item {
+  background-color: transparent;
+}
 
 .game-rules-container::-webkit-scrollbar {
   width: 6px;

@@ -1,6 +1,9 @@
 .game-over-and-win-modal {
   justify-content: center;
   gap: 5vh;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  pointer-events: none;
 }
 
 .game-over-and-win-modal .modal-dialog-centered {
@@ -43,16 +46,59 @@
 }
 
 .game-over-and-win-modal .modal-body {
-  background-color: brown;
+  background-color: rgb(134, 100, 167);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   /* height: 100%; */
   height: 600px;
   width: 100%;
   overflow: hidden;
-  padding: 1rem 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  gap: 1.5rem;
+}
+
+.game-over-and-win-body-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  font-size: 1rem;
+  border: 2px solid rgb(30, 183, 210);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.game-over-and-win-text {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.game-over-and-win-text-left,
+.game-over-and-win-dealing-counter-left-text {
+  color: yellow;
+}
+
+.game-over-and-win-text-right,
+.game-over-and-win-dealing-counter-right-text {
+  color: gold;
+}
+
+.game-over-and-win-dealing-counter-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
 }
 
 .game-over-and-win-modal-body-state {
@@ -60,14 +106,22 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 5vh;
+  gap: 2rem;
   width: 100%;
   font-size: 1rem;
   color: rgb(30, 183, 210);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   line-height: 1;
-  background-color: rgb(134, 100, 167);
+  background-color: transparent;
   padding: 1rem 0;
+}
+
+.game-over-and-win-modal-body-state-row:nth-child(odd) {
+  background: linear-gradient(135deg, #605a7a, #cf7fc9);
+}
+
+.game-over-and-win-modal-body-state-row:nth-child(even) {
+  background: linear-gradient(135deg, #cf7fc9, #605a7a);
 }
 
 .game-over-and-win-modal-body-state-row {
@@ -79,10 +133,10 @@
   font-size: 1rem;
   color: rgb(30, 183, 210);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  line-height: 1;
-  background-color: rgb(134, 100, 167);
-  padding-left: 1rem;
-  padding-right: 1rem;
+  line-height: 1.5;
+  background-color: transparent;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .game-over-and-win-modal-body-state-row-key,
@@ -91,6 +145,7 @@
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
+  background-color: transparent;
 }
 
 .game-over-and-win-modal .modal-footer {

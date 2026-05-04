@@ -99,6 +99,7 @@ export const standartMove = createAsyncThunk(
       toPileId,
       cardsIds,
       isDropping = false,
+      isUserMove = false,
     } = args;
     const baseData = { pileId: null, cardId: null, cardSide: null };
     const moveData = { isMoves: false, pointsUpData: {} };
@@ -184,7 +185,15 @@ export const standartMove = createAsyncThunk(
       }
     }
     const type = moveEventsTypes.standart;
-    const data = { fromPileId, toPileId, cardsIds, moveData, flipsData };
+    const data = {
+      fromPileId,
+      toPileId,
+      cardsIds,
+      moveData,
+      flipsData,
+      isDropping,
+      isUserMove,
+    };
     return { type, data };
   },
 );
@@ -207,7 +216,13 @@ export const moveToFoundations = createAsyncThunk(
       const currentCardId = topCardId;
       const toPileId = foundationId;
       const cardsIds = [currentCardId];
-      const payload = { currentCardId, toPileId, cardsIds, fromPileId };
+      const payload = {
+        currentCardId,
+        toPileId,
+        cardsIds,
+        fromPileId,
+        isUserMove: false,
+      };
       await dispatch(standartMove(payload));
     }
   },
@@ -278,7 +293,13 @@ export const handleCardClick = createAsyncThunk(
     for (const toPileId of targetPiles) {
       const isCanMove = selectCanMoveCardToPile(state, toPileId, card);
       if (!isCanMove) continue;
-      const payload = { currentCardId, toPileId, cardsIds, fromPileId };
+      const payload = {
+        currentCardId,
+        toPileId,
+        cardsIds,
+        fromPileId,
+        isUserMove: true,
+      };
       await dispatch(standartMove(payload));
       return;
     }

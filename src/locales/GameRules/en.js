@@ -23,10 +23,6 @@ export default {
   good_luck_in_game: "Good luck in the game!",
   description_game: "Solitaire with Joker • 5 difficulty modes • Dynamic rules",
   clear_btn: "It's clear!",
-  common_goal_p1: "Move all cards (52 cards + joker) from the playing field to",
-  common_goal_p2: "the foundation",
-  common_goal_p3:
-    "(4 stacks at the top of the screen), collecting each suit in ascending order from Ace to King.",
   foundation_rules1: "4 stacks",
   foundation_rules2:
     "cards of the same suit are collected in ascending order (Ace, 2, 3, ..., King, Joker at the end)",
@@ -42,4 +38,31 @@ export default {
   basic_steps8: "means going back one step",
   basic_steps9: "Hint",
   basic_steps10: "highlighting a possible move",
+
+  common_goal_p_all:
+    "Move all 52 cards to <0>the foundation</0> (4 top piles) from ace to king.",
+
+  play_areas_li1: "<0>Foundation</0> – collecting each suit from ace to king",
+  play_areas_li2: "<0>Playing field</0> – 7 columns for moving cards",
+  play_areas_li3:
+    "<0>Deck</0> – drawing new cards, <1>waste</1> – discarding used ones",
+  basic_steps_li1: "Dragging cards",
+  basic_steps_li2: "Auto-transfer (double click)",
+  basic_steps_li3: "Drawing from the deck",
+  basic_steps_li4: "Undo",
+  basic_steps_li5: "Hint",
+
+  game_modes_classic_name_desc: "<0>Classic</0> - 5 redeals, 3 undos, 3 hints",
+  game_modes_timed_name_desc: "<0>Timed</0> - 3 minutes, 3 undos, 3 hints",
+  game_modes_relaxed_name_desc: "<0>Relaxed</0> - Unlimited",
+  points_system_accrual:
+    "<0>Accrual:</0> moving to foundation (5-15), flipping a card (2-10), game completion",
+  points_system_fines:
+    "<0>Penalties:</0> undo (0-20), hint (0-10), time (-2/sec)",
+
+  strategic_advice_li1: "Reveal face-down cards",
+  strategic_advice_li2: "Collect aces first",
+  strategic_advice_li3: "Plan your moves in timed modes",
+
+  victory_conditions_p1: "All cards are in the foundation",
 };

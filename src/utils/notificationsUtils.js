@@ -1,4 +1,4 @@
-import { notificationsMap } from "../Configs/NotificationsConfigs";
+import { notifications_ids, notificationsMap } from "../Configs/NotificationsConfigs";
 
 export const getNotificationById = (notificationId, t, params = {}) => {
   if (!notificationId) return null;
@@ -8,8 +8,8 @@ export const getNotificationById = (notificationId, t, params = {}) => {
 
   let message = t(`notifications.${template.messageKey}`);
 
-  if (template.messageFormatter && params.value !== undefined) {
-    const formatterParams = template.messageFormatter(params.value);
+  if (template.messageFormatter) {
+    const formatterParams = template.messageFormatter(params);
     message = t(`notifications.${template.messageKey}`, formatterParams);
   }
 
@@ -20,5 +20,7 @@ export const getNotificationById = (notificationId, t, params = {}) => {
   return {
     ...template,
     message,
+    params,
+    isCombo: template.id === notifications_ids.combo_increment,
   };
 };
