@@ -21,4 +21,7 @@ export default {
   modes_classic: "Ак|лассическ|а",
   modes_timed: "П|атлала",
   modes_relax: "Тшырльальа",
+  wins_text: "Айгӏайраква:",
+  losses_text: "Агӏалахараква:",
+  game_mode_text_left: "Хъвмарра ргӏапсща:",
 };

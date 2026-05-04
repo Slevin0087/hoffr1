@@ -6,4 +6,9 @@ export default {
   points_state: "Gözlük:",
   time_state: "Zaman:",
   moves_state: "Hamleler:",
+  modes_classic: "Klasik",
+  modes_timed: "Bir süre için",
+  modes_relax: "Rahatlamış",
+  game_over_and_win_text_left: "Oyun mod:",
+  dealing_cards_count: "Kartların dağıtımı:",
 };

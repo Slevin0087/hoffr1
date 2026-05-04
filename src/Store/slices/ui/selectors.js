@@ -40,3 +40,14 @@ export const selectNotificationsQueue = createSelector(
   [(state) => selectNotificationsState(state)],
   (notifications) => notifications?.queue,
 );
+
+export const selectComboCount = createSelector(
+  [(state) => selectNotificationsState(state)],
+  (notifications) => {
+    const active = notifications?.active;
+    if (active && active.id === "combo_increment") {
+      return active.params?.value || 0;
+    }
+    return 0;
+  },
+);

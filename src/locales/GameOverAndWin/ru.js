@@ -6,4 +6,9 @@ export default {
   points_state: "Очки:",
   time_state: "Время:",
   moves_state: "Ходы:",
+  modes_classic: "Классический",
+  modes_timed: "На время",
+  modes_relax: "Расслабленный",
+  game_over_and_win_text_left: "Режим игры:",
+  dealing_cards_count: "Раздача карт по:",
 };

@@ -21,4 +21,7 @@ export default {
   modes_classic: "Классический",
   modes_timed: "На время",
   modes_relax: "Расслабленный",
+  wins_text: "Побед:",
+  losses_text: "Поражений:",
+  game_mode_text_left: 'Режим игры:',
 };

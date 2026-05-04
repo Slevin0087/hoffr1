@@ -156,6 +156,7 @@ export const GAME_DEFAULT_STATE = {
   currentModeId: GAME_MODES_IDS.CLASSIC,
   modes: {
     [GAME_MODES_IDS.CLASSIC]: {
+      id: GAME_MODES_IDS.CLASSIC,
       currentDealing: dealingCounts.one,
       time: 0,
       wins: 0,
@@ -167,7 +168,7 @@ export const GAME_DEFAULT_STATE = {
         wins: { time: 0, total: 0, no_hints: 0, no_undo: 0 },
         undo: { current: 0, limit: 3, penalty: 10, stack: [] },
         moves: { total: 0, current: 0 },
-        hints: { current: 0, limit: null, penalty: 0 }, // для теста pinalty сейчас равна 0, потом нужно изменить на 10
+        hints: { current: 0, limit: 3, penalty: 0 }, // для теста pinalty сейчас равна 0, потом нужно изменить на 10
         played: 0,
         losses: 0,
         points: { best: null, total: 0, current: 0, prevCurrent: 0 },
@@ -185,7 +186,7 @@ export const GAME_DEFAULT_STATE = {
         wins: { time: 0, total: 0, no_hints: 0, no_undo: 0 },
         undo: { current: 0, limit: 3, penalty: 10, stack: [] },
         moves: { total: 0, current: 0 },
-        hints: { current: 0, limit: null, penalty: 10 },
+        hints: { current: 0, limit: 3, penalty: 10 },
         played: 0,
         losses: 0,
         points: { best: null, total: 0, current: 0, prevCurrent: 0 },
@@ -201,6 +202,7 @@ export const GAME_DEFAULT_STATE = {
       },
     },
     [GAME_MODES_IDS.TIMED]: {
+      id: GAME_MODES_IDS.TIMED,
       currentDealing: dealingCounts.one,
       time: 0,
       wins: 0,
@@ -210,13 +212,14 @@ export const GAME_DEFAULT_STATE = {
       points: 0,
       [dealingCounts.one]: {
         wins: { time: 0, total: 0, no_hints: 0, no_undo: 0 },
-        undo: { current: 0, limit: 2, penalty: 15, stack: [] },
+        undo: { current: 0, limit: 3, penalty: 15, stack: [] },
+        combo: { current: 0, lastTimestamp: 0 },
         moves: { total: 0, current: 0 },
-        hints: { current: 0, limit: 1, penalty: 10 },
+        hints: { current: 0, limit: 3, penalty: 10 },
         played: 0,
         losses: 0,
         points: { best: null, total: 0, current: 0, prevCurrent: 0 },
-        redeals: { current: 0, limit: 2 },
+        redeals: { current: 0, limit: 3 },
         time: {
           best: null,
           total: 0,
@@ -228,13 +231,14 @@ export const GAME_DEFAULT_STATE = {
       },
       [dealingCounts.three]: {
         wins: { time: 0, total: 0, no_hints: 0, no_undo: 0 },
-        undo: { current: 0, limit: 2, penalty: 15, stack: [] },
+        undo: { current: 0, limit: 3, penalty: 15, stack: [] },
+        combo: { current: 0, lastTimestamp: 0 },
         moves: { total: 0, current: 0 },
-        hints: { current: 0, limit: 1, penalty: 10 },
+        hints: { current: 0, limit: 3, penalty: 10 },
         played: 0,
         losses: 0,
         points: { best: null, total: 0, current: 0, prevCurrent: 0 },
-        redeals: { current: 0, limit: 2 },
+        redeals: { current: 0, limit: 3 },
         time: {
           best: null,
           total: 0,
@@ -246,6 +250,7 @@ export const GAME_DEFAULT_STATE = {
       },
     },
     [GAME_MODES_IDS.RELAXED]: {
+      id: GAME_MODES_IDS.RELAXED,
       currentDealing: dealingCounts.one,
       time: 0,
       wins: 0,
@@ -255,9 +260,9 @@ export const GAME_DEFAULT_STATE = {
       points: 0,
       [dealingCounts.one]: {
         wins: { time: 0, total: 0, no_hints: 0, no_undo: 0 },
-        undo: { current: 0, limit: 2, penalty: 15, stack: [] },
+        undo: { current: 0, limit: null, penalty: 15, stack: [] },
         moves: { total: 0, current: 0 },
-        hints: { current: 0, limit: 1, penalty: 10 },
+        hints: { current: 0, limit: null, penalty: 10 },
         played: 0,
         losses: 0,
         points: { best: null, total: 0, current: 0, prevCurrent: 0 },
@@ -273,9 +278,9 @@ export const GAME_DEFAULT_STATE = {
       },
       [dealingCounts.three]: {
         wins: { time: 0, total: 0, no_hints: 0, no_undo: 0 },
-        undo: { current: 0, limit: 2, penalty: 15, stack: [] },
+        undo: { current: 0, limit: null, penalty: 15, stack: [] },
         moves: { total: 0, current: 0 },
-        hints: { current: 0, limit: 1, penalty: 10 },
+        hints: { current: 0, limit: null, penalty: 10 },
         played: 0,
         losses: 0,
         points: { best: null, total: 0, current: 0, prevCurrent: 0 },

@@ -1,7 +1,5 @@
 ////////////////////////// I_P_N - INPUT_PLAYER_NAME ///////////////////
 
-import { notifications_ids } from "./NotificationsConfigs";
-
 //////////////////////////// P_F - PLAYING_FIELD ////////////////////////
 export const UI_SLICE_NAME = "ui";
 

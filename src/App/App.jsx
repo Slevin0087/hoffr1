@@ -20,12 +20,36 @@ function App() {
   const gameStatus = useSelector(selectGameStatus);
   const activePageId = useSelector(selectActivePageId);
   const prefersReducedMotion = useReducedMotion();
+
   useEffect(() => {
     dispatch(setReducedMotion(prefersReducedMotion));
     if (gameStatus === GAME_STATUSES.INIT) {
       dispatch(setActivePageId(PAGES_IDS.PLAYING_FIELD));
     }
   }, [dispatch, gameStatus, prefersReducedMotion]);
+
+  useEffect(() => {
+    // Отключаем контекстное меню
+    const disableContextMenu = (e) => e.preventDefault();
+    document.addEventListener("contextmenu", disableContextMenu);
+
+    // Отключаем pull-to-refresh
+    const preventTouchMove = (e) => {
+      const scrollTop = window.scrollY;
+      if (scrollTop === 0 && e.touches) {
+        e.preventDefault();
+      }
+    };
+    document.addEventListener("touchmove", preventTouchMove, {
+      passive: false,
+    });
+
+    return () => {
+      document.removeEventListener("contextmenu", disableContextMenu);
+      document.removeEventListener("touchmove", preventTouchMove);
+    };
+  }, []);
+
   return (
     <div className="app-page" ref={ref}>
       <button

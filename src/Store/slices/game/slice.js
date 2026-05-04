@@ -35,6 +35,9 @@ export const {
   addUndo,
   removeUndo,
   incrementUndoUsed,
+  updateCombo,
+  addComboBonusTime,
+  resetCombo,
 } = gamesSlice.actions;
 
 export default gamesSlice.reducer;

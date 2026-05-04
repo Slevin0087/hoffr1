@@ -21,4 +21,7 @@ export default {
   modes_classic: "Klasik",
   modes_timed: "Bir süre için",
   modes_relax: "Rahatlamış",
+  wins_text: "Kazanılan:",
+  losses_text: "Yenilgilerin:",
+  game_mode_text_left: 'Oyun mod:',
 };

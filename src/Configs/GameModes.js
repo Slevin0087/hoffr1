@@ -1,5 +1,4 @@
 import { field_components_types } from "./FieldComponentsConfigs";
-import { directionsTypes } from "./GameConfigs";
 
 export const GAME_MODES_SLICE_NAME = "gameModes";
 
@@ -22,6 +21,12 @@ export const GAME_MODES_IDS = {
   TIMED: "TIMED",
   EXPERT: "EXPERT",
   RELAXED: "RELAXED",
+};
+
+export const gameModesLocals = {
+  [GAME_MODES_IDS.CLASSIC]: "modes_classic",
+  [GAME_MODES_IDS.TIMED]: "modes_timed",
+  [GAME_MODES_IDS.RELAXED]: "modes_relax",
 };
 
 export const GAME_MODES_DEFAULT_STATE = {

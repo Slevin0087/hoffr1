@@ -1,11 +1,10 @@
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { endedGame, setIsFirstCardsEvent, updatePoints } from "../game/slice";
 import {
-  addNotification,
   clearCurrentNotification,
   removeUpPointsByCardId,
+  setActiveNotification,
   setIsCollectCardsBtnVisible,
-  showNextNotification,
   showPFModalById,
 } from "./slice";
 import { getAnimationFlipDuration } from "../../../utils/playingCardUtils";
@@ -18,7 +17,6 @@ import {
 } from "./selectors";
 import { handleGameInit, handleShuffle } from "../game/thunks";
 import { notifications_ids } from "../../../Configs/NotificationsConfigs";
-import { selectCurrentBestPoints } from "../game/selectors/points";
 
 export const uiListeners = createListenerMiddleware();
 
@@ -60,12 +58,20 @@ uiListeners.startListening({
 });
 
 uiListeners.startListening({
+  actionCreator: handleGameInit.pending,
+  effect: async (action, listenerApi) => {
+    const dispatch = listenerApi.dispatch;
+    const payload = { id: notifications_ids.game_initing, params: {} };
+    dispatch(setActiveNotification(payload));
+  },
+});
+
+uiListeners.startListening({
   actionCreator: handleGameInit.fulfilled,
   effect: async (action, listenerApi) => {
     const dispatch = listenerApi.dispatch;
     const payload = { id: notifications_ids.game_is_ready, params: {} };
-    dispatch(addNotification(payload));
-    dispatch(showNextNotification());
+    dispatch(setActiveNotification(payload));
   },
 });
 
@@ -74,15 +80,13 @@ uiListeners.startListening({
   effect: async (action, listenerApi) => {
     const state = listenerApi.getState();
     const dispatch = listenerApi.dispatch;
-    const bestPoints = selectCurrentBestPoints(state);
+    // const bestPoints = selectCurrentBestPoints(state);
     const activeNotification = selectActiveNotification(state);
 
     if (activeNotification?.id === notifications_ids.game_is_ready) {
-      const value = bestPoints === null ? 0 : bestPoints;
-      const payload = { id: notifications_ids.best_points, params: { value } };
+      // const value = bestPoints === null ? 0 : bestPoints;
+      // const payload = { id: notifications_ids.best_points, params: { value } };
       dispatch(clearCurrentNotification());
-      dispatch(addNotification(payload));
-      dispatch(showNextNotification());
     }
   },
 });
@@ -92,8 +96,6 @@ uiListeners.startListening({
   effect: async (action, listenerApi) => {
     const dispatch = listenerApi.dispatch;
     const payload = { id: notifications_ids.cards_shuffled, params: {} };
-    dispatch(clearCurrentNotification());
-    dispatch(addNotification(payload));
-    dispatch(showNextNotification());
+    dispatch(setActiveNotification(payload));
   },
 });

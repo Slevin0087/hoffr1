@@ -26,7 +26,7 @@ export const CustomDragLayer = () => {
     offset: monitor.getSourceClientOffset(),
   }));
 
-  const currentPileId = item?.card.pileId;
+  const currentPileId = item?.card?.pileId;
 
   const currentPile = useSelector((state) =>
     item ? selectPile(state, currentPileId) : null,

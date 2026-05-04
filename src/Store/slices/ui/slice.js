@@ -31,10 +31,9 @@ export const {
   showPFModalById,
   hidePFModalById,
   setIsCollectCardsBtnVisible,
-  addNotification,
-  showNextNotification,
   clearCurrentNotification,
-  clearNotificationsQueue,
+  updateActiveNotification,
+  setActiveNotification,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;
