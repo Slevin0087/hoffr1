@@ -46,6 +46,10 @@
   font-size: 2rem;
 }
 
+.pile-span-need-by-redeals {
+  color: gold;
+}
+
 .stocks {
   cursor: pointer;
 }

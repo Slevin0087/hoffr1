@@ -36,3 +36,11 @@
   background: #4CAF50;
   color: white;
 }
+
+@media (max-height: 500px) {
+  .dealing-cards-btns button {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+  }
+}

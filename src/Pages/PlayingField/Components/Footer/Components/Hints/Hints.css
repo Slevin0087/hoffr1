@@ -1,0 +1,35 @@
+:root {
+  --width-hints-btn-span: 1.5rem;
+  --height-hints-btn-span: 1.5rem;
+  --br-hints-btn-span: 50%;
+  --br-width-hints-btn-span: calc(var(--width-hints-btn-span) / 20);
+}
+
+.hints-btn-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hints-btn-span {
+  position: absolute;
+  z-index: 1;
+  margin: auto;
+  right: calc((var(--width-hints-btn-span) / 2) * -1);
+  top: calc((var(--width-hints-btn-span) / 2) * -1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: var(--width-hints-btn-span);
+  height: var(--height-hints-btn-span);
+  line-height: 1;
+  text-align: center;
+  border: var(--br-width-hints-btn-span) solid black;
+  background-color: yellow;
+  color: black;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}

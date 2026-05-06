@@ -6,5 +6,5 @@ export default {
   combo_seconds: " +{{seconds}} sec!",
   cards_shuffled: "Cards shuffled!",
   points_record: "Record: {{points}}",
-  best_points: "Best 🌟: {{value}}",
+  best_points: "Record 🌟: {{value}}",
 };

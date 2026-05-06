@@ -83,6 +83,18 @@ export const selectWasteId = createSelector(
   (deck) => deck?.currentWasteId,
 );
 
+export const selectStockAndWasteEmpty = createSelector(
+  [(state) => selectDeck(state)],
+  (deck) => {
+    const { currentStockId, currentWasteId } = deck;
+    const stockPile = deck.piles[currentStockId];
+    const wastePile = deck.piles[currentWasteId];
+    const isStockEmpty = stockPile?.cardsIds?.length === 0;
+    const isWasteEmpty = wastePile?.cardsIds?.length === 0;
+    return isStockEmpty && isWasteEmpty;
+  },
+);
+
 export const selectIsCanCardClick = createSelector(
   [(state) => selectDeck(state)],
   (deck) => deck?.isCanCardClick,
@@ -310,11 +322,6 @@ export const selectMoveStockCardsToFoundations = createSelector(
     const wastePile = piles[wasteId];
     const foundationsIds = field_components_type_ids.foundations;
     const tableausIds = field_components_type_ids.tableaus;
-    console.log(
-      "selectMoveStockCardsToFoundations stockPile: ",
-      stockPile,
-      wasteId,
-    );
     let cardsIdsForCircle = [];
     if (stockPile?.cardsIds?.length === 0) {
       if (wastePile?.cardsIds?.length === 0) {

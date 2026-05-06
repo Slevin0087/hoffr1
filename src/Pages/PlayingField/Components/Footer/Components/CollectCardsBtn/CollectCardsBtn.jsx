@@ -16,19 +16,23 @@ import { gameSettingsTypes } from "../../../../../../Configs/SettingsConfigs";
 function CollectCardsBtn() {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const settingType = gameSettingsTypes.assistanceInCollection;
+  const settingType = gameSettingsTypes.canCardClick;
   const isAnimationsEnabled = useSelector(selectAnimationsEnabled);
   const isCollectCardsBtnVisible = useSelector(selectIsCollectCardsBtnVisible);
-  const isAssistanceInCollection = useSelector((state) =>
+  const isCanCardClick = useSelector((state) =>
     selectSettingsByType(state, settingType),
   );
-  console.log('isCollectCardsBtnVisible isAssistanceInCollection?.value: ', isCollectCardsBtnVisible, isAssistanceInCollection?.value);
-  if (!isCollectCardsBtnVisible || isAssistanceInCollection?.value) return null;
+  console.log(
+    "isCollectCardsBtnVisible isCanCardClick?.value: ",
+    isCollectCardsBtnVisible,
+    isCanCardClick?.value,
+  );
+  if (!isCollectCardsBtnVisible || isCanCardClick?.value) return null;
   const onClick = () => {
     dispatch(handleCollectCards());
     dispatch(setIsCollectCardsBtnVisible(false));
   };
-  
+
   return (
     <Button className="collect-cards-btn footer-btn" onClick={onClick}>
       {isAnimationsEnabled ? (

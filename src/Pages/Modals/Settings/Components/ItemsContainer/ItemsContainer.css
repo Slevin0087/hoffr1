@@ -58,3 +58,14 @@
   border-radius: var(--border-radius-btn-input);
   width: fit-content;
 }
+
+@media (max-height: 400px) {
+  .setting-item-description-label {
+    font-size: 0.6rem;
+  }
+
+  .setting-item-description-p {
+    font-size: 0.5rem;
+  }
+}
+

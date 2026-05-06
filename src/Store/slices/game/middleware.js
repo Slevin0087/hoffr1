@@ -2,6 +2,7 @@ import {
   addComboBonusTime,
   addUndo,
   endedGame,
+  incrementHintsUsed,
   incrementMoves,
   incrementRedeals,
   resetCombo,
@@ -36,26 +37,19 @@ import {
   COMBO_MAX_COUNT,
 } from "../../../Configs/ComboConfigs";
 import { notifications_ids } from "../../../Configs/NotificationsConfigs";
-import {
-  // selectIsFirstCardsEvent,
-  selectIsGameStarted,
-  selectIsTimeStarted,
-} from "./selectors";
+import { selectIsGameStarted, selectIsTimeStarted } from "./selectors";
 import { field_components_type_ids } from "../../../Configs/FieldComponentsConfigs";
 import {
   selectIsFoundationsCompleted,
   selectPileCardsIds,
   selectStockId,
-  selectTableausShirtCardsIds,
   selectWasteId,
 } from "../decks/selectors";
-import { removeTabsShirtCardIdOne } from "../decks/slice";
-import {
-  setIsCollectCardsBtnVisible,
-  setActiveNotification,
-} from "../ui/slice";
+import { setActiveNotification } from "../ui/slice";
 import { handleHints } from "./thunks/hints";
 import { selectIsCanUpTime } from "./selectors/time";
+import { selectSettingsByType } from "../settings/selectors";
+import { gameSettingsTypes } from "../../../Configs/SettingsConfigs";
 
 let intervalId = null;
 let comboTimeoutId = null;
@@ -72,9 +66,16 @@ gameListeners.startListening({
     handleDrop.fulfilled,
     handleHints.fulfilled,
   ),
-  effect: async (_, listenerApi) => {
+  effect: async (action, listenerApi) => {
     const state = listenerApi.getState();
     const dispatch = listenerApi.dispatch;
+
+    const isHandleHints = handleHints.fulfilled.match(action);
+    if (isHandleHints) {
+      dispatch(incrementHintsUsed());
+      if (action.payload?.noHintAvailable) return;
+    }
+
     const isGameStarted = selectIsGameStarted(state);
     if (!isGameStarted) dispatch(setIsGameStarted(true));
     dispatch(setIsFirstCardsEvent(true));
@@ -236,11 +237,11 @@ gameListeners.startListening({
   actionCreator: standartMove.fulfilled,
   effect: async (action, listenerApi) => {
     const dispatch = listenerApi.dispatch;
-    const { toPileId } = action.meta.arg;
     dispatch(addUndo(action.payload));
+    const toPileId = action.payload.data.toPileId;
     const foundationsIds = field_components_type_ids.foundations;
-    const isPileFromFoundation = foundationsIds.includes(toPileId);
-    if (isPileFromFoundation) {
+    const isToPileFoundation = foundationsIds.includes(toPileId);
+    if (isToPileFoundation) {
       const state = listenerApi.getState();
       const isFoundationsCompleted = selectIsFoundationsCompleted(state);
       if (isFoundationsCompleted) {
@@ -248,6 +249,13 @@ gameListeners.startListening({
         dispatch(endedGame({ status: GAME_STATUSES.WON }));
         return;
       } else {
+        const type = gameSettingsTypes.fastGame;
+        const isFastGameEnabled = selectSettingsByType(
+          listenerApi.getState(),
+          type,
+        );
+        console.log('standartMove.fulfilled: ', isFastGameEnabled.value);
+        if (!isFastGameEnabled.value) return;
         const tableausIds = field_components_type_ids.tableaus;
         for (const tableauId of tableausIds) {
           await dispatch(moveToFoundations({ fromPileId: tableauId }));
@@ -255,18 +263,6 @@ gameListeners.startListening({
         const wasteId = selectWasteId(listenerApi.getState());
         await dispatch(moveToFoundations({ fromPileId: wasteId }));
       }
-    }
-  },
-});
-
-gameListeners.startListening({
-  actionCreator: removeTabsShirtCardIdOne,
-  effect: (_, listenerApi) => {
-    const state = listenerApi.getState();
-    const dispatch = listenerApi.dispatch;
-    const tableausShirtCardsIds = selectTableausShirtCardsIds(state);
-    if (tableausShirtCardsIds.length === 0) {
-      dispatch(setIsCollectCardsBtnVisible(true));
     }
   },
 });

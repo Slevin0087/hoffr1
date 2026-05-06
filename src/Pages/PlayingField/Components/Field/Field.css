@@ -1,10 +1,8 @@
 :root {
   --gap-stock-waste: 10px;
   --gap-field-container: 10px;
-  --card-width: min(13.5vw, 10vh);
   --gap-cards-container-row: 55px;
   --gap-cards-container-column: 5px;
-  --card-height: calc(var(--card-width) * 1.4);
 }
 
 .field-container {
@@ -44,7 +42,7 @@
   .field-container {
     flex-direction: row;
     align-items: flex-start;
-    margin-top: calc(var(--card-width) / 2);
+    margin-top: calc(var(--card-width) / 4);
     gap: var(--gap-cards-container-row);
   }
   .cards-swf-container-min-height {
@@ -55,6 +53,11 @@
     flex-direction: column;
     gap: calc(var(--card-height) / 25);
   }
+
+  .cards-tbs-container {
+    margin-top: calc(var(--card-width) / 1.3);
+  }
+
   :root {
     --card-width: 12vmin;
   }

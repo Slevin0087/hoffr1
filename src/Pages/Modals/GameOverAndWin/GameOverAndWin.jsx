@@ -57,9 +57,6 @@ function GameOverAndWin() {
       show={isShow}
       centered
       className="game-over-and-win-modal"
-      // onHide={onHide}
-      size="md"
-      fullscreen="md-down"
       backdrop="static"
       keyboard={false}
     >

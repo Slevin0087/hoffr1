@@ -21,7 +21,7 @@ function Field() {
             <Foundations />
           </div>
         </div>
-        <div className="cards-container">
+        <div className="cards-container cards-tbs-container">
           <Tableaus />
         </div>
       </Container>

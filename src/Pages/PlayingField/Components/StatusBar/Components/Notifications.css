@@ -4,6 +4,11 @@
     calc(var(--card-width) / 4),
     0.5rem
   );
+  --font-size-status-bar-notifications: clamp(
+    1rem,
+    calc(var(--card-width) / 5),
+    2rem
+  );
 }
 
 .notifications-container {
@@ -23,11 +28,11 @@
   align-items: center;
   white-space: nowrap;
   flex-wrap: nowrap;
-  font-size: var(--fs-status-bar-cell);
   background-color: chocolate;
   border: 1px solid rgb(75, 38, 11);
   border-radius: var(--border-radius-status-bar-cell);
   padding: var(--padding-status-bar-notifications);
+  font-size: var(--font-size-status-bar-notifications);
 }
 
 .notification-item.success {
@@ -50,7 +55,6 @@
 }
 
 .notification-icon {
-  font-size: 20px;
   line-height: 1;
 }
 
@@ -80,13 +84,42 @@
   font-weight: 700;
 }
 
-.notification-icon {
-  font-size: 20px;
-  line-height: 1;
-}
-
 .notification-message {
   letter-spacing: 0.5px;
   color: gold;
   line-height: 1;
+}
+
+@media (max-height: 600px) {
+  :root {
+    --padding-status-bar-notifications: clamp(
+      0.3rem,
+      calc(var(--card-width) / 6),
+      0.3rem
+    );
+    --font-size-status-bar-notifications: clamp(
+    0.8rem,
+    calc(var(--card-width) / 10),
+    1rem
+  );
+  }
+
+  .notification-message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .notifications-container {
+    position: absolute;
+    top: calc(var(--card-width) / 10);
+    /* left: 50%; */
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    overflow: hidden;
+  }
 }

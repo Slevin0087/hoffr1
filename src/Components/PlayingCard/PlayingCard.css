@@ -1,4 +1,6 @@
 :root {
+  --card-width: min(12.5vw, 10vh);
+  --card-height: calc(var(--card-width) * 1.4);
   --cards-sprite-width: calc(var(--card-width) * 13);
   --cards-sprite-height: calc(var(--card-height) * 4);
 }

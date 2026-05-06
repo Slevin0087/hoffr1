@@ -6,5 +6,5 @@ export default {
   combo_seconds: " +{{seconds}} сек!",
   cards_shuffled: "Акартаква алапсапӏ!",
   points_record: "Рекорд: {{points}}",
-  best_points: "Лучший 🌟: {{value}}",
+  best_points: "Арекорд 🌟: {{value}}",
 };

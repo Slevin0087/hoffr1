@@ -34,12 +34,14 @@ export const fonsAppearancesIds = {
   ice: "ice",
 };
 
+const BASE_URL = import.meta.env.BASE_URL;
+
 export const facesAppearancesObj = {
   [facesAppearancesIds.classic]: {
     id: facesAppearancesIds.classic,
     img: {
-      path: "./src/assets/faces/faces_classic_mini.png",
-      joker: "./src/assets/faces/faces_classic_joker_mini.png",
+      path: `${BASE_URL}/faces/faces_classic_mini.png`,
+      joker: `${BASE_URL}/faces/faces_classic_joker_mini.png`,
       manyColumns: 13,
       manyLines: 4,
     },
@@ -50,8 +52,8 @@ export const facesAppearancesObj = {
   [facesAppearancesIds.classicPro]: {
     id: facesAppearancesIds.classicPro,
     img: {
-      path: "./src/assets/faces/faces_classic_pro_mini.png",
-      joker: "./src/assets/faces/faces_classic_pro_joker_mini.png",
+      path: `${BASE_URL}/faces/faces_classic_pro_mini.png`,
+      joker: `${BASE_URL}/faces/faces_classic_pro_joker_mini.png`,
       manyColumns: 13,
       manyLines: 4,
     },
@@ -64,8 +66,8 @@ export const shirtsAppearancesObj = {
   [shirtsAppearancesIds.classic]: {
     id: shirtsAppearancesIds.classic,
     img: {
-      path: "./src/assets/shirts/shirts_classic_mini.png",
-      joker: "./src/assets/shirts/shirts_classic_mini.png",
+      path: `${BASE_URL}/shirts/shirts_classic_mini.png`,
+      joker: `${BASE_URL}/shirts/shirts_classic_mini.png`,
       manyColumns: 1,
       manyLines: 4,
     },
@@ -75,8 +77,8 @@ export const shirtsAppearancesObj = {
   [shirtsAppearancesIds.classicPro]: {
     id: shirtsAppearancesIds.classicPro,
     img: {
-      path: "./src/assets/shirts/shirts_classic_pro_mini.png",
-      joker: "./src/assets/shirts/shirts_classic_mini.png",
+      path: `${BASE_URL}/shirts/shirts_classic_pro_mini.png`,
+      joker: `${BASE_URL}/shirts/shirts_classic_mini.png`,
       manyColumns: 1,
       manyLines: 4,
     },
@@ -86,8 +88,8 @@ export const shirtsAppearancesObj = {
   [shirtsAppearancesIds.classicPro2]: {
     id: shirtsAppearancesIds.classicPro2,
     img: {
-      path: "./src/assets/shirts/shirts_classic_pro2_mini.png",
-      joker: "./src/assets/shirts/shirts_classic_mini.png",
+      path: `${BASE_URL}/shirts/shirts_classic_pro2_mini.png`,
+      joker: `${BASE_URL}/shirts/shirts_classic_mini.png`,
       manyColumns: 1,
       manyLines: 4,
     },
@@ -100,7 +102,7 @@ export const fonsAppearancesObj = {
   [fonsAppearancesIds.classic]: {
     id: fonsAppearancesIds.classic,
     img: {
-      path: "./src/assets/fons/classic.png",
+      path: `${BASE_URL}/fons/classic.png`,
     },
     price: 0,
     styles: "",
@@ -108,7 +110,7 @@ export const fonsAppearancesObj = {
   [fonsAppearancesIds.sea]: {
     id: fonsAppearancesIds.sea,
     img: {
-      path: "./src/assets/fons/sea.png",
+      path: `${BASE_URL}/fons/sea.png`,
     },
     price: 100,
     styles: "",
@@ -116,7 +118,7 @@ export const fonsAppearancesObj = {
   [fonsAppearancesIds.mahogany]: {
     id: fonsAppearancesIds.mahogany,
     img: {
-      path: "./src/assets/fons/mahogany.png",
+      path: `${BASE_URL}/fons/mahogany.png`,
     },
     price: 100,
     styles: "",
@@ -124,7 +126,7 @@ export const fonsAppearancesObj = {
   [fonsAppearancesIds.ice]: {
     id: fonsAppearancesIds.ice,
     img: {
-      path: "./src/assets/fons/ice.png",
+      path: `${BASE_URL}/fons/ice.png`,
     },
     price: 100,
     styles: "",

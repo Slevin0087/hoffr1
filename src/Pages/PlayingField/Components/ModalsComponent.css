@@ -1,5 +1,15 @@
-.modals-component2 .modal {
+:root {
+  --modals-component2-header-btns-width: 4rem;
+  --modals-component2-header-btns-height: 4rem;
+  --modals-component2-header-btns-width-mini: 2.5rem;
+  --modals-component2-header-btns-height-mini: 2.5rem;
+}
+
+.modals-component2.modal {
+  display: flex !important;
   justify-content: center;
+  align-items: center;
+  overflow: hidden;
   gap: 5vh;
 }
 
@@ -9,7 +19,6 @@
 
 .modals-component2 .modal-dialog-centered {
   justify-content: center;
-  overflow: hidden;
 }
 
 .modals-component2 .modal-content {
@@ -34,8 +43,9 @@
   align-items: center;
   gap: 5vh;
   width: 100%;
-  padding: 0 0 80px 0;
   flex: 1;
+  line-height: 1;
+  padding-top: calc(var(--modals-component2-header-btns-height) / 1.5);
 }
 
 .modals-component2 .modal-body {
@@ -58,11 +68,13 @@
 
 .modals-component2 .modal-header .modal-title {
   position: absolute;
-  top: 10px;
+  top: calc(var(--modals-component2-header-btns-height) / 3);
+  bottom: 0;
   left: 0;
   right: 0;
+  margin: auto;
   color: #ffd700;
-  font-size: 28px;
+  font-size: 1.5rem;
   font-weight: bold;
   text-align: center;
   width: 100%;
@@ -83,8 +95,8 @@
   font-size: 2rem;
   padding: 0;
   white-space: nowrap;
-  width: 4rem;
-  height: 4rem;
+  width: var(--modals-component2-header-btns-width);
+  height: var(--modals-component2-header-btns-height);
   line-height: 0;
   padding-bottom: 4px;
   position: absolute;
@@ -92,13 +104,13 @@
 }
 
 .modals-component2 .modal-header .btn-primary {
-  left: -0.5rem;
-  top: -0.5rem;
+  left: calc((var(--modals-component2-header-btns-width) / 2) * -1);
+  top: calc((var(--modals-component2-header-btns-height) / 2) * -1);
 }
 
 .modals-component2 .modal-header .btn-secondary {
-  right: -0.5rem;
-  top: -0.5rem;
+  right: calc((var(--modals-component2-header-btns-width) / 2) * -1);
+  top: calc((var(--modals-component2-header-btns-height) / 2) * -1);
 }
 
 .modals-component2 .modal-footer {
@@ -113,4 +125,54 @@
   color: rgb(30, 183, 210);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   line-height: 1;
+}
+
+@media (max-height: 600px) {
+  .modals-component2 .modal-header .btn-primary,
+  .modals-component2 .modal-header .btn-secondary {
+    font-size: 1.5rem;
+    width: var(--modals-component2-header-btns-width-mini);
+    height: var(--modals-component2-header-btns-height-mini);
+  }
+
+  .modals-component2 .modal-header .btn-primary {
+    left: calc((var(--modals-component2-header-btns-width-mini) / 2) * -1);
+    top: calc((var(--modals-component2-header-btns-height-mini) / 2) * -1);
+  }
+
+  .modals-component2 .modal-header .btn-secondary {
+    right: calc((var(--modals-component2-header-btns-width-mini) / 2) * -1);
+    top: calc((var(--modals-component2-header-btns-height-mini) / 2) * -1);
+  }
+
+  .modals-component2 .modal-content {
+    width: 80%;
+    height: 90%;
+  }
+
+  .player-stats-achievement-section .achievement-btn {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-height: 700px) {
+  .modals-component2 .modal-header {
+    padding: 0 0 40px 0;
+  }
+
+  .modals-component2 .modal-header .modal-title,
+  .modals-component2 .modal-footer {
+    top: calc(var(--modals-component2-header-btns-height-mini) / 3);
+    font-size: 1.2rem;
+  }
+
+  .modals-component2 .modal-footer {
+    padding: 0.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .modals-component2 .modal-content {
+    width: 90%;
+  }
 }

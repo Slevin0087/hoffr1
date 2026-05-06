@@ -307,9 +307,9 @@ export const handleCardClick = createAsyncThunk(
   {
     condition: ({ card }, { getState }) => {
       if (!card) return false;
-      const type = gameSettingsTypes.assistanceInCardClick;
-      const isAssistanceInCardClick = selectSettingsByType(getState(), type);
-      if (!isAssistanceInCardClick?.value) return false;
+      const type = gameSettingsTypes.canCardClick;
+      const isCanCardClick = selectSettingsByType(getState(), type);
+      if (!isCanCardClick?.value) return false;
       return selectIsEventsInDeck(getState()) ? false : true;
     },
   },

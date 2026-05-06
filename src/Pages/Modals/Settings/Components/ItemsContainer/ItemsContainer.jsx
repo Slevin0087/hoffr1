@@ -59,7 +59,7 @@ function ItemsContainer() {
       <ToggleSetting
         id="assistance-in-collection"
         label="assistance_in_collection"
-        settingType={gameSettingsTypes.assistanceInCollection}
+        settingType={gameSettingsTypes.fastGame}
         description="assistance_in_collection_p"
       />
 
@@ -67,7 +67,7 @@ function ItemsContainer() {
       <ToggleSetting
         id="assistance-in-card-click"
         label="assistance_in_card_click"
-        settingType={gameSettingsTypes.assistanceInCardClick}
+        settingType={gameSettingsTypes.canCardClick}
         description="assistance_in_card_click_p"
       />
 

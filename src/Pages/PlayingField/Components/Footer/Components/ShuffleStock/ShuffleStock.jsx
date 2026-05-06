@@ -8,7 +8,10 @@ import {
 } from "../../../../../../Store/slices/decks/selectors";
 import { useTranslation } from "react-i18next";
 import { dealingCounts } from "../../../../../../Configs/GameConfigs";
-import { selectGameCurrentDealing } from "../../../../../../Store/slices/game/selectors";
+import {
+  selectGameCurrentDealing,
+  selectIsCanRedeals,
+} from "../../../../../../Store/slices/game/selectors";
 
 function ShuffleStock() {
   const dispatch = useDispatch();
@@ -16,6 +19,7 @@ function ShuffleStock() {
   const stockId = useSelector(selectStockId);
   const wasteId = useSelector(selectWasteId);
   const currentDealing = useSelector(selectGameCurrentDealing);
+  const isCanRedeals = useSelector(selectIsCanRedeals);
   const isStockEmpty = useSelector((state) =>
     selectIsPileEmpty(state, stockId),
   );
@@ -35,6 +39,7 @@ function ShuffleStock() {
       title={ariaLabel}
       aria-label={ariaLabel}
       disabled={
+        !isCanRedeals ||
         (isStockEmpty && !isWasteEmpty) ||
         (!isStockEmpty && !isWasteEmpty) ||
         (isStockEmpty && isWasteEmpty)

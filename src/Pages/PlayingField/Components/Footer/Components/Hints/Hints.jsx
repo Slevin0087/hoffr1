@@ -1,27 +1,52 @@
-import { Button } from "react-bootstrap";
+import "./Hints.css";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { selectIsCanUseHint } from "../../../../../../Store/slices/game/selectors/hints";
+import {
+  selectRemainingHints,
+  selectIsCanUseHint,
+  selectHintsLimit,
+} from "../../../../../../Store/slices/game/selectors/hints";
 import { handleHints } from "../../../../../../Store/slices/game/thunks/hints";
+import FooterBtn from "../FooterBtn";
+import { resetHintsUsed } from "../../../../../../Store/slices/game/slice";
 
 function Hints() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const hintsLimit = useSelector(selectHintsLimit);
+  const remainingHints = useSelector(selectRemainingHints);
   const isCanUse = useSelector(selectIsCanUseHint);
   console.log("Hints isCanUse", isCanUse);
   const ariaLabel = t("playingField.footer_hints");
 
+  const onClick = () => {
+    if (remainingHints === 0) {
+      dispatch(resetHintsUsed());
+      return;
+    }
+    console.log("Hints onClick: ", remainingHints, hintsLimit);
+    dispatch(handleHints());
+  };
+
   return (
-    <Button
-      variant="outline-dark"
-      className="footer-btn"
-      title={ariaLabel}
-      aria-label={ariaLabel}
-      onClick={() => dispatch(handleHints())}
-      disabled={!isCanUse}
-    >
-      💡
-    </Button>
+    <div className="hints-btn-container">
+      <span className="hints-btn-span">
+        {hintsLimit === null
+          ? "∞"
+          : remainingHints > 0
+            ? remainingHints
+            : `+${hintsLimit}`}
+        {/* ♾️ */}
+      </span>
+      <FooterBtn
+        variant="outline-dark"
+        ariaLabel={ariaLabel}
+        onClick={onClick}
+        disabled={!isCanUse && remainingHints > 0}
+      >
+        💡
+      </FooterBtn>
+    </div>
   );
 }
 

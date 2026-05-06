@@ -1,5 +1,7 @@
 import { Howl } from "howler";
 
+const BASE_URL = import.meta.env.BASE_URL;
+
 export const AudioName = {
   BACKGROUND: "background",
   CARD_FLIP: "card-flip",
@@ -15,31 +17,31 @@ export const AudioName = {
 // Предзагрузка всех звуков
 export const sounds = {
   [AudioName.CLICK]: new Howl({
-    src: ["./src/assets/sounds/click.mp3"],
+    src: [`${BASE_URL}/sounds/click.mp3`],
     volume: 0.5,
   }),
   [AudioName.CARD_FLIP]: new Howl({
-    src: ["./src/assets/sounds/card-flip.mp3"],
+    src: [`${BASE_URL}/sounds/card-flip.mp3`],
     volume: 0.5,
   }),
   [AudioName.CARD_MOVE]: new Howl({
-    src: ["./src/assets/sounds/card-move.mp3"],
+    src: [`${BASE_URL}/sounds/card-move.mp3`],
     volume: 0.5,
   }),
   [AudioName.WIN]: new Howl({
-    src: ["./src/assets/sounds/win.mp3"],
+    src: [`${BASE_URL}/sounds/win.mp3`],
     volume: 0.7,
   }),
   [AudioName.UP_SCORE]: new Howl({
-    src: ["./src/assets/sounds/up-score.mp3"],
+    src: [`${BASE_URL}/sounds/up-score.mp3`],
     volume: 0.5,
   }),
   [AudioName.SHUFFLE]: new Howl({
-    src: ["./src/assets/sounds/shuffle.mp3"],
+    src: [`${BASE_URL}/sounds/shuffle.mp3`],
     volume: 0.5,
   }),
   [AudioName.BACKGROUND]: new Howl({
-    src: ["./src/assets/sounds/background.mp3"],
+    src: [`${BASE_URL}/sounds/background.mp3`],
     loop: true,
     volume: 0.5,
   }),

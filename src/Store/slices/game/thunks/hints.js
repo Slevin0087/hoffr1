@@ -6,20 +6,21 @@ import {
   selectMoveTopCardFromPileToFoundationPile,
   selectMoveTopCardFromPileToTableauPile,
   selectMoveTopCardsTableauToTableau,
-  selectPileCardsIds,
   selectStockId,
   selectWasteId,
 } from "../../decks/selectors";
-import { updatePoints } from "../slice";
-import { scoreOperations } from "../../../../Configs/GameConfigs";
-import { selectIsEventsInDeck } from "../selectors";
+import { endedGame, updatePoints } from "../slice";
+import {
+  GAME_STATUSES,
+  scoreOperations,
+} from "../../../../Configs/GameConfigs";
+import { selectIsCanRedeals, selectIsEventsInDeck } from "../selectors";
 import {
   setHintShowColor,
   setHintShowColorPileById,
   updateCardOne,
 } from "../../decks/slice";
 import { selectHintsPenalty, selectIsCanUseHint } from "../selectors/hints";
-import { showPFModalById } from "../../ui/slice";
 import { P_F_MODALS_IDS } from "../../../../Configs/UIConfigs";
 
 export const handleHints = createAsyncThunk(
@@ -29,6 +30,7 @@ export const handleHints = createAsyncThunk(
     const state = getState();
     const stockId = selectStockId(state);
     const wasteId = selectWasteId(state);
+    const penaltyCount = selectHintsPenalty(state);
     const tableausIds = field_components_type_ids.tableaus;
     const foundationsIds = field_components_type_ids.foundations;
 
@@ -67,8 +69,8 @@ export const handleHints = createAsyncThunk(
             }),
           );
         }
+        if (penaltyCount === null) return;
         const operation = scoreOperations.decrement;
-        const penaltyCount = selectHintsPenalty(state);
         dispatch(updatePoints({ count: penaltyCount, operation }));
         return;
       }
@@ -106,8 +108,8 @@ export const handleHints = createAsyncThunk(
           }),
         );
       }
+      if (penaltyCount === null) return;
       const operation = scoreOperations.decrement;
-      const penaltyCount = selectHintsPenalty(state);
       dispatch(updatePoints({ count: penaltyCount, operation }));
       return;
     }
@@ -123,8 +125,8 @@ export const handleHints = createAsyncThunk(
         if (!isCanMove) continue;
         console.log("handleHints НАЙДЕН ХОД, ПРИОРИТЕТ 3");
         dispatch(setHintShowColor({ ...data }));
+        if (penaltyCount === null) return;
         const operation = scoreOperations.decrement;
-        const penaltyCount = selectHintsPenalty(state);
         dispatch(updatePoints({ count: penaltyCount, operation }));
         return;
       }
@@ -163,58 +165,50 @@ export const handleHints = createAsyncThunk(
           }),
         );
       }
+      if (penaltyCount === null) return;
       const operation = scoreOperations.decrement;
-      const penaltyCount = selectHintsPenalty(state);
-      dispatch(updatePoints({ count: penaltyCount, operation }));
-      return;
-    }
-
-    // --- ПРИОРИТЕТ 5: Stock to Foundations ---
-    const { isCanMove, data } = selectMoveStockCardsToFoundations(
-      state,
-      stockId,
-      wasteId,
-    );
-    console.log("ПРИОРИТЕТ 5: Stock to Foundations: ", isCanMove, data);
-    if (isCanMove) {
-      console.log("handleHints НАЙДЕН ХОД, ПРИОРИТЕТ 5: Stock to Foundations");
-      dispatch(
-        setHintShowColorPileById({
-          pileId: data.fromPileId,
-          value: "green",
-        }),
-      );
-      const operation = scoreOperations.decrement;
-      const penaltyCount = selectHintsPenalty(state);
       dispatch(updatePoints({ count: penaltyCount, operation }));
       return;
     }
 
     // // --- ПОСЛЕДНИЙ ВАРИАНТ: Взять карту из колоды ---
-    // const stockCardsIds = selectPileCardsIds(state, stockId);
-    // if (stockCardsIds.length > 0) {
-    //   console.log("Hint: Draw card from stock");
-    //   dispatch(
-    //     setHintShowColorPileById({
-    //       pileId: stockId,
-    //       value: "green",
-    //     }),
-    //   );
-    //   const operation = scoreOperations.decrement;
-    //   const penaltyCount = selectHintsPenalty(state);
-    //   dispatch(updatePoints({ count: penaltyCount, operation }));
-    //   return;
-    // }
+    const isCanRedeals = selectIsCanRedeals(state);
+
+    if (isCanRedeals) {
+      // --- ПРИОРИТЕТ 5: Stock to Foundations ---
+      const { isCanMove, data } = selectMoveStockCardsToFoundations(
+        state,
+        stockId,
+        wasteId,
+      );
+      console.log("ПРИОРИТЕТ 5: Stock to Foundations: ", isCanMove, data);
+      if (isCanMove) {
+        console.log(
+          "handleHints НАЙДЕН ХОД, ПРИОРИТЕТ 5: Stock to Foundations",
+        );
+        dispatch(
+          setHintShowColorPileById({
+            pileId: data.fromPileId,
+            value: "green",
+          }),
+        );
+        if (penaltyCount === null) return;
+        const operation = scoreOperations.decrement;
+        dispatch(updatePoints({ count: penaltyCount, operation }));
+        return;
+      }
+    }
 
     // Если мы дошли сюда, то ходов нет
     console.log("No moves available.");
-    dispatch(showPFModalById({ id: P_F_MODALS_IDS.GAME_OVER_AND_WIN }));
+    dispatch(endedGame({ status: GAME_STATUSES.GAME_OVER }));
     return { noHintAvailable: true };
   },
   {
     condition: (_, { getState }) => {
       if (selectIsEventsInDeck(getState())) return false;
-      if (!selectIsCanUseHint(getState())) return false;
+      console.log('condition "handleHints": ', !selectIsCanUseHint(getState()));
+      // if (!selectIsCanUseHint(getState())) return false;
       return true;
     },
   },

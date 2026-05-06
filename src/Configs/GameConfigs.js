@@ -260,9 +260,9 @@ export const GAME_DEFAULT_STATE = {
       points: 0,
       [dealingCounts.one]: {
         wins: { time: 0, total: 0, no_hints: 0, no_undo: 0 },
-        undo: { current: 0, limit: null, penalty: 15, stack: [] },
+        undo: { current: 0, limit: null, penalty: null, stack: [] },
         moves: { total: 0, current: 0 },
-        hints: { current: 0, limit: null, penalty: 10 },
+        hints: { current: 0, limit: null, penalty: null },
         played: 0,
         losses: 0,
         points: { best: null, total: 0, current: 0, prevCurrent: 0 },
@@ -278,9 +278,9 @@ export const GAME_DEFAULT_STATE = {
       },
       [dealingCounts.three]: {
         wins: { time: 0, total: 0, no_hints: 0, no_undo: 0 },
-        undo: { current: 0, limit: null, penalty: 15, stack: [] },
+        undo: { current: 0, limit: null, penalty: null, stack: [] },
         moves: { total: 0, current: 0 },
-        hints: { current: 0, limit: null, penalty: 10 },
+        hints: { current: 0, limit: null, penalty: null },
         played: 0,
         losses: 0,
         points: { best: null, total: 0, current: 0, prevCurrent: 0 },

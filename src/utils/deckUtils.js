@@ -288,7 +288,7 @@ export const calculateHintShowTableauCard = (
     const cardId = hintsShowCarsIds[i];
     offsets[cardId] = { x: accumulatedX, y: accumulatedY };
     accumulatedX += config.x;
-    accumulatedY += config.faceY;
+    accumulatedY += config.y.faceY;
   }
 
   return offsets;
@@ -297,7 +297,8 @@ export const calculateHintShowTableauCard = (
 export const calculateAllPileOffsets = (pile, height) => {
   const offsets = {};
   if (!pile?.cardsIds?.length) return offsets;
-
+  const styles = getCardSize();
+  console.log("calculateAllPileOffsets styles: ", styles);
   const orientation =
     height >= 600 ? orientations.portrait : orientations.landscape;
   const pileConfig = field_components_default_state[pile.id];
@@ -317,12 +318,28 @@ export const calculateAllPileOffsets = (pile, height) => {
       const config = overlapConfig[orientation];
       for (let i = 0; i < pile.cardsIds.length; i++) {
         const cardId = pile.cardsIds[i];
-        offsets[cardId] = { x: accumulatedX, y: accumulatedY };
         const card = pile.cards[cardId];
-        accumulatedX += config.x;
-        accumulatedY += card.side === sides.face ? config.faceY : config.shirtY;
+        offsets[cardId] = { x: accumulatedX, y: accumulatedY };
+        const configYBySide =
+          card.side === sides.face ? config.y.face : config.y.shirt;
+        accumulatedX += (styles.width / 30) * config.x;
+        accumulatedY += (styles.height / 50) * configYBySide;
+        // const x = i * ((styles.width / 30) * config.x);
+        // const configYBySide =
+        //   card.side === sides.face ? config.y.face : config.y.shirt;
+        // const y = i * ((styles.height / 50) * configYBySide);
+        // offsets[cardId] = { x, y };
       }
       break;
+      // const config = overlapConfig[orientation];
+      // for (let i = 0; i < pile.cardsIds.length; i++) {
+      //   const cardId = pile.cardsIds[i];
+      //   offsets[cardId] = { x: accumulatedX, y: accumulatedY };
+      //   const card = pile.cards[cardId];
+      //   accumulatedX += config.x;
+      //   accumulatedY += card.side === sides.face ? config.faceY : config.shirtY;
+      // }
+      // break;
     }
 
     case field_components_types.wastes: {
@@ -364,4 +381,16 @@ export const getCardOffset2 = (cardId, pile, height = 0) => {
   const allOffsets = calculateAllPileOffsets(pile, height);
   const offset = allOffsets[cardId] || { x: 0, y: 0 };
   return { x: offset.x, y: offset.y };
+};
+
+export const getCardSize = () => {
+  // Ищем реальную карту на странице
+  const card = document.querySelector(".playing-card-container");
+  if (!card) return { width: 100, height: 140 };
+
+  const styles = getComputedStyle(card);
+  return {
+    width: parseFloat(styles.width),
+    height: parseFloat(styles.height),
+  };
 };

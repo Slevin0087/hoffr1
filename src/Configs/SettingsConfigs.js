@@ -12,8 +12,8 @@ export const gameSettingsTypes = {
   volume: "volume",
   animations: "animations",
   dealingCards: "dealingCards",
-  assistanceInCollection: "assistanceInCollection",
-  assistanceInCardClick: "assistanceInCardClick",
+  fastGame: "fastGame",
+  canCardClick: "canCardClick",
 };
 
 export const SETTINGS_STORAGE_KEYS = {
@@ -48,11 +48,11 @@ export const defaultSettingDealingCards = {
   value: dealingCounts.one,
 };
 
-export const defaultSettingsAssistanceInCollection = {
+export const defaultSettingsFastGame = {
   value: false,
 };
 
-export const defaultSettingsAssistanceInCardClick = {
+export const defaultSettingsCanCardClick = {
   value: false,
 };
 
@@ -64,8 +64,8 @@ export const SETTINGS_DEFAULT_STATE = {
   [gameSettingsTypes.volume]: defaultSettingsVolume,
   [gameSettingsTypes.animations]: defaultSettingsAnimations,
   [gameSettingsTypes.dealingCards]: defaultSettingDealingCards,
-  [gameSettingsTypes.assistanceInCollection]:
-    defaultSettingsAssistanceInCollection,
-  [gameSettingsTypes.assistanceInCardClick]:
-    defaultSettingsAssistanceInCardClick,
+  [gameSettingsTypes.fastGame]:
+    defaultSettingsFastGame,
+  [gameSettingsTypes.canCardClick]:
+    defaultSettingsCanCardClick,
 };

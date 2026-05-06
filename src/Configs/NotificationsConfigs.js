@@ -64,7 +64,7 @@ export const notificationsMap = {
     messageFormatter: (params) => ({ value: params.value }),
     type: "success",
     duration: null,
-    icon: "🌟",
+    icon: "",
   },
   save_success: {
     id: "save-success",

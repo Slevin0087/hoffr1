@@ -101,6 +101,7 @@ export const endedGame = (state, action) => {
       dealingStats.wins.no_hints += 1;
     }
   } else if (status === GAME_STATUSES.GAME_OVER) {
+    console.log("endedGame GAME_OVER");
     state.losses += 1;
     mode.losses += 1;
     dealingStats.losses += 1;
@@ -161,6 +162,12 @@ export const incrementRedeals = (state) => {
   storage.setItem(GAME_STORAGE_KEYS.GAME, state);
 };
 
+export const decrementRedeals = (state) => {
+  const currentDealing = state.modes[state.currentModeId].currentDealing;
+  state.modes[state.currentModeId][currentDealing].redeals.current -= 1;
+  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
+};
+
 export const resetCoins = (state) => {
   state.coins = 0;
   storage.setItem(GAME_STORAGE_KEYS.GAME, state);
@@ -178,6 +185,24 @@ export const removeUndo = (state, action) => {
 export const incrementUndoUsed = (state) => {
   const currentDealing = state.modes[state.currentModeId].currentDealing;
   state.modes[state.currentModeId][currentDealing].undo.current += 1;
+  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
+};
+
+export const incrementHintsUsed = (state) => {
+  const currentDealing = state.modes[state.currentModeId].currentDealing;
+  state.modes[state.currentModeId][currentDealing].hints.current += 1;
+  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
+};
+
+export const resetUndoUsed = (state) => {
+  const currentDealing = state.modes[state.currentModeId].currentDealing;
+  state.modes[state.currentModeId][currentDealing].undo.current = 0;
+  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
+};
+
+export const resetHintsUsed = (state) => {
+  const currentDealing = state.modes[state.currentModeId].currentDealing;
+  state.modes[state.currentModeId][currentDealing].hints.current = 0;
   storage.setItem(GAME_STORAGE_KEYS.GAME, state);
 };
 
@@ -239,10 +264,14 @@ export const reducers = {
   updateTime,
   incrementMoves,
   incrementRedeals,
+  decrementRedeals,
   resetCoins,
   addUndo,
   removeUndo,
   incrementUndoUsed,
+  incrementHintsUsed,
+  resetUndoUsed,
+  resetHintsUsed,
   updateCombo,
   addComboBonusTime,
   resetCombo,

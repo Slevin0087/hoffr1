@@ -35,8 +35,8 @@ function ModalsComponent() {
       show={isShow}
       centered
       className="modals-component2"
-      fullscreen="md-down"
-      size="lg"
+      // fullscreen="lg-down"
+      // size="lg"
       dialogClassName="modal-h80"
     >
       <Modal.Header>

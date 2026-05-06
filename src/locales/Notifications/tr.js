@@ -6,5 +6,5 @@ export default {
   combo_seconds: " +{{seconds}} sn!",
   cards_shuffled: "Kartlar karışık!",
   points_record: "Rekor: {{points}}",
-  best_points: "En iyi 🌟: {{value}}",
+  best_points: "Rekor 🌟: {{value}}",
 };

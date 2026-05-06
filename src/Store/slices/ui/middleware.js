@@ -1,4 +1,4 @@
-import { createListenerMiddleware } from "@reduxjs/toolkit";
+import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { endedGame, setIsFirstCardsEvent, updatePoints } from "../game/slice";
 import {
   clearCurrentNotification,
@@ -9,14 +9,21 @@ import {
 } from "./slice";
 import { getAnimationFlipDuration } from "../../../utils/playingCardUtils";
 import { animationsTypes } from "../../../Configs/PlayingCardsConfigs/PlayingCardsConfigs";
-import { GAME_STATUSES } from "../../../Configs/GameConfigs";
+import { dealingCounts, GAME_STATUSES } from "../../../Configs/GameConfigs";
 import { P_F_MODALS_IDS } from "../../../Configs/UIConfigs";
 import {
   selectActiveNotification,
   selectIsCollectCardsBtnVisible,
 } from "./selectors";
-import { handleGameInit, handleShuffle } from "../game/thunks";
+import { handleGameInit, handleShuffle, standartMove } from "../game/thunks";
 import { notifications_ids } from "../../../Configs/NotificationsConfigs";
+import { removeTabsShirtCardIdOne } from "../decks/slice";
+import {
+  selectStockAndWasteEmpty,
+  selectTableausShirtCardsIds,
+} from "../decks/selectors";
+import { selectGameCurrentDealing } from "../game/selectors";
+import { field_components_type_ids } from "../../../Configs/FieldComponentsConfigs";
 
 export const uiListeners = createListenerMiddleware();
 
@@ -41,6 +48,41 @@ uiListeners.startListening({
     );
 
     updatePointsTimers.set(cardId, timer);
+  },
+});
+
+uiListeners.startListening({
+  actionCreator: standartMove.fulfilled,
+  effect: async (action, listenerApi) => {
+    const dispatch = listenerApi.dispatch;
+    const isCollectCardsBtnVisible = selectIsCollectCardsBtnVisible(
+      listenerApi.getState(),
+    );
+    if (isCollectCardsBtnVisible) {
+      dispatch(setIsCollectCardsBtnVisible(false));
+    }
+  },
+});
+
+uiListeners.startListening({
+  matcher: isAnyOf(removeTabsShirtCardIdOne, standartMove.fulfilled),
+  effect: (action, listenerApi) => {
+    const state = listenerApi.getState();
+    const dispatch = listenerApi.dispatch;
+    const tableausShirtCardsIds = selectTableausShirtCardsIds(state);
+    if (tableausShirtCardsIds.length === 0) {
+      const gameCurrentDealing = selectGameCurrentDealing(state);
+      if (gameCurrentDealing === dealingCounts.three) {
+        if (standartMove.fulfilled.match(action)) {
+          const fromPileId = action.payload.data.fromPileId;
+          const isFropmPileWaste =
+            field_components_type_ids.wastes.includes(fromPileId);
+          if (isFropmPileWaste && !selectStockAndWasteEmpty(state)) return;
+        }
+        if (!selectStockAndWasteEmpty(state)) return;
+      }
+      dispatch(setIsCollectCardsBtnVisible(true));
+    }
   },
 });
 

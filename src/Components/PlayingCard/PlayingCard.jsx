@@ -1,3 +1,5 @@
+import cn from 'classnames';
+
 import "./PlayingCard.css";
 import FaceAndShirt from "./Components/FaceAndShirt";
 import ChangingPoints from "./Components/ChangingPoints";
@@ -49,7 +51,7 @@ const hoverAnimation = animationsData.hover.types.standart.animation;
 
 const PlayingCard = (props) => {
   const dispatch = useDispatch();
-  const { height, width } = useWindowSize();
+  const { height } = useWindowSize();
   const {
     cardId,
     pileId,
@@ -70,8 +72,8 @@ const PlayingCard = (props) => {
   );
 
   const [shuffleOffset] = useState(() => ({
-    x: ((Math.random() - 0.5) * width) / 6,
-    y: ((Math.random() - 0.5) * height) / 6,
+    x: ((Math.random() - 0.5) * height) / 10,
+    y: ((Math.random() - 0.5) * height) / 10,
   }));
 
   const isAnimationsEnabled = useSelector(selectAnimationsEnabled);
@@ -206,6 +208,13 @@ const PlayingCard = (props) => {
       return () => clearTimeout(timer);
     }
   }, [card.hintShowColor, isEventsInDeck, dispatch, cardId, pileId]);
+
+  const cardContainerClassName = cn(
+    "playing-card",
+    `playing-card--${card.suit}`,
+    `playing-card--${card.value}`,
+    { "playing-card--ghost": isGhost },
+  );
 
   if (isGhost) {
     return (

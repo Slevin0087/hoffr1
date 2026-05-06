@@ -7,11 +7,15 @@
   position: absolute;
   top: 50%;
   left: 50%;
+  bottom: 0;
+  right: 0;
+  margin: auto;
   background-color: transparent;
   pointer-events: none;
   z-index: 9999;
   white-space: nowrap;
   transform-style: preserve-3d;
+  width: fit-content;
   /* backface-visibility: hidden; */
 }
 
@@ -40,4 +44,16 @@
 .score-value.negative {
   color: #ff4444;
   text-shadow: 0 0 25px #ff4444;
+}
+
+@media (max-height: 600px) {
+  .score-value {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-height: 800px) {
+  .score-value {
+    font-size: 1.3rem;
+  }
 }

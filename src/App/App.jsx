@@ -36,7 +36,7 @@ function App() {
     // Отключаем pull-to-refresh
     const preventTouchMove = (e) => {
       const scrollTop = window.scrollY;
-      if (scrollTop === 0 && e.touches) {
+      if (scrollTop === 0 && e.touches.clientY > e.touches[0].clientY) {
         e.preventDefault();
       }
     };
@@ -52,19 +52,7 @@ function App() {
 
   return (
     <div className="app-page" ref={ref}>
-      <button
-        style={{
-          position: "absolute",
-          top: "100px",
-          right: "10px",
-          width: "100px",
-          height: "50px",
-          backgroundColor: "red",
-          margin: "10px",
-          color: "black",
-        }}
-        onClick={() => toggle()}
-      >
+      <button className="fullscreen-btn" onClick={() => toggle()}>
         {isFullscreen ? "__" : "[ ]"}
       </button>
       <ShowActivePage activePageId={activePageId} />

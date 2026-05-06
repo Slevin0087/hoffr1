@@ -25,6 +25,7 @@ function CategoryTabs(props) {
       {categories.map((category, index) => (
         <motion.div
           key={category.id}
+          className="category-button-container"
           initial={{ x: -20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.1 * index }}
