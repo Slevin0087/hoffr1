@@ -9,9 +9,26 @@ export const notifications_ids = {
   cards_shuffled: "cards_shuffled",
   points_record: "points_record",
   best_points: "best_points",
+  new_appearance: "new_appearance",
+  paused: "paused",
 };
 
 export const notificationsMap = {
+  [notifications_ids.paused]: {
+    id: notifications_ids.paused,
+    messageKey: "paused",
+    type: "info",
+    duration: null,
+    icon: "⏸️",
+  },
+
+  [notifications_ids.new_appearance]: {
+    id: notifications_ids.new_appearance,
+    messageKey: "new_appearance",
+    type: "success",
+    duration: 3000,
+    icon: "✓",
+  },
   [notifications_ids.game_initing]: {
     id: notifications_ids.game_initing,
     messageKey: "game_initing",

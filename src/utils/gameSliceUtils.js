@@ -1,11 +1,9 @@
 import {
   gameStateTypes,
-  gameStateTypesValuesKeys,
   moveEventsTypes,
   scoreOperations,
 } from "../Configs/GameConfigs";
-import { animationsNames } from "../Configs/PlayingCardsConfigs/PlayingCardsConfigs";
-import { AudioName, sounds } from "../Services/soundService";
+import { AudioName } from "../Services/soundService";
 import {
   selectCardPoints,
   selectPileCardsIds,
@@ -18,16 +16,7 @@ import {
 } from "../Store/slices/game/selectors";
 import { getNTopCardsIds } from "./deckUtils";
 import { delay } from "./helpers";
-import {
-  getAnimationMoveDuration,
-  getAnimationShuffleDuration,
-} from "./playingCardUtils";
-
-export const incrementMoves = (state) => {
-  const currentGame = state.entities[state.currentId];
-  currentGame.sessionState.moves.count += 1;
-  currentGame.lifetimeState.moves.count += 1;
-};
+import { getAnimationDuration } from "./playingCardUtils";
 
 export const upLifetimeStateByTypeEndOperation = (state, action) => {
   const { type, key, value, operation } = action.payload;
@@ -53,74 +42,39 @@ export const upSessionStateByTypeEndOperation = (state, action) => {
   };
 };
 
-export const updatePoints = (state, action) => {
-  const { count, operation, cardId } = action.payload;
-  const type = gameStateTypes.points;
-  const key = gameStateTypesValuesKeys.count;
-  const upLifetimeStatePayload = { type, key, value: count, operation };
-  const upSessionStateChanges = {
-    changing: true,
-    value: count,
-    operation,
-    cardId,
-  };
-  const upSessionStatePayload = { type, key, changes: upSessionStateChanges };
-  upSessionStateByTypeEndOperation(state, {
-    payload: upSessionStatePayload,
-  });
-  upLifetimeStateByTypeEndOperation(state, {
-    payload: upLifetimeStatePayload,
-  });
-};
-
 /////////////////////////////////////////////////////////////////////////////
-
-export const getSetMoveAnimationData = (type, cardId, pileId) => {
-  const name = animationsNames.move;
-  const moveData = { name, type };
-  const changes = { isAnimating: true, activeAnimations: [moveData] };
+export const getSetAnimationData = (cardId, pileId, name, type) => {
+  const data = { name, type };
+  const changes = { isAnimating: true, activeAnimations: [data] };
+  console.log('getSetAnimationData, data: ', data, 'changes: ', changes);
   return { pileId, cardId, changes };
 };
 
-export const resetMoveAnimationData = (pileId, cardId) => {
+export const getResetAnimationData = (pileId, cardId) => {
   const changes = { isAnimating: false, activeAnimations: [] };
   return { pileId, cardId, changes };
 };
 
-export const animMove = async (dispatch, cardId, toPileId, type) => {
-  const setAnimPayload = getSetMoveAnimationData(type, cardId, toPileId);
-  const resetAnimPayload = resetMoveAnimationData(toPileId, cardId);
-  const duration = getAnimationMoveDuration(type);
-  const moveSound = sounds[AudioName.CARD_MOVE];
-  const soundRate = (moveSound.duration() * 1000) / duration;
-  const moveSoundId = moveSound.play();
-  moveSound.rate(soundRate, moveSoundId);
+export const animationCard = async (
+  dispatch,
+  cardId,
+  pileId,
+  animationName,
+  animationType,
+) => {
+  console.log('animationCard');
+  const setAnimPayload = getSetAnimationData(
+    cardId,
+    pileId,
+    animationName,
+    animationType,
+  );
+  const duration = getAnimationDuration(animationName, animationType);
+  const resetAnimPayload = getResetAnimationData(pileId, cardId);
+  console.log('animationCard updateCardOne1');
   dispatch(updateCardOne(setAnimPayload));
   await delay(duration);
-  dispatch(updateCardOne(resetAnimPayload));
-};
-
-export const animShuffle = async (dispatch, cardId, pileId, type) => {
-  const name = animationsNames.shuffle;
-  const setAnimPayload = {
-    pileId,
-    cardId,
-    changes: { isAnimating: true, activeAnimations: [{ name, type }] },
-  };
-  const resetAnimPayload = {
-    pileId,
-    cardId,
-    changes: { isAnimating: false, activeAnimations: [] },
-  };
-  const duration = getAnimationShuffleDuration(type);
-  // const moveSound = sounds[AudioName.CARD_MOVE];
-  const moveSound = sounds[AudioName.SHUFFLE];
-  const soundRate = (moveSound.duration() * 1000) / duration;
-  console.log("animShuffle duration: ", duration, "soundRate: ", soundRate);
-  const moveSoundId = moveSound.play();
-  moveSound.rate(soundRate, moveSoundId);
-  dispatch(updateCardOne(setAnimPayload));
-  await delay(duration);
+  console.log('animationCard updateCardOne2');
   dispatch(updateCardOne(resetAnimPayload));
 };
 

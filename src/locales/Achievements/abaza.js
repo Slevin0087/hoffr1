@@ -1,7 +1,7 @@
 export default {
-  reward: "Хъах|ара:",
+  reward: "Хъахӏара:",
   received: "Йгӏарадзатӏ",
-  newbie_title: "Шӏыцыг|в",
+  newbie_title: "Шӏыцыгӏв",
   newbie_description: "Йапхъахауа ахъвмарра хъвмарра",
   score_breaker_title: "Арекордсмен",
   score_breaker_description: "Хъвмарракӏ апны очкота 1000 гӏатгара",

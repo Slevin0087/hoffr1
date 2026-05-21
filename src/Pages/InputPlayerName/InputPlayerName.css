@@ -1,27 +1,11 @@
 :root {
-  /* ipn-f - inputPlayerName-form */
-  --min-gap-ipn-f: 5px;
-  --average-gap-ipn-f: min(2vh, 2vw);
-  --max-gap-ipn-f: 3vw;
+  --gap-inputPlayerName-form: clamp(0.5vh, 3vh, 4vh);
+  --gap-inputPlayerName-group: calc(var(--gap-inputPlayerName-form) / 2);
+  --gap-page-buttons-container: clamp(0.5vh, 3vh, 4vh);
+  --pd-inputPlayerName-page: min(5vh, 5vw);
 
-  --gap-inputPlayerName-form: clamp(
-    var(--min-gap-ipn-f),
-    var(--average-gap-ipn-f),
-    var(--max-gap-ipn-f)
-  );
-
-  --gap-inputPlayerName-group: calc(var(--gap-inputPlayerName-form) / 5);
-
-  /* pbc - page-buttons-container */
-  --min-gap-pbc: 5px;
-  --average-gap-pbc: min(2vh, 2vw);
-  --max-gap-pbc: 3vw;
-
-  --gap-page-buttons-container: clamp(
-    var(--min-gap-pbc),
-    var(--average-gap-pbc),
-    var(--max-gap-pbc)
-  );
+  --fs-ipn-btn: clamp(1rem, 1rem + 1vmin, 1.5rem);
+  --br-ipn-btn: 0.5em;
 }
 
 .inputPlayerName-page {
@@ -31,6 +15,7 @@
   align-items: center;
   width: 100%;
   height: 100%;
+  padding: var(--pd-inputPlayerName-page);
 }
 
 .inputPlayerName-form {
@@ -42,6 +27,14 @@
   gap: var(--gap-inputPlayerName-form);
 }
 
+.inputPlayerName-form .form-control {
+  font-size: var(--fs-ipn-btn);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: var(--br-ipn-btn);
+  border-top-right-radius: var(--br-ipn-btn);
+}
+
 .inputPlayerName-group {
   display: flex;
   flex-direction: column;
@@ -50,9 +43,41 @@
   align-items: center;
 }
 
-.inputPlayerName-btns-group {
+.inputPlayerName-group .form-label {
+  cursor: pointer;
+  text-align: center;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.inputPlayerName-page .btn-group {
   display: flex;
   justify-content: center;
-  align-items: center;
   gap: var(--gap-page-buttons-container);
+}
+
+.inputPlayerName-page-btn {
+  font-size: var(--fs-ipn-btn);
+  line-height: 1;
+  padding: 0.6em;
+  text-align: center;
+  color: black; /* Приоритет над системными стилями */
+  background-color: yellow;
+  border-style: hidden;
+  box-shadow: 0 0 0 0.1rem rgba(0, 0, 0, 0.5);
+  -webkit-tap-highlight-color: transparent; /* Убирает синюю подсветку */
+  text-emphasis-color: black; /* Для Safari */
+  -webkit-text-fill-color: black; /* Для старых версий */
+  -webkit-appearance: none;
+  appearance: none; /* Отключает системные стили */
+}
+
+.inputPlayerName-page-btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: var(--br-ipn-btn);
+}
+
+.inputPlayerName-page-btn:last-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: var(--br-ipn-btn);
 }

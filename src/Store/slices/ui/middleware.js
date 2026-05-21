@@ -1,10 +1,11 @@
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
-import { endedGame, setIsFirstCardsEvent, updatePoints } from "../game/slice";
+import { setGameStatus, updatePoints } from "../game/slice";
 import {
   clearCurrentNotification,
   removeUpPointsByCardId,
   setActiveNotification,
   setIsCollectCardsBtnVisible,
+  setIsNeedByRedealsShowing,
   showPFModalById,
 } from "./slice";
 import { getAnimationFlipDuration } from "../../../utils/playingCardUtils";
@@ -12,22 +13,123 @@ import { animationsTypes } from "../../../Configs/PlayingCardsConfigs/PlayingCar
 import { dealingCounts, GAME_STATUSES } from "../../../Configs/GameConfigs";
 import { P_F_MODALS_IDS } from "../../../Configs/UIConfigs";
 import {
-  selectActiveNotification,
   selectIsCollectCardsBtnVisible,
+  selectIsNeedByRedealsShowing,
 } from "./selectors";
-import { handleGameInit, handleShuffle, standartMove } from "../game/thunks";
+import { handleShuffle, moveStockWaste, standartMove } from "../game/thunks";
 import { notifications_ids } from "../../../Configs/NotificationsConfigs";
-import { removeTabsShirtCardIdOne } from "../decks/slice";
 import {
-  selectStockAndWasteEmpty,
-  selectTableausShirtCardsIds,
+  addTabsShirtCardIdOne,
+  removeTabsShirtCardIdOne,
+} from "../decks/slice";
+import {
+  selectHasWasteMoreOneCardId,
+  selectIsPileEmpty,
+  selectStockId,
+  selectIsTableausShirtCardsEmpty,
+  selectWasteId,
 } from "../decks/selectors";
-import { selectGameCurrentDealing } from "../game/selectors";
-import { field_components_type_ids } from "../../../Configs/FieldComponentsConfigs";
+import {
+  selectGameCurrentDealing,
+  selectIsCanRedeals,
+  selectIsCollectingCards,
+} from "../game/selectors";
+import { addAppearanceIdToUnlockedsIds } from "../appearances/slice";
 
 export const uiListeners = createListenerMiddleware();
 
 const updatePointsTimers = new Map();
+
+uiListeners.startListening({
+  actionCreator: setGameStatus,
+  effect: (action, listenerApi) => {
+    const status = action.payload;
+    const dispatch = listenerApi.dispatch;
+
+    if (status === GAME_STATUSES.PLAYING) {
+      const dispatch = listenerApi.dispatch;
+      dispatch(clearCurrentNotification());
+      return;
+    }
+
+    if (status === GAME_STATUSES.INIT) {
+      const payload = { id: notifications_ids.game_initing, params: {} };
+      dispatch(setActiveNotification(payload));
+      return;
+    }
+
+    if (status === GAME_STATUSES.PAUSED) {
+      const payload = { id: notifications_ids.paused, params: {} };
+      dispatch(setActiveNotification(payload));
+      return;
+    }
+
+    if (status === GAME_STATUSES.READY) {
+      const payload = { id: notifications_ids.game_is_ready, params: {} };
+      dispatch(setActiveNotification(payload));
+      return;
+    }
+  },
+});
+
+uiListeners.startListening({
+  matcher: isAnyOf(moveStockWaste.fulfilled, standartMove.fulfilled),
+  effect: async (action, listenerApi) => {
+    const state = listenerApi.getState();
+    const dispatch = listenerApi.dispatch;
+
+    const stockId = selectStockId(state);
+    const isStockEmpty = selectIsPileEmpty(state, stockId);
+    const isCanRedeals = selectIsCanRedeals(state);
+    const hasWasteMoreOneCardId = selectHasWasteMoreOneCardId(state);
+    
+    if (selectIsCollectingCards(state)) return;
+
+    if (standartMove.fulfilled.match(action)) {
+      const fromPileId = action.payload.data.fromPileId;
+      if (fromPileId !== selectWasteId(state)) return;
+    }
+
+    if (isStockEmpty && !hasWasteMoreOneCardId) {
+      if (selectIsNeedByRedealsShowing(state)) {
+        dispatch(setIsNeedByRedealsShowing(false));
+      }
+      return;
+    }
+
+    const shouldShow = isStockEmpty && !isCanRedeals && hasWasteMoreOneCardId;
+    const isNeedByRedealsShowing = selectIsNeedByRedealsShowing(state);
+
+    if (shouldShow !== isNeedByRedealsShowing) {
+      dispatch(setIsNeedByRedealsShowing(shouldShow));
+    }
+  },
+});
+
+uiListeners.startListening({
+  matcher: isAnyOf(moveStockWaste.fulfilled, standartMove.fulfilled),
+  effect: async (action, listenerApi) => {
+    const state = listenerApi.getState();
+    const dispatch = listenerApi.dispatch;
+    const gameCurrentDealing = selectGameCurrentDealing(state);
+    const isDealingThree = gameCurrentDealing === dealingCounts.three;
+
+    if (!isDealingThree) return;
+
+    const stockId = selectStockId(state);
+    const isStockEmpty = selectIsPileEmpty(state, stockId);
+    const noShirtCards = selectIsTableausShirtCardsEmpty(state);
+    const isCollectCardsBtnVisible = selectIsCollectCardsBtnVisible(state);
+    const hasWasteMoreOneCardId = selectHasWasteMoreOneCardId(state);
+
+    const shouldShow1 = isStockEmpty && !hasWasteMoreOneCardId;
+    const shouldShow2 = isDealingThree && noShirtCards;
+    const shouldShow = shouldShow1 && shouldShow2;
+    if (shouldShow !== isCollectCardsBtnVisible) {
+      dispatch(setIsCollectCardsBtnVisible(shouldShow));
+    }
+  },
+});
 
 uiListeners.startListening({
   actionCreator: updatePoints,
@@ -52,83 +154,52 @@ uiListeners.startListening({
 });
 
 uiListeners.startListening({
-  actionCreator: standartMove.fulfilled,
-  effect: async (action, listenerApi) => {
+  actionCreator: addTabsShirtCardIdOne,
+  effect: (action, listenerApi) => {
+    const state = listenerApi.getState();
     const dispatch = listenerApi.dispatch;
-    const isCollectCardsBtnVisible = selectIsCollectCardsBtnVisible(
-      listenerApi.getState(),
-    );
-    if (isCollectCardsBtnVisible) {
-      dispatch(setIsCollectCardsBtnVisible(false));
-    }
+
+    if (!selectIsCollectCardsBtnVisible(state)) return;
+
+    dispatch(setIsCollectCardsBtnVisible(false));
   },
 });
 
 uiListeners.startListening({
-  matcher: isAnyOf(removeTabsShirtCardIdOne, standartMove.fulfilled),
+  actionCreator: removeTabsShirtCardIdOne,
   effect: (action, listenerApi) => {
     const state = listenerApi.getState();
     const dispatch = listenerApi.dispatch;
-    const tableausShirtCardsIds = selectTableausShirtCardsIds(state);
-    if (tableausShirtCardsIds.length === 0) {
-      const gameCurrentDealing = selectGameCurrentDealing(state);
-      if (gameCurrentDealing === dealingCounts.three) {
-        if (standartMove.fulfilled.match(action)) {
-          const fromPileId = action.payload.data.fromPileId;
-          const isFropmPileWaste =
-            field_components_type_ids.wastes.includes(fromPileId);
-          if (isFropmPileWaste && !selectStockAndWasteEmpty(state)) return;
-        }
-        if (!selectStockAndWasteEmpty(state)) return;
-      }
+
+    if (!selectIsTableausShirtCardsEmpty(state)) return;
+
+    const gameCurrentDealing = selectGameCurrentDealing(state);
+    const isDealingOne = gameCurrentDealing === dealingCounts.one;
+    const isCollectCardsBtnVisible = selectIsCollectCardsBtnVisible(state);
+
+    if (isDealingOne && !isCollectCardsBtnVisible) {
       dispatch(setIsCollectCardsBtnVisible(true));
     }
   },
 });
 
 uiListeners.startListening({
-  actionCreator: endedGame,
+  actionCreator: setGameStatus,
   effect: async (action, listenerApi) => {
     const state = listenerApi.getState();
     const dispatch = listenerApi.dispatch;
-    const isCollectCardsBtnVisible = selectIsCollectCardsBtnVisible(state);
-    if (isCollectCardsBtnVisible) {
-      dispatch(setIsCollectCardsBtnVisible(false));
-    }
-    dispatch(showPFModalById({ id: P_F_MODALS_IDS.GAME_OVER_AND_WIN }));
-  },
-});
+    const isWinStatus = action.payload === GAME_STATUSES.WON;
+    const isGameOverStatus = action.payload === GAME_STATUSES.GAME_OVER;
 
-uiListeners.startListening({
-  actionCreator: handleGameInit.pending,
-  effect: async (action, listenerApi) => {
-    const dispatch = listenerApi.dispatch;
-    const payload = { id: notifications_ids.game_initing, params: {} };
-    dispatch(setActiveNotification(payload));
-  },
-});
+    if (isWinStatus || isGameOverStatus) {
+      if (selectIsNeedByRedealsShowing(state)) {
+        dispatch(setIsNeedByRedealsShowing(false));
+      }
 
-uiListeners.startListening({
-  actionCreator: handleGameInit.fulfilled,
-  effect: async (action, listenerApi) => {
-    const dispatch = listenerApi.dispatch;
-    const payload = { id: notifications_ids.game_is_ready, params: {} };
-    dispatch(setActiveNotification(payload));
-  },
-});
-
-uiListeners.startListening({
-  actionCreator: setIsFirstCardsEvent,
-  effect: async (action, listenerApi) => {
-    const state = listenerApi.getState();
-    const dispatch = listenerApi.dispatch;
-    // const bestPoints = selectCurrentBestPoints(state);
-    const activeNotification = selectActiveNotification(state);
-
-    if (activeNotification?.id === notifications_ids.game_is_ready) {
-      // const value = bestPoints === null ? 0 : bestPoints;
-      // const payload = { id: notifications_ids.best_points, params: { value } };
-      dispatch(clearCurrentNotification());
+      if (selectIsCollectCardsBtnVisible(state)) {
+        dispatch(setIsCollectCardsBtnVisible(false));
+      }
+      dispatch(showPFModalById({ id: P_F_MODALS_IDS.GAME_OVER_AND_WIN }));
     }
   },
 });
@@ -138,6 +209,15 @@ uiListeners.startListening({
   effect: async (action, listenerApi) => {
     const dispatch = listenerApi.dispatch;
     const payload = { id: notifications_ids.cards_shuffled, params: {} };
+    dispatch(setActiveNotification(payload));
+  },
+});
+
+uiListeners.startListening({
+  actionCreator: addAppearanceIdToUnlockedsIds,
+  effect: async (action, listenerApi) => {
+    const dispatch = listenerApi.dispatch;
+    const payload = { id: notifications_ids.new_appearance, params: {} };
     dispatch(setActiveNotification(payload));
   },
 });

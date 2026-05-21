@@ -22,6 +22,7 @@ export const useMenuBtns = () => {
       case BUTTONS_IDS.CONTINUE_GAME: {
         dispatch(resetActivePFModalId());
         dispatch(setGameStatus(GAME_STATUSES.READY));
+
         return;
       }
       case BUTTONS_IDS.SETTINGS: {

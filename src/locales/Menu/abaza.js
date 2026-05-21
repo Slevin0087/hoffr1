@@ -1,8 +1,8 @@
 export default {
   modal_title: "Аменю",
   game_name: "Хъвмарра ахьыз",
-  menu_page_h1: "Х|ВУСЫНК|А",
-  menu_btn_new_game: "Хъвмарра ш|ыц",
+  menu_page_h1: "ХӏВУСЫНКӏА",
+  menu_btn_new_game: "Хъвмарра шӏыц",
   menu_btn_continue_game: "Нардзара",
   menu_btn_settings_game: "Щаквыргылра",
   menu_btn_player_stats: "Астатистика",

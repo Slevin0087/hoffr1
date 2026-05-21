@@ -29,7 +29,13 @@ function Hints() {
   };
 
   return (
-    <div className="hints-btn-container">
+    <FooterBtn
+      variant="dark"
+      btnClassName="hints"
+      ariaLabel={ariaLabel}
+      onClick={onClick}
+      disabled={!isCanUse && remainingHints > 0}
+    >
       <span className="hints-btn-span">
         {hintsLimit === null
           ? "∞"
@@ -38,15 +44,8 @@ function Hints() {
             : `+${hintsLimit}`}
         {/* ♾️ */}
       </span>
-      <FooterBtn
-        variant="outline-dark"
-        ariaLabel={ariaLabel}
-        onClick={onClick}
-        disabled={!isCanUse && remainingHints > 0}
-      >
-        💡
-      </FooterBtn>
-    </div>
+      💡
+    </FooterBtn>
   );
 }
 

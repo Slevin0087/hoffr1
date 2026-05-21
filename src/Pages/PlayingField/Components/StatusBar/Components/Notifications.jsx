@@ -18,6 +18,7 @@ function Notifications() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const activeNotification = useSelector(selectActiveNotification);
+  console.log('activeNotification: ', activeNotification);
   const bestPoints = useSelector(selectCurrentBestPoints);
   const notificationData = useMemo(
     () =>
@@ -35,6 +36,7 @@ function Notifications() {
 
   useEffect(() => {
     if (!activeNotification || !notificationData) return;
+    console.log('notificationData.isCombo: ', notificationData);
 
     if (notificationData.duration === null) return;
 

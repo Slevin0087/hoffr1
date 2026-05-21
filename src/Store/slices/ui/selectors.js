@@ -12,6 +12,10 @@ export const selectPFModalsIds = (state) => state.ui.p_f_modalsIds;
 
 export const selectNotificationsState = (state) => state.ui.notifications;
 
+export const selectIsNeedByRedealsShowing = (state) => {
+  return state.ui.isNeedByRedealsShowing;
+};
+
 export const selectIsShowPFModalById = createSelector(
   [(state) => selectPFModalsIds(state), (_, modalId) => modalId],
   (modals, modalId) => modals?.[modalId],

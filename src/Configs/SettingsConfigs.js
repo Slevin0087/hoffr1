@@ -7,7 +7,7 @@ export const SETTINGS_SLICE_NAME = "settings";
 export const gameSettingsTypes = {
   gameMode: "gameMode",
   language: "language",
-  soundEffects: "soundEffects",
+  soundsEffects: "soundsEffects",
   music: "music",
   volume: "volume",
   animations: "animations",
@@ -28,7 +28,7 @@ export const defaultSettingsLanguage = {
   value: LANGUAGES.ABAZA,
 };
 
-export const defaultSettingsSoundEffects = {
+export const defaultSettingsSoundsEffects = {
   value: true,
 };
 
@@ -59,13 +59,11 @@ export const defaultSettingsCanCardClick = {
 export const SETTINGS_DEFAULT_STATE = {
   [gameSettingsTypes.gameMode]: defaultSettingsGameModes,
   [gameSettingsTypes.language]: defaultSettingsLanguage,
-  [gameSettingsTypes.soundEffects]: defaultSettingsSoundEffects,
+  [gameSettingsTypes.soundsEffects]: defaultSettingsSoundsEffects,
   [gameSettingsTypes.music]: defaultSettingsMusic,
   [gameSettingsTypes.volume]: defaultSettingsVolume,
   [gameSettingsTypes.animations]: defaultSettingsAnimations,
   [gameSettingsTypes.dealingCards]: defaultSettingDealingCards,
-  [gameSettingsTypes.fastGame]:
-    defaultSettingsFastGame,
-  [gameSettingsTypes.canCardClick]:
-    defaultSettingsCanCardClick,
+  [gameSettingsTypes.fastGame]: defaultSettingsFastGame,
+  [gameSettingsTypes.canCardClick]: defaultSettingsCanCardClick,
 };

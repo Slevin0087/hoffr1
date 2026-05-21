@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { showPFModalById } from "../../../../../../Store/slices/ui/slice";
 import { P_F_MODALS_IDS } from "../../../../../../Configs/UIConfigs";
+import FooterBtn from "../FooterBtn";
 
 const modalId = P_F_MODALS_IDS.RESTART;
 
@@ -15,15 +16,14 @@ function GameRestart() {
   const ariaLabel = t("playingField.footer_gameRestart");
 
   return (
-    <Button
-      variant="outline-success"
-      className="footer-btn"
+    <FooterBtn
+      variant="success"
+      btnClassName="game-restart"
       onClick={onClickGamePlay}
-      title={ariaLabel}
       aria-label={ariaLabel}
     >
       ↻
-    </Button>
+    </FooterBtn>
   );
 }
 

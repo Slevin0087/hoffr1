@@ -1,44 +1,56 @@
 .dealing-cards-btns {
   display: flex;
+  flex-wrap: nowrap;
   gap: 10px;
 }
 
-.dealing-cards-btns button {
+.dealing-cards-btn {
   width: 40px;
   height: 40px;
-  border: 2px solid #4CAF50;
+  border: 2px solid #4caf50;
   background: white;
-  color: #4CAF50;
+  color: #4caf50;
   font-size: 16px;
   font-weight: bold;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
+  text-align: center;
 }
 
-.dealing-cards-btns button:hover {
-  background: #4CAF50;
+.dealing-cards-btn-one {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.dealing-cards-btn-three {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.dealing-cards-btn:hover {
+  background: #4caf50;
   color: white;
 }
 
-.dealing-cards-btns button.active-dealing-cards-btn {
-  background: #4CAF50;
+.dealing-cards-btn.active-dealing-cards-btn {
+  background: #4caf50;
   color: white;
   cursor: default;
 }
 
-.dealing-cards-btns button:disabled {
-  opacity: 0.7;
+.dealing-cards-btn:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.dealing-cards-btns button:disabled:hover {
-  background: #4CAF50;
+.dealing-cards-btn:disabled:hover {
+  background: #4caf50;
   color: white;
 }
 
 @media (max-height: 500px) {
-  .dealing-cards-btns button {
+  .dealing-cards-btn {
     width: 30px;
     height: 30px;
     font-size: 12px;

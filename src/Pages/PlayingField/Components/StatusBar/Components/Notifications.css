@@ -16,9 +16,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
   font-weight: bold;
   backdrop-filter: blur(10px);
+  padding: 0;
+  gap: 0.3vh;
 }
 
 .notification-item {
@@ -28,11 +29,20 @@
   align-items: center;
   white-space: nowrap;
   flex-wrap: nowrap;
-  background-color: chocolate;
+  font-size: var(--fs-status-bar-cell);
+  padding: var(--padding-status-bar-cell);
   border: 1px solid rgb(75, 38, 11);
-  border-radius: var(--border-radius-status-bar-cell);
-  padding: var(--padding-status-bar-notifications);
-  font-size: var(--font-size-status-bar-notifications);
+  border-radius: calc(var(--padding-status-bar-cell) * 2);
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.9),
+    rgba(56, 142, 60, 0.9)
+  );
+  /* background-color: chocolate; */
+  /* border: 1px solid rgb(75, 38, 11);
+  border-radius: var(--border-radius-status-bar-cell); */
+  /* padding: var(--padding-status-bar-notifications); */
+  /* font-size: var(--font-size-status-bar-notifications); */
 }
 
 .notification-item.success {
@@ -67,12 +77,14 @@
   /* font-size: calc(var(--fs-status-bar-cell) * 1.4); */
   font-weight: 900;
   text-shadow: 0 0 10px rgba(255, 200, 0, 0.8);
+  margin-bottom: 0;
 }
 
 .notifications-container .combo-timer {
   background-color: red;
-  height: 5px;
+  height: 0.5vh;
   border-radius: 5px;
+  margin-top: 0;
 }
 
 .notification-item.combo_bonus {
@@ -90,7 +102,7 @@
   line-height: 1;
 }
 
-@media (max-height: 600px) {
+@media (max-height: 38rem) and (orientation: landscape) {
   :root {
     --padding-status-bar-notifications: clamp(
       0.3rem,
@@ -98,10 +110,15 @@
       0.3rem
     );
     --font-size-status-bar-notifications: clamp(
-    0.8rem,
-    calc(var(--card-width) / 10),
-    1rem
-  );
+      0.8rem,
+      calc(var(--card-width) / 10),
+      1rem
+    );
+  }
+
+  .notification-item.combo {
+    font-size: 2.8vh;
+    padding: 0.6vh;
   }
 
   .notification-message {
@@ -109,17 +126,5 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  }
-
-  .notifications-container {
-    position: absolute;
-    top: calc(var(--card-width) / 10);
-    /* left: 50%; */
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    width: fit-content;
-    overflow: hidden;
   }
 }

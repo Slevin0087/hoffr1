@@ -28,7 +28,13 @@ function Undo() {
   const ariaLabel = t("playingField.footer_undo");
 
   return (
-    <div className="undo-btn-container">
+      <FooterBtn
+        variant="info"
+        btnClassName="undo"
+        ariaLabel={ariaLabel}
+        onClick={onClick}
+        disabled={!isCanUse && remainingUndo > 0}
+      >
       <span className="undo-btn-span">
         {undoLimit === null
           ? "∞"
@@ -37,15 +43,8 @@ function Undo() {
             : `+${undoLimit}`}
         {/* ♾️ */}
       </span>
-      <FooterBtn
-        variant="outline-info"
-        ariaLabel={ariaLabel}
-        onClick={onClick}
-        disabled={!isCanUse && remainingUndo > 0}
-      >
         ↩
       </FooterBtn>
-    </div>
   );
 }
 

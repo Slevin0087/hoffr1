@@ -26,4 +26,6 @@ export default {
   assistance_in_card_click: "Kartlara tıklayın:",
   assistance_in_card_click_p: "haritaya tıklama yeteneği",
   selected_value: "seçilen değer -",
+  info_modal_small_p: "Bir sonraki maçtan itibaren geçerli olacak.",
+  info_modal_small_btn: "Apaçık",
 };

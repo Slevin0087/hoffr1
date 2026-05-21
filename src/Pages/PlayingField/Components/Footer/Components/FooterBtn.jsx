@@ -1,10 +1,20 @@
+import "./FooterBtn.css";
+import cn from "classnames";
 import { Button } from "react-bootstrap";
 
 function FooterBtn(props) {
-  const { variant, ariaLabel, onClick, disabled, children } = props;
+  const {
+    variant,
+    ariaLabel,
+    onClick,
+    disabled,
+    children,
+    btnClassName = '',
+  } = props;
+  const classes = cn("footer-btn", btnClassName );
   return (
     <Button
-      className="footer-btn"
+      className={classes}
       variant={variant}
       title={ariaLabel}
       aria-label={ariaLabel}

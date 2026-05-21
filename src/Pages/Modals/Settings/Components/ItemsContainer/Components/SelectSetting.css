@@ -34,12 +34,12 @@
 
 @media (max-height: 500px) {
   .setting-select-item {
-    font-size: 0.6rem;
+    font-size: 0.8rem;
     padding: 4px 8px;
   }
 
   .setting-select-item-option {
-    font-size: 0.6rem;
+    font-size: 0.8rem;
     padding: 4px;
   }
 }

@@ -7,12 +7,18 @@ export const selectTypeAppearancesByType = createSelector(
   (appearances, type) => appearances[type],
 );
 
-export const selectAppearancesSelectedIdByType = createSelector(
+export const selectAppearancesActiveIdByType = createSelector(
   [(state, type) => selectTypeAppearancesByType(state, type)],
-  (appearancesByType) => appearancesByType.selectedId,
+  (appearancesByType) => appearancesByType.activeId,
 );
 
-export const selectAppearancesOwnedsIdsByType = createSelector(
+export const selectAppearancesUnlockedsIdsByType = createSelector(
   [(state, type) => selectTypeAppearancesByType(state, type)],
-  (appearancesByType) => appearancesByType.ownedsIds,
+  (appearancesByType) => appearancesByType.unlockedsIds,
+);
+
+export const selectApperancesAllLockedsIds = createSelector(
+  [(state) => selectAppearances(state)],
+  (appearances) =>
+    Object.values(appearances).flatMap(({ lockedsIds }) => lockedsIds),
 );

@@ -5,13 +5,13 @@ import { BUTTONS_IDS } from "../../../../Configs/MenuConfigs";
 import { useTranslation } from "react-i18next";
 
 function MenuBtn(props) {
-  const { btn, isGameInit } = props;
+  const { btn, isGameReady } = props;
   const { t } = useTranslation();
   const { onClick } = useMenuBtns();
   const btnText = t(`menu.${btn.text}`);
   return (
     <>
-      {btn.id === BUTTONS_IDS.CONTINUE_GAME && !isGameInit ? null : (
+      {btn.id === BUTTONS_IDS.CONTINUE_GAME && !isGameReady ? null : (
         <Button
           id={btn.id}
           variant="secondary"

@@ -9,6 +9,7 @@ export const AudioName = {
   CLICK: "click",
   INFO: "info",
   WIN: "win",
+  GAME_OVER: "game-over",
   UP_SCORE: "up-score",
   SHOCK: "shock",
   SHUFFLE: "shuffle",
@@ -32,6 +33,10 @@ export const sounds = {
     src: [`${BASE_URL}/sounds/win.mp3`],
     volume: 0.7,
   }),
+  [AudioName.GAME_OVER]: new Howl({
+    src: [`${BASE_URL}/sounds/game-over.mp3`],
+    volume: 0.7,
+  }),
   [AudioName.UP_SCORE]: new Howl({
     src: [`${BASE_URL}/sounds/up-score.mp3`],
     volume: 0.5,
@@ -45,17 +50,36 @@ export const sounds = {
     loop: true,
     volume: 0.5,
   }),
+  [AudioName.INFO]: new Howl({
+    src: [`${BASE_URL}/sounds/info.mp3`],
+    volume: 0.5,
+  }),
 };
 
-export const playSound = (soundName) => {
+export const playSound = (soundName, isSoundsEnabled) => {
   try {
+    if (!isSoundsEnabled) return;
     sounds[soundName]?.play();
   } catch (error) {
     console.error(`Failed to play sound: ${soundName}`, error);
   }
 };
 
-// Для отладки
+export const playSoundAsync = (
+  soundName,
+  animationDurationMs,
+  isSoundsEnabled,
+) => {
+  if (!isSoundsEnabled) return;
+  const sound = sounds[soundName];
+  if (!sound) return;
+  const soundDurationMs = sound.duration() * 1000;
+  const rate = soundDurationMs / animationDurationMs;
+  const id = sound.play();
+  sound.rate(rate, id);
+  return id;
+};
+
 export const setVolume = (soundName, volume) => {
   sounds[soundName]?.volume(volume);
 };

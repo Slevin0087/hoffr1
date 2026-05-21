@@ -1,25 +1,20 @@
 :root {
-  --width-hints-btn-span: 1.5rem;
-  --height-hints-btn-span: 1.5rem;
+  --width-hints-btn-span: 1.8rem;
+  --height-hints-btn-span: 1.8rem;
   --br-hints-btn-span: 50%;
   --br-width-hints-btn-span: calc(var(--width-hints-btn-span) / 20);
-}
-
-.hints-btn-container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
+  --fs-hints-btn-span: clamp(15px, 1.5rem, 40px);
 }
 
 .hints-btn-span {
   position: absolute;
   z-index: 1;
   margin: auto;
-  right: calc((var(--width-hints-btn-span) / 2) * -1);
+  /* right: calc((var(--width-hints-btn-span) / 2) * -1); */
+  right: 0;
+
   top: calc((var(--width-hints-btn-span) / 2) * -1);
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,5 +26,22 @@
   border: var(--br-width-hints-btn-span) solid black;
   background-color: yellow;
   color: black;
+  -webkit-text-fill-color: black;
+  -webkit-tap-highlight-color: transparent;
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+
+  font-size: var(--fs-hints-btn-span);
+}
+
+@media (max-height: 38rem) and (orientation: landscape) {
+  :root {
+    --width-hints-btn-span: 1.6rem;
+    --height-hints-btn-span: 1.6rem;
+  }
+
+  .hints-btn-span {
+    top: 0;
+    margin: 0;
+    right: calc((var(--width-hints-btn-span) / 2) * -1);
+  }
 }

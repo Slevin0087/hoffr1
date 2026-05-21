@@ -95,6 +95,7 @@ export const span_text = {
   waste: "W",
   foundation: "A",
   tableau: "K",
+  needByRedealsText: '+↺',
 };
 
 export const field_components_default_state = {

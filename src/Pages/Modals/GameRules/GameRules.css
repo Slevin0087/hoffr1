@@ -1,3 +1,7 @@
+:root {
+  --bw-game-rules-accordion: 1vmin;
+}
+
 .game-rules-wrapper {
   display: flex;
   flex-direction: column;
@@ -7,21 +11,17 @@
 }
 
 .game-rules-container {
-  /* max-width: 1200px; */
-  /* z-index: 1000; */
   background-color: transparent;
-  /* height: 100%; */
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 0;
   flex: 1;
   min-height: 0;
 }
 
 .game-rules-container .shadow {
-  height: 100%;
   border: none;
 }
-
 
 .game-rules-container .shadow,
 .game-rules-container .shadow .card-body,
@@ -30,6 +30,7 @@
 .game-rules-container .shadow .card-body .accordion-item {
   background-color: transparent;
 }
+
 
 .game-rules-container::-webkit-scrollbar {
   width: 6px;
@@ -74,10 +75,98 @@
   transform: translateY(-2px);
 } */
 
-/* Адаптивность */
-@media (max-width: 768px) {
-  .game-rules-container {
-    padding-left: 10px;
-    padding-right: 10px;
+@media (max-width: 30rem) and (orientation: portrait) {
+  .game-rules-wrapper,
+  .game-rules-container,
+  .shadow-card-body {
+    padding: 0;
+  }
+}
+
+@media (max-height: 38rem) and (orientation: landscape) {
+  :root {
+    --bw-game-rules-accordion: 0.5vh;
+  }
+
+  .game-rules-wrapper,
+  .game-rules-container,
+  .shadow-card-body {
+    padding: 0;
+  }
+
+  .game-rules-clear-btn-container {
+    margin: 0;
+    margin-top: 2vh;
+  }
+
+  .game-rules-container .shadow .card-body {
+    padding: 1vh;
+  }
+
+  .game-rules-container .shadow .card-body .card,
+  .game-rules-container .shadow .card-body .accordion {
+    border-radius: 1vh;
+  }
+
+  .game-rules-container .shadow .card-body .accordion .accordion-item {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  .game-rules-container
+    .shadow
+    .card-body
+    .accordion
+    .accordion-item:first-child {
+    border-top-left-radius: calc(1vh + var(--bw-game-rules-accordion) / 10);
+    border-top-right-radius: calc(1vh + var(--bw-game-rules-accordion) / 10);
+  }
+
+  .game-rules-container
+    .shadow
+    .card-body
+    .accordion
+    .accordion-item:last-child {
+    border-bottom: none;
+    border-bottom-left-radius: calc(1vh + var(--bw-game-rules-accordion) / 10);
+    border-bottom-right-radius: calc(1vh + var(--bw-game-rules-accordion) / 10);
+  }
+
+  .game-rules-common-goal-h5,
+  .game-rules-victory-conditions-h5 {
+    font-size: 4vh;
+  }
+
+  .game-rules-common-goal-p,
+  .game-rules-victory-conditions-p {
+    font-size: 3vh;
+  }
+
+  .game-rules-container
+    .shadow
+    .card-body
+    .accordion
+    .accordion-item
+    .accordion-button {
+    font-size: 4vh;
+  }
+
+  .game-rules-container
+    .shadow
+    .card-body
+    .accordion
+    .accordion-item
+    .accordion-body {
+    font-size: 3vh;
+    padding: 1vh;
+  }
+
+  .game-rules-clear-btn {
+    margin: 0;
+    padding: 0.3rem;
+    line-height: 1;
+    border-radius: 0.3rem;
+    text-align: center;
   }
 }

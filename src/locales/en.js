@@ -11,6 +11,8 @@ import playerStatsEn from "./PlayerStats/en.js";
 import gameOverAndWinEn from "./GameOverAndWin/en.js";
 import achievementsEn from "./Achievements/en.js";
 import notificationsEn from "./Notifications/en.js";
+import needByRedealsEn from "./NeedByRedeals/en.js";
+import needByShuffleEn from "./NeedByShuffle/en.js";
 
 export default {
   translation: {
@@ -27,5 +29,7 @@ export default {
     gameOverAndWin: { ...gameOverAndWinEn },
     achievements: { ...achievementsEn },
     notifications: { ...notificationsEn },
+    needByRedeals: { ...needByRedealsEn },
+    needByShuffle: { ...needByShuffleEn },
   },
 };

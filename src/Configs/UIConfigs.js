@@ -26,6 +26,8 @@ export const P_F_MODALS_IDS = {
   PLAYER_STATS: "player-stats",
   SHOP: "shop-modal",
   GAME_OVER_AND_WIN: "game-over-and-win-modal",
+  NEED_BY_REDEALS: "need-by-redeals-modal",
+  NEED_BY_SHUFFLE: "need-by-shuffle-modal",
 };
 
 export const PAGES_STORAGE_KEYS = {
@@ -48,11 +50,14 @@ export const UI_DEFAULTS_STATE = {
   upPoints: {},
   activePFModalId: P_F_MODALS_IDS.MENU,
   p_f_modalsIds: {
-    [P_F_MODALS_IDS.RESTART]: false,
+    [P_F_MODALS_IDS.RESTART]: true,
     [P_F_MODALS_IDS.MENU]: false,
-    [P_F_MODALS_IDS.GAME_OVER_AND_WIN]: true,
+    [P_F_MODALS_IDS.GAME_OVER_AND_WIN]: false,
+    [P_F_MODALS_IDS.NEED_BY_REDEALS]: false,
+    [P_F_MODALS_IDS.NEED_BY_SHUFFLE]: false,
   },
   isCollectCardsBtnVisible: false,
+  isNeedByRedealsShowing: false,
   notifications: {
     // active: null,
     active: null,

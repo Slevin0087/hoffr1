@@ -17,138 +17,147 @@ export const APPEARANCES_STORAGE_KEYS_BY_TYPE = {
 };
 
 export const facesAppearancesIds = {
-  classic: "classic",
-  classicPro: "classicPro",
+  faceClassic: "faceClassic",
+  faceClassicPro: "faceClassicPro",
 };
 
 export const shirtsAppearancesIds = {
-  classic: "classic",
-  classicPro: "classicPro",
-  classicPro2: "classicPro2",
+  shirtClassic: "shirtClassic",
+  shirtClassicPro: "shirtClassicPro",
+  shirtClassicPro2: "shirtClassicPro2",
 };
 
 export const fonsAppearancesIds = {
-  classic: "classic",
-  sea: "sea",
-  mahogany: "mahogany",
-  ice: "ice",
+  fonClassic: "fonClassic",
+  fonSea: "fonSea",
+  fonMahogany: "fonMahogany",
+  fonIce: "fonIce",
 };
 
 const BASE_URL = import.meta.env.BASE_URL;
 
 export const facesAppearancesObj = {
-  [facesAppearancesIds.classic]: {
-    id: facesAppearancesIds.classic,
+  [facesAppearancesIds.faceClassic]: {
+    id: facesAppearancesIds.faceClassic,
+    type: APPEARANCES_TYPES.FACES,
     img: {
       path: `${BASE_URL}/faces/faces_classic_mini.png`,
       joker: `${BASE_URL}/faces/faces_classic_joker_mini.png`,
       manyColumns: 13,
       manyLines: 4,
     },
-    price: 0,
+    requiredPoints: 0,
     styles: "",
   },
 
-  [facesAppearancesIds.classicPro]: {
-    id: facesAppearancesIds.classicPro,
+  [facesAppearancesIds.faceClassicPro]: {
+    id: facesAppearancesIds.faceClassicPro,
+    type: APPEARANCES_TYPES.FACES,
     img: {
       path: `${BASE_URL}/faces/faces_classic_pro_mini.png`,
       joker: `${BASE_URL}/faces/faces_classic_pro_joker_mini.png`,
       manyColumns: 13,
       manyLines: 4,
     },
-    price: 0,
+    requiredPoints: 500,
     styles: "",
   },
 };
 
 export const shirtsAppearancesObj = {
-  [shirtsAppearancesIds.classic]: {
-    id: shirtsAppearancesIds.classic,
+  [shirtsAppearancesIds.shirtClassic]: {
+    id: shirtsAppearancesIds.shirtClassic,
+    type: APPEARANCES_TYPES.SHIRTS,
     img: {
       path: `${BASE_URL}/shirts/shirts_classic_mini.png`,
       joker: `${BASE_URL}/shirts/shirts_classic_mini.png`,
       manyColumns: 1,
       manyLines: 4,
     },
-    price: 0,
+    requiredPoints: 0,
     styles: "",
   },
-  [shirtsAppearancesIds.classicPro]: {
-    id: shirtsAppearancesIds.classicPro,
+  [shirtsAppearancesIds.shirtClassicPro]: {
+    id: shirtsAppearancesIds.shirtClassicPro,
+    type: APPEARANCES_TYPES.SHIRTS,
     img: {
       path: `${BASE_URL}/shirts/shirts_classic_pro_mini.png`,
       joker: `${BASE_URL}/shirts/shirts_classic_mini.png`,
       manyColumns: 1,
       manyLines: 4,
     },
-    price: 0,
+    requiredPoints: 300,
     styles: "",
   },
-  [shirtsAppearancesIds.classicPro2]: {
-    id: shirtsAppearancesIds.classicPro2,
+  [shirtsAppearancesIds.shirtClassicPro2]: {
+    id: shirtsAppearancesIds.shirtClassicPro2,
+    type: APPEARANCES_TYPES.SHIRTS,
     img: {
       path: `${BASE_URL}/shirts/shirts_classic_pro2_mini.png`,
       joker: `${BASE_URL}/shirts/shirts_classic_mini.png`,
       manyColumns: 1,
       manyLines: 4,
     },
-    price: 0,
+    requiredPoints: 800,
     styles: "",
   },
 };
 
 export const fonsAppearancesObj = {
-  [fonsAppearancesIds.classic]: {
-    id: fonsAppearancesIds.classic,
+  [fonsAppearancesIds.fonClassic]: {
+    id: fonsAppearancesIds.fonClassic,
+    type: APPEARANCES_TYPES.FONS,
     img: {
       path: `${BASE_URL}/fons/classic.png`,
     },
-    price: 0,
+    requiredPoints: 0,
     styles: "",
   },
-  [fonsAppearancesIds.sea]: {
-    id: fonsAppearancesIds.sea,
+  [fonsAppearancesIds.fonSea]: {
+    id: fonsAppearancesIds.fonSea,
+    type: APPEARANCES_TYPES.FONS,
     img: {
       path: `${BASE_URL}/fons/sea.png`,
     },
-    price: 100,
+    requiredPoints: 1000,
     styles: "",
   },
-  [fonsAppearancesIds.mahogany]: {
-    id: fonsAppearancesIds.mahogany,
+  [fonsAppearancesIds.fonMahogany]: {
+    id: fonsAppearancesIds.fonMahogany,
+    type: APPEARANCES_TYPES.FONS,
     img: {
       path: `${BASE_URL}/fons/mahogany.png`,
     },
-    price: 100,
+    requiredPoints: 2500,
     styles: "",
   },
-  [fonsAppearancesIds.ice]: {
-    id: fonsAppearancesIds.ice,
+  [fonsAppearancesIds.fonIce]: {
+    id: fonsAppearancesIds.fonIce,
+    type: APPEARANCES_TYPES.FONS,
     img: {
       path: `${BASE_URL}/fons/ice.png`,
     },
-    price: 100,
+    requiredPoints: 5000,
     styles: "",
   },
 };
 
 export const facesAppearancesArr = [
-  facesAppearancesObj.classic,
-  facesAppearancesObj.classicPro,
+  facesAppearancesObj.faceClassic,
+  facesAppearancesObj.faceClassicPro,
 ];
 
 export const shirtsAppearancesArr = [
-  shirtsAppearancesObj.classic,
-  shirtsAppearancesObj.classicPro,
-  shirtsAppearancesObj.classicPro2,
+  shirtsAppearancesObj.shirtClassic,
+  shirtsAppearancesObj.shirtClassicPro,
+  shirtsAppearancesObj.shirtClassicPro2,
 ];
 
 export const fonsAppearancesArr = [
-  fonsAppearancesObj.classic,
-  fonsAppearancesObj.sea,
-  fonsAppearancesObj.mahogany,
-  fonsAppearancesObj.ice,
+  fonsAppearancesObj.fonClassic,
+  fonsAppearancesObj.fonSea,
+  fonsAppearancesObj.fonMahogany,
+  fonsAppearancesObj.fonIce,
 ];
 
 export const appearancesObjArrs = {
@@ -157,17 +166,39 @@ export const appearancesObjArrs = {
   [APPEARANCES_TYPES.FONS]: [...fonsAppearancesArr],
 };
 
+export const appearancesObjs = {
+  ...facesAppearancesObj,
+  ...shirtsAppearancesObj,
+  ...fonsAppearancesObj,
+};
+
+export const appearancesObj = {
+  [APPEARANCES_TYPES.FACES]: facesAppearancesArr,
+  [APPEARANCES_TYPES.SHIRTS]: shirtsAppearancesArr,
+  [APPEARANCES_TYPES.FONS]: fonsAppearancesArr,
+};
+
 export const APPEARANCES_DEFAULT_STATE = {
   [APPEARANCES_TYPES.FACES]: {
-    selectedId: facesAppearancesIds.classic,
-    ownedsIds: [facesAppearancesIds.classic],
+    activeId: facesAppearancesIds.faceClassic,
+    unlockedsIds: [facesAppearancesIds.faceClassic],
+    lockedsIds: [facesAppearancesIds.faceClassicPro],
   },
   [APPEARANCES_TYPES.SHIRTS]: {
-    selectedId: shirtsAppearancesIds.classic,
-    ownedsIds: [shirtsAppearancesIds.classic],
+    activeId: shirtsAppearancesIds.shirtClassic,
+    unlockedsIds: [shirtsAppearancesIds.shirtClassic],
+    lockedsIds: [
+      shirtsAppearancesIds.shirtClassicPro,
+      shirtsAppearancesIds.shirtClassicPro2,
+    ],
   },
   [APPEARANCES_TYPES.FONS]: {
-    selectedId: fonsAppearancesIds.classic,
-    ownedsIds: [fonsAppearancesIds.classic],
+    activeId: fonsAppearancesIds.fonClassic,
+    unlockedsIds: [fonsAppearancesIds.fonClassic],
+    lockedsIds: [
+      fonsAppearancesIds.fonSea,
+      fonsAppearancesIds.fonMahogany,
+      fonsAppearancesIds.fonIce,
+    ],
   },
 };

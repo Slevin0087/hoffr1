@@ -2,12 +2,9 @@ import "./ShopItem.css";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "motion/react";
 import { Badge } from "react-bootstrap";
-import { Check, Cart } from "react-bootstrap-icons";
-import { useDispatch } from "react-redux";
-import {
-  addAppearanceIdToOwnedsIds,
-  setSelectedIdAppearanceByType,
-} from "../../../../../Store/slices/appearances/slice";
+import { Check } from "react-bootstrap-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { setActiveIdAppearanceByType } from "../../../../../Store/slices/appearances/slice";
 import { calculateFacesPosition } from "../../../../../utils/facesUtils";
 import {
   PLAYING_CARD_SUITS,
@@ -15,12 +12,29 @@ import {
 } from "../../../../../Configs/PlayingCardsConfigs/PlayingCardsConfigs";
 import { useTranslation } from "react-i18next";
 import { APPEARANCES_TYPES } from "../../../../../Configs/AppearancesConfigs";
+import {
+  selectAppearancesActiveIdByType,
+  selectAppearancesUnlockedsIdsByType,
+} from "../../../../../Store/slices/appearances/selectors";
+import { selectlifetimePoints } from "../../../../../Store/slices/game/selectors/points";
 
-function ShopItem({ item, categoryId, isSelected, isOwned }) {
-  const { id, img, price } = item;
-  const dispatch = useDispatch();
+function ShopItem({ index, item, categoryId }) {
+  const { id, img, requiredPoints } = item;
   const { t } = useTranslation();
-  // Определяем позиции для спрайта (если используется спрайт)
+  const dispatch = useDispatch();
+  const activeId = useSelector((state) =>
+    selectAppearancesActiveIdByType(state, categoryId),
+  );
+
+  const unlockedsItemsIds = useSelector((state) =>
+    selectAppearancesUnlockedsIdsByType(state, categoryId),
+  );
+
+  const lifetimePoints = useSelector(selectlifetimePoints);
+
+  const isActive = item.id === activeId;
+  const isUnlocked = unlockedsItemsIds.includes(item.id);
+
   const getBackgroundStyles = () => {
     const result = {
       backgroundImage: "",
@@ -54,94 +68,79 @@ function ShopItem({ item, categoryId, isSelected, isOwned }) {
     }
   };
 
-  const handleSelectItem = () => {
-    dispatch(setSelectedIdAppearanceByType({ type: categoryId, id }));
-  };
-
-  const handleBuyItem = () => {
-    dispatch(addAppearanceIdToOwnedsIds({ type: categoryId, id }));
+  const handleSetActive = () => {
+    dispatch(setActiveIdAppearanceByType({ type: categoryId, id }));
   };
 
   const backgroundStyles = getBackgroundStyles();
 
   const handleClick = () => {
-    if (isOwned) {
-      handleSelectItem();
-    } else {
-      handleBuyItem();
-    }
+    if (isUnlocked) handleSetActive();
+    return;
   };
 
   const ariaLabelSelected = t("shop.selected");
   const ariaLabelInStock = t("shop.owned_badge_in_stock");
-  const ariaLabelIsSelected = isSelected ? ariaLabelSelected : ariaLabelInStock;
-  const ariaLabelSelectedAndInStock = `${isOwned ? ariaLabelIsSelected : `${price} монет`}`;
+  const ariaLabelIsSelected = isActive ? ariaLabelSelected : ariaLabelInStock;
+  const ariaLabelSelectedAndInStock = `${isUnlocked ? ariaLabelIsSelected : `${requiredPoints} очков`}`;
+
+  const pointsProgress =
+    requiredPoints > 0
+      ? Math.min((lifetimePoints / requiredPoints) * 100, 100)
+      : 100;
+
   return (
     <motion.div
-      className={`shop-item ${isOwned ? "owned" : ""} ${isSelected ? "selected" : ""}`}
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.2 }}
+      className={`shop-item-container ${item.type}`}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      transition={{ delay: index * 0.01, duration: 0.1 }}
+      style={{ pointerEvents: isUnlocked ? "auto" : "none" }}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyUp={(e) => {
+        console.log("onKeyUp e.key: ", e.key);
+        if (e.key === "Enter" || e.key === " ") {
+          handleClick();
+        }
+      }}
+      title={ariaLabelSelectedAndInStock}
+      aria-label={`${id} - ${ariaLabelSelectedAndInStock}`}
     >
       <div
-        className="shop-item-container"
-        onClick={handleClick}
-        role="button"
-        tabIndex={0}
-        onKeyUp={(e) => {
-          console.log("onKeyUp e.key: ", e.key);
-          if (e.key === "Enter" || e.key === " ") {
-            handleClick();
-          }
+        className={`shop-item ${isActive ? "selected" : ""} ${item.type}`}
+        style={{
+          ...backgroundStyles,
         }}
-        title={ariaLabelSelectedAndInStock}
-        aria-label={`${id} - ${ariaLabelSelectedAndInStock}`}
       >
-        {/* Карточка */}
-        <div className="shop-item-card">
-          <div
-            className="shop-item-card-bg"
-            style={{
-              ...backgroundStyles,
-              borderRadius: "0.5vw",
-              padding: 0,
-            }}
-          />
-        </div>
-
-        {/* Информация о цене/выборе */}
-        <div className="shop-item-info">
-          {!isOwned ? (
-            <Badge bg="warning" className="price-badge">
-              <Cart size={12} /> {price}
-            </Badge>
-          ) : isSelected ? (
-            <motion.div
-              className="selected-indicator"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 200 }}
-            >
-              <Check size={20} />
-            </motion.div>
-          ) : (
-            <Badge bg="success" className="owned-badge">
-              {ariaLabelInStock}
-            </Badge>
-          )}
-        </div>
+        {isActive && (
+          <motion.div
+            className="shop-item-selected-indicator"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 200 }}
+          >
+            <Check size={20} />
+          </motion.div>
+        )}
       </div>
-
-      {/* Чекмарк для выбранного */}
-      {/* {isSelected && (
-        <motion.div
-          className="checkmark-circle"
-          initial={{ scale: 0, rotate: -90 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: "spring", stiffness: 200 }}
-        >
-          <div className="checkmark"></div>
-        </motion.div>
-      )} */}
+      {!isUnlocked && (
+        <div className="points-progress-container">
+          <div className="points-progress-bar">
+            <motion.div
+              className="points-progress-fill"
+              initial={{ width: 0 }}
+              animate={{ width: `${pointsProgress}%` }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            />
+          </div>
+          <span className="points-progress-text">
+            {`🌟 ${lifetimePoints} / ${requiredPoints}`}
+          </span>
+        </div>
+      )}
     </motion.div>
   );
 }

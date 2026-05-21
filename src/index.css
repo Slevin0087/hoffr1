@@ -26,89 +26,33 @@
   -webkit-touch-callout: none;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
 a:hover {
   color: #535bf2;
 }
 
 body {
-  margin: 0;
   display: flex;
   place-items: center;
 }
 
 html,
-body {
+body,
+#root {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
   overscroll-behavior: none;
-  touch-action: pan-y;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  touch-action: none;
 }
 
 #root {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0;
-  margin: 0;
   position: relative;
   isolation: isolate;
-  overflow: hidden;
 }
 
-#root .pages-btn {
-  color: black; /* Приоритет над системными стилями */
-  background-color: yellow;
-  -webkit-tap-highlight-color: transparent; /* Убирает синюю подсветку */
-  text-emphasis-color: black; /* Для Safari */
-  -webkit-text-fill-color: black; /* Для старых версий */
-  -webkit-appearance: none;
-  appearance: none; /* Отключает системные стили */
-}
-
-#root .btns-links {
-  color: black;
-  border-bottom: #242424;
-  border-bottom: 2px solid black;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 5px;
-}
-
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-/* @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-} */
-
-@media (prefers-reduced-motion: no-preference) {
-}

@@ -13,5 +13,5 @@ export default {
   scroll_to_end: "Ацӏыхъва",
   scroll_to_left: "Армала",
   scroll_to_right: "Агъьмала",
-  selected: "Йг|алхп|",
+  selected: "Йгӏалхпӏ",
 };

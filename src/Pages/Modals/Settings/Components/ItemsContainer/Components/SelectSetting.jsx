@@ -4,13 +4,20 @@ import { updateSettingByType } from "../../../../../../Store/slices/settings/sli
 import { selectSettingsByType } from "../../../../../../Store/slices/settings/selectors";
 import { useDispatch, useSelector } from "react-redux";
 
-function SelectSetting({ id, label, settingType, options }) {
+function SelectSetting({
+  id,
+  label,
+  settingType,
+  options,
+  openInfoModal = null,
+}) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const settingData = useSelector((state) =>
     selectSettingsByType(state, settingType),
   );
   const handleChange = (value) => {
+    if (openInfoModal) openInfoModal();
     dispatch(updateSettingByType({ type: settingType, changes: { value } }));
   };
   const labelText = t(`settings.${label}`);

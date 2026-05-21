@@ -11,18 +11,20 @@ import {
   getTopCardsIds,
 } from "../../../utils/deckUtils";
 import {
-  selectCanMoveCardToPile,
-  selectCanMoveToFoundation,
+  selectCardMove,
+  selectEasyMoveToFoundations,
   selectIsFoundationsCompleted,
-  selectPile,
+  selectMoveTopCardToFoundation,
   selectPileCardsIds,
+  selectStock,
   selectStockId,
   selectTopCardByPileId,
+  selectWaste,
   selectWasteId,
 } from "../decks/selectors";
 import { delay } from "../../../utils/helpers";
 import {
-  animationsData,
+  animationsNames,
   animationsTypes,
   sides,
 } from "../../../Configs/PlayingCardsConfigs/PlayingCardsConfigs";
@@ -33,23 +35,32 @@ import {
   removeTabsShirtCardIdOne,
   resetDeck,
   resetIsDraggingCardsByPileId,
-  shuffleStockCardsIds,
+  shuffleCardsByPileId,
   updateCardOne,
 } from "../decks/slice";
-import { selectGameCurrentModeId, selectIsEventsInDeck } from "./selectors";
+import {
+  selectGameCurrentModeId,
+  selectIsCollectingCards,
+  selectIsEventsInDeck,
+} from "./selectors";
 import {
   selectAnimationsEnabled,
   selectSettingsByType,
 } from "../settings/selectors";
 import { gameSettingsTypes } from "../../../Configs/SettingsConfigs";
-import { initGame, setGameStatus, updatePoints } from "./slice";
+import {
+  initGame,
+  setGameStatus,
+  setIsCollectingCards,
+  updatePoints,
+} from "./slice";
 import {
   getFlipPointsByGameMode,
   getPointsByGameMode,
 } from "../../../utils/gameModes";
 import {
-  getAnimationFlipDuration,
-  getAnimationMoveDuration,
+  getAnimationDuration,
+  getAnimationShuffleDuration,
   isAce,
   isKing,
   isNextInSequence,
@@ -58,31 +69,63 @@ import {
   isSameSuit,
 } from "../../../utils/playingCardUtils";
 import {
-  animMove,
-  animShuffle,
+  animationCard,
   getAllPoints,
-  getSetMoveAnimationData,
+  getResetAnimationData,
+  getSetAnimationData,
   getStockWasteMovePayload,
   isValidStockClick,
-  resetMoveAnimationData,
 } from "../../../utils/gameSliceUtils";
-import { AudioName, playSound, sounds } from "../../../Services/soundService";
-import { dropTypes } from "../../../Configs/PlayingCardsConfigs/DecksConfigs";
+import {
+  AudioName,
+  playSound,
+  playSoundAsync,
+} from "../../../Services/soundService";
+import { dropTypes } from "../../../Configs/DecksConfigs";
 
 export const moveStockWaste = createAsyncThunk(
   GAME_THUNKS.MOVE_STOCK_WASTE,
   async (args, { dispatch, getState }) => {
-    const { type, fromPileId, toPileId, cardsIds } = args;
+    const {
+      type,
+      fromPileId,
+      toPileId,
+      cardsIds,
+      isCollectCardsUsed = false,
+    } = args;
     const isStockToWasteType = type === moveEventsTypes.stockToWaste;
     const side = isStockToWasteType ? sides.face : sides.shirt;
+    const animType = isCollectCardsUsed
+      ? animationsTypes.collectStockToWaste
+      : isStockToWasteType
+        ? animationsTypes.stockToWaste
+        : animationsTypes.wasteToStock;
     const isAnimationsEnabled = selectAnimationsEnabled(getState());
+    const isSoundsEnabled = selectSettingsByType(
+      getState(),
+      gameSettingsTypes.soundsEffects,
+    ).value;
+    const moveDuration = getAnimationDuration(animationsNames.move, animType);
+    const flipDuration = getAnimationDuration(animationsNames.flip, animType);
+
     for (const cardId of cardsIds) {
       const payload = { cardId, fromPileId, toPileId };
       dispatch(addCardOne(payload));
-      if (isAnimationsEnabled) await animMove(dispatch, cardId, toPileId, type);
-      const flipSound = sounds[AudioName.CARD_FLIP];
-      const flipSoundId = flipSound.play();
-      flipSound.rate(2, flipSoundId);
+
+      playSoundAsync(AudioName.CARD_MOVE, moveDuration, isSoundsEnabled);
+
+      if (isAnimationsEnabled) {
+        await animationCard(
+          dispatch,
+          cardId,
+          toPileId,
+          animationsNames.move,
+          animType,
+        );
+      }
+
+      playSoundAsync(AudioName.CARD_FLIP, flipDuration, isSoundsEnabled);
+
       const pileId = toPileId;
       const changes = { side };
       dispatch(updateCardOne({ cardId, pileId, changes }));
@@ -100,41 +143,58 @@ export const standartMove = createAsyncThunk(
       cardsIds,
       isDropping = false,
       isUserMove = false,
+      isCollectCardsUsed = false,
     } = args;
     const baseData = { pileId: null, cardId: null, cardSide: null };
     const moveData = { isMoves: false, pointsUpData: {} };
     const flippedData = { isFlipped: false, isFlippedInTableau: false };
     const flipsData = { ...baseData, ...flippedData, pointsUpData: {} };
-    const isAnimationsEnabled = selectAnimationsEnabled(getState());
+    const animType = isCollectCardsUsed
+      ? animationsTypes.collectStandart
+      : animationsTypes.standart;
     const gameModeId = selectGameCurrentModeId(getState());
-    const animType = animationsTypes.standart;
+    const moveDuration = getAnimationDuration(animationsNames.move, animType);
+    const isAnimationsEnabled = selectAnimationsEnabled(getState());
+    const isSoundsEnabled = selectSettingsByType(
+      getState(),
+      gameSettingsTypes.soundsEffects,
+    ).value;
+
     for (const cardId of cardsIds) {
       const payload = { cardId, fromPileId, toPileId };
       dispatch(addCardOne(payload));
+
       if (isAnimationsEnabled && !isDropping) {
-        const payload = getSetMoveAnimationData(animType, cardId, toPileId);
+        const payload = getSetAnimationData(
+          cardId,
+          toPileId,
+          animationsNames.move,
+          animType,
+        );
         dispatch(updateCardOne(payload));
       }
     }
+
+    playSoundAsync(AudioName.CARD_MOVE, moveDuration, isSoundsEnabled);
+
     if (isAnimationsEnabled && !isDropping) {
-      const duration = getAnimationMoveDuration(animType);
-      const moveSound = sounds[AudioName.CARD_MOVE];
-      const soundRate = (moveSound.duration() * 1000) / duration;
-      const moveSoundId = moveSound.play();
-      moveSound.rate(soundRate, moveSoundId);
-      await delay(duration);
+      await delay(moveDuration);
+
       for (const cardId of cardsIds) {
-        const payload = resetMoveAnimationData(toPileId, cardId);
+        const payload = getResetAnimationData(toPileId, cardId);
         dispatch(updateCardOne(payload));
       }
     }
+
     moveData.isMoves = true;
+
     if (isDropping) {
       dispatch(resetIsDraggingCardsByPileId({ pileId: toPileId }));
     }
 
     const payloadPoints = { fromPileId, toPileId, cardId: currentCardId };
     const pointsMoveData = getPointsByGameMode(gameModeId, payloadPoints);
+
     if (pointsMoveData) {
       const pointsMovePayload = getAllPoints(
         getState(),
@@ -143,32 +203,33 @@ export const standartMove = createAsyncThunk(
         currentCardId,
       );
       dispatch(updatePoints(pointsMovePayload));
-      playSound(AudioName.UP_SCORE);
+      playSound(AudioName.UP_SCORE, isSoundsEnabled);
       moveData.pointsUpData.isUpPoints = true;
       moveData.pointsUpData.data = pointsMovePayload;
     }
+
     const tableausIds = field_components_type_ids.tableaus;
     const isPileFromTableau = tableausIds.includes(fromPileId);
+
     if (isPileFromTableau) {
       const topCard = selectTopCardByPileId(getState(), fromPileId);
       const isSideShirt = topCard?.side === sides.shirt;
+
       if (topCard && isSideShirt) {
         const cardId = topCard.id;
         const pileId = fromPileId;
         const changes = { side: sides.face };
         const flipsPayload = { cardId, pileId, changes };
         dispatch(updateCardOne(flipsPayload));
+        playSound(AudioName.CARD_FLIP, isSoundsEnabled);
         flipsData.isFlipped = true;
         flipsData.isFlippedInTableau = true;
         flipsData.pileId = pileId;
         flipsData.cardId = cardId;
         flipsData.cardSide = sides.face;
-        if (isAnimationsEnabled) {
-          const duration = getAnimationFlipDuration(animType);
-          playSound(AudioName.CARD_FLIP);
-          await delay(duration);
-        }
+
         const pointsFlip = getFlipPointsByGameMode(gameModeId, { pileId });
+
         if (pointsFlip) {
           const pointsFlipPayload = getAllPoints(
             getState(),
@@ -176,14 +237,16 @@ export const standartMove = createAsyncThunk(
             pileId,
             cardId,
           );
+
           dispatch(updatePoints(pointsFlipPayload));
-          playSound(AudioName.UP_SCORE);
+          playSound(AudioName.UP_SCORE, isSoundsEnabled);
           flipsData.pointsUpData.isUpPoints = true;
           flipsData.pointsUpData.data = pointsFlipPayload;
         }
         dispatch(removeTabsShirtCardIdOne({ cardId }));
       }
     }
+
     const type = moveEventsTypes.standart;
     const data = {
       fromPileId,
@@ -200,30 +263,27 @@ export const standartMove = createAsyncThunk(
 
 export const moveToFoundations = createAsyncThunk(
   GAME_THUNKS.MOVE_TO_FOUNDATIONS,
-  async ({ fromPileId }, { dispatch, getState }) => {
-    const fromPile = selectPile(getState(), fromPileId);
-    const topCardId = getTopCardId(fromPile?.cardsIds);
-    const topCard = fromPile?.cards?.[topCardId];
-    if (!topCard) return { moved: false };
+  async (
+    { fromPileId, isCollectCardsUsed = false },
+    { dispatch, getState },
+  ) => {
     const foundationsIds = field_components_type_ids?.foundations;
     for (const foundationId of foundationsIds) {
-      const isCanMove = selectCanMoveToFoundation(
-        getState(),
-        foundationId,
-        topCard,
-      );
+      const { isCanMove, data } = isCollectCardsUsed
+        ? selectEasyMoveToFoundations(getState(), fromPileId, foundationId)
+        : selectMoveTopCardToFoundation(getState(), fromPileId, foundationId);
+
       if (!isCanMove) continue;
-      const currentCardId = topCardId;
-      const toPileId = foundationId;
-      const cardsIds = [currentCardId];
+
       const payload = {
-        currentCardId,
-        toPileId,
-        cardsIds,
+        currentCardId: data.movingCardId,
+        toPileId: foundationId,
+        cardsIds: [data.movingCardId],
         fromPileId,
-        isUserMove: false,
+        isCollectCardsUsed,
       };
       await dispatch(standartMove(payload));
+      return;
     }
   },
 );
@@ -231,11 +291,18 @@ export const moveToFoundations = createAsyncThunk(
 export const dealStockToTableaus = createAsyncThunk(
   GAME_THUNKS.DEAL_STOCK_TO_TABLEAUS,
   async ({ stockId }, { dispatch, getState }) => {
+    const type = animationsTypes.dealsFromStockToTableaus;
     const tabIds = field_components_type_ids.tableaus;
+    const willFlips = [];
     const tabsCounts = tabIds.length;
     const isAnimationsEnabled = selectAnimationsEnabled(getState());
-    const willFlips = [];
+    const isSoundsEnabled = selectSettingsByType(
+      getState(),
+      gameSettingsTypes.soundsEffects,
+    ).value;
+
     await delay(5);
+
     for (let cycle = 0; cycle < tabsCounts; cycle++) {
       for (let tabIndex = cycle; tabIndex < tabsCounts; tabIndex++) {
         const cardsIds = selectPileCardsIds(getState(), stockId);
@@ -245,32 +312,33 @@ export const dealStockToTableaus = createAsyncThunk(
         const payload1 = { cardId, fromPileId: stockId, toPileId };
         dispatch(addCardOne(payload1));
 
+        // const moveDuration = getAnimationMoveDuration(type);
+        const moveDuration = getAnimationDuration(animationsNames.move, type);
+        playSoundAsync(AudioName.CARD_MOVE, moveDuration, isSoundsEnabled);
+
         if (isAnimationsEnabled) {
-          const type = animationsTypes.dealsFromStockToTableaus;
-          animMove(dispatch, cardId, toPileId, type);
+          await animationCard(
+            dispatch,
+            cardId,
+            toPileId,
+            animationsNames.move,
+            type,
+          );
         }
         if (cycle === tabIndex) {
           willFlips.push({ cardId, pileId: toPileId });
         } else dispatch(addTabsShirtCardIdOne({ cardId }));
-        if (isAnimationsEnabled) {
-          await delay(
-            animationsData.move.types.dealsFromStockToTableaus.transition
-              .duration * 1000,
-          );
-        }
+        if (isAnimationsEnabled) await delay(moveDuration);
       }
     }
     for (const willFlip of willFlips) {
       const { cardId, pileId } = willFlip;
       const payload = { cardId, pileId, changes: { side: sides.face } };
-      const type = animationsTypes.dealsFromStockToTableaus;
-      const duration = getAnimationFlipDuration(type);
-      const flipSound = sounds[AudioName.CARD_FLIP];
-      const soundRate = (flipSound.duration() * 1000) / duration;
-      const flipSoundId = flipSound.play();
-      flipSound.rate(soundRate, flipSoundId);
+      // const flipDuration = getAnimationFlipDuration(type);
+      const flipDuration = getAnimationDuration(animationsNames.flip, type);
+      playSoundAsync(AudioName.CARD_FLIP, flipDuration, isSoundsEnabled);
       dispatch(updateCardOne(payload));
-      await delay(duration);
+      await delay(flipDuration);
     }
   },
   { condition: ({ stockId }) => !!stockId },
@@ -280,29 +348,37 @@ export const handleCardClick = createAsyncThunk(
   GAME_THUNKS.HANDLE_CARD_CLICK,
   async ({ card }, { dispatch, getState }) => {
     const state = getState();
-    const fromPileId = card?.pileId;
-    const currentCardId = card.id;
-    const tableausIds = field_components_type_ids.tableaus;
-    const foundationsIds = field_components_type_ids.foundations;
-    const pileCardsIds = selectPileCardsIds(state, fromPileId);
-    const cardsIds = getTopCardsIds(currentCardId, pileCardsIds);
-    if (cardsIds.length === 0) return;
-    const isCardsIdsOne = cardsIds.length === 1;
-    const pileIds = [...foundationsIds, ...tableausIds];
-    const targetPiles = isCardsIdsOne ? pileIds : tableausIds;
-    for (const toPileId of targetPiles) {
-      const isCanMove = selectCanMoveCardToPile(state, toPileId, card);
-      if (!isCanMove) continue;
-      const payload = {
-        currentCardId,
-        toPileId,
-        cardsIds,
-        fromPileId,
-        isUserMove: true,
-      };
-      await dispatch(standartMove(payload));
+    const { isCanMove, data } = selectCardMove(state, card);
+    if (!isCanMove) {
+      if (data.cardsIds?.length > 0) {
+        const isSoundsEnabled = selectSettingsByType(
+          getState(),
+          gameSettingsTypes.soundsEffects,
+        ).value;
+        playSound(AudioName.INFO, isSoundsEnabled);
+        for (const cardId of data.cardsIds) {
+          console.log("Card ID:", cardId);
+          animationCard(
+            dispatch,
+            cardId,
+            data.fromPileId,
+            animationsNames.can_not_move,
+            animationsTypes.standart,
+          );
+        }
+      }
       return;
     }
+    const { currentCardId, toPileId, cardsIds, fromPileId } = data;
+    const payload = {
+      currentCardId,
+      toPileId,
+      cardsIds,
+      fromPileId,
+      isUserMove: true,
+    };
+    await dispatch(standartMove(payload));
+    return;
   },
   {
     condition: ({ card }, { getState }) => {
@@ -334,42 +410,98 @@ export const handleStockClick = createAsyncThunk(
 export const handleCollectCards = createAsyncThunk(
   GAME_THUNKS.HANDLE_COLLECT_CARDS,
   async (_, { dispatch, getState }) => {
-    if (selectIsFoundationsCompleted(getState())) return;
-    const tableausIds = field_components_type_ids.tableaus;
-    for (const tableauId of tableausIds) {
-      await dispatch(moveToFoundations({ fromPileId: tableauId }));
+    dispatch(setIsCollectingCards(true));
+
+    if (selectIsFoundationsCompleted(getState())) {
+      dispatch(setIsCollectingCards(false));
+      return;
     }
+
+    const tableausIds = field_components_type_ids.tableaus;
+
+    for (const tableauId of tableausIds) {
+      await dispatch(
+        moveToFoundations({
+          fromPileId: tableauId,
+          isCollectCardsUsed: true,
+        }),
+      );
+    }
+
     const wasteId = selectWasteId(getState());
     const stockId = selectStockId(getState());
-    await dispatch(moveToFoundations({ fromPileId: wasteId }));
+    await dispatch(
+      moveToFoundations({ fromPileId: wasteId, isCollectCardsUsed: true }),
+    );
     const stockWasteMovePayload = getStockWasteMovePayload(getState(), stockId);
-    await dispatch(moveStockWaste(stockWasteMovePayload));
-    await dispatch(handleCollectCards());
+
+    if (stockWasteMovePayload) {
+      await dispatch(
+        moveStockWaste({
+          ...stockWasteMovePayload,
+          isCollectCardsUsed: true,
+        }),
+      );
+    }
+
+    // await dispatch(handleCollectCards());
+    dispatch(handleCollectCards());
   },
   {
-    condition: (_, { getState }) => !selectIsEventsInDeck(getState()),
+    condition: (_, { getState }) => {
+      console.log(
+        "handleCollectCards, condition, selectIsEventsInDeck: ",
+        selectIsEventsInDeck(getState()),
+      );
+      if (
+        selectIsEventsInDeck(getState()) &&
+        !selectIsCollectingCards(getState())
+      )
+        return false;
+      return true;
+    },
   },
 );
 
 export const handleShuffle = createAsyncThunk(
   GAME_THUNKS.HANDLE_SHUFFLE,
-  async ({ stockId }, { dispatch, getState }) => {
-    const cardsIds = selectPileCardsIds(getState(), stockId);
-    if (!cardsIds || !cardsIds.length) return;
+  async (_, { dispatch, getState }) => {
+    const stock = selectStock(getState());
+    const waste = selectWaste(getState());
+    const hasStockMoreOneCardId = stock.cardsIds.length > 1;
+    const hasWasteMoreOneCardId = waste.cardsIds.length > 1;
+
+    if (!hasStockMoreOneCardId && !hasWasteMoreOneCardId) return;
+
+    const type = animationsTypes.shuffleStock;
+    const duration = getAnimationShuffleDuration(type);
+    const resultCardsIds = [...stock.cardsIds, ...waste.cardsIds];
     const isAnimationsEnabled = selectAnimationsEnabled(getState());
-    if (isAnimationsEnabled) {
-      for (let i = 0; i < cardsIds.length; i++) {
-        const randomIndex = Math.floor(Math.random() * cardsIds.length);
-        const randomCardId = cardsIds[randomIndex];
-        const type = animationsTypes.shuffleStock;
-        await animShuffle(dispatch, randomCardId, stockId, type);
+    const isSoundsEnabled = selectSettingsByType(
+      getState(),
+      gameSettingsTypes.soundsEffects,
+    ).value;
+
+    for (let i = 0; i < resultCardsIds.length; i++) {
+      const randomIndex = Math.floor(Math.random() * resultCardsIds.length);
+      const randomCardId = resultCardsIds[randomIndex];
+      const pileId = stock.cards[randomCardId] ? stock.id : waste.id;
+      dispatch(shuffleCardsByPileId({ pileId }));
+      playSoundAsync(AudioName.SHUFFLE, duration, isSoundsEnabled);
+      if (isAnimationsEnabled) {
+        await animationCard(
+          dispatch,
+          randomCardId,
+          pileId,
+          animationsNames.shuffle,
+          type,
+        );
       }
     }
-    dispatch(shuffleStockCardsIds({ stockId }));
   },
   {
-    condition: ({ stockId }, { getState }) => {
-      return !selectIsEventsInDeck(getState()) && stockId;
+    condition: (_, { getState }) => {
+      return !selectIsEventsInDeck(getState());
     },
   },
 );

@@ -1,3 +1,7 @@
+:root {
+  --category-button-container-btn: clamp(1rem, calc(1rem + 1vmin), 1.5rem);
+}
+
 .category-buttons {
   display: flex;
   justify-content: center;
@@ -14,17 +18,13 @@
 }
 
 .category-button-container .btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: calc(var(--card-width) / 5);
+  text-align: center;
+  font-size: var(--category-button-container-btn);
   border-radius: 5px;
   transition: all 0.3s ease;
   white-space: nowrap;
-  line-height: 2;
-  /* width: calc(var(--card-width)); */
+  line-height: 1;
   width: 100%;
-  /* height: calc(var(--card-width) / 2); */
 }
 
 .category-button-container .btn-primary {

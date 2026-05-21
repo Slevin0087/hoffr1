@@ -19,4 +19,9 @@ export default {
   btn_game_restart_modal_cancel: "Iptal",
   game_restart_modal_cancel_content: "Elbette?",
   game_restart_modal_title: "Yeni oyun!",
+
+  foundations_span: "A",
+  stock_span: "К",
+  waste_span: "Y",
+  tableaus_span: "K",
 };

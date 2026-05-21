@@ -1,81 +1,66 @@
-import { ANIMATIONS_ON, UI_STORE_KEYS } from "../../../Configs/UIConfigs";
-import storage from "../../../utils/Storage";
+import { ANIMATIONS_ON } from "../../../Configs/UIConfigs";
 
 export const setActivePageId = (state, action) => {
   state.activePageId = action.payload;
-  storage.setItem(UI_STORE_KEYS.UI, state);
 };
 export const setReducedMotion = (state, action) => {
   state.reducedMotion = action.payload;
-  storage.setItem(UI_STORE_KEYS.UI, state);
 };
 
 export const addUpPointsByCardId = (state, action) => {
   const { cardId, data } = action.payload;
   state.upPoints[cardId] = data;
-  storage.setItem(UI_STORE_KEYS.UI, state);
 };
 
 export const removeUpPointsByCardId = (state, action) => {
   const { cardId } = action.payload;
   delete state.upPoints[cardId];
-  storage.setItem(UI_STORE_KEYS.UI, state);
 };
 
 export const openRestartModal = (state) => {
   state.isRestartModalOpen = true;
-  storage.setItem(UI_STORE_KEYS.UI, state);
 };
 export const closeRestartModal = (state) => {
   state.isRestartModalOpen = false;
-  storage.setItem(UI_STORE_KEYS.UI, state);
 };
 
 export const openGameRulesModal = (state) => {
   state.isGameRulesModalOpen = true;
-  storage.setItem(UI_STORE_KEYS.UI, state);
 };
 export const closeGameRulesModal = (state) => {
   state.isGameRulesModalOpen = false;
-  storage.setItem(UI_STORE_KEYS.UI, state);
 };
 
 export const setIsCollectCardsBtnVisible = (state, action) => {
   state.isCollectCardsBtnVisible = action.payload;
-  storage.setItem(UI_STORE_KEYS.UI, state);
 };
 
 export const setActivePFModalId = (state, action) => {
   state.activePFModalId = action.payload;
-  storage.setItem(UI_STORE_KEYS.UI, state);
 };
 
 export const resetActivePFModalId = (state) => {
   state.activePFModalId = null;
-  storage.setItem(UI_STORE_KEYS.UI, state);
 };
 
 export const showPFModalById = (state, action) => {
   const { id } = action.payload;
   state.p_f_modalsIds[id] = true;
-  storage.setItem(UI_STORE_KEYS.UI, state);
 };
 
 export const hidePFModalById = (state, action) => {
   const { id } = action.payload;
   state.p_f_modalsIds[id] = false;
-  storage.setItem(UI_STORE_KEYS.UI, state);
 };
 
 export const setActiveNotification = (state, action) => {
+  console.log('setActiveNotification: ', action.payload);
   const { id, params } = action.payload;
   state.notifications.active = { id, params, createdAt: Date.now() };
-  storage.setItem(UI_STORE_KEYS.UI, state);
 };
 
 export const clearCurrentNotification = (state) => {
   state.notifications.active = null;
-  storage.setItem(UI_STORE_KEYS.UI, state);
 };
 
 export const updateActiveNotification = (state, action) => {
@@ -84,7 +69,10 @@ export const updateActiveNotification = (state, action) => {
   if (active && active.id === id) {
     active.params = params;
   }
-  storage.setItem(UI_STORE_KEYS.UI, state);
+};
+
+export const setIsNeedByRedealsShowing = (state, action) => {
+  state.isNeedByRedealsShowing = action.payload;
 };
 
 export const reducers = {
@@ -104,4 +92,5 @@ export const reducers = {
   clearCurrentNotification,
   updateActiveNotification,
   setActiveNotification,
+  setIsNeedByRedealsShowing,
 };

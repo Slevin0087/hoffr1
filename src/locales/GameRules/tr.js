@@ -60,7 +60,7 @@ export default {
   points_system_accrual:
     "<0>Kazanç:</0> temele taşıma (5-15), kart çevirme (2-10), oyunu tamamlama",
   points_system_fines:
-    "<0>Ceza:</0> geri alma (0-20), ipucu (0-10), zaman (-2/saniye)",
+    "<0>Ceza:</0> geri alma (0-20), ipucu (0-10)",
 
   strategic_advice_li1: "Kapalı kartları açın",
   strategic_advice_li2: "Önce as'ları toplayın",

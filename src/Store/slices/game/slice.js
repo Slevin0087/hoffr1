@@ -1,21 +1,13 @@
-import storage from "../../../utils/Storage";
-import {
-  GAME_NAME,
-  GAME_DEFAULT_STATE,
-  GAME_STORAGE_KEYS,
-} from "../../../Configs/GameConfigs";
+import { GAME_NAME, GAME_DEFAULT_STATE } from "../../../Configs/GameConfigs";
 import { createSlice } from "@reduxjs/toolkit";
 import { reducers } from "./reducers";
-import { extraReducers } from "./exrtaReducers";
 
-const initialState =
-  storage.getItem(GAME_STORAGE_KEYS.GAME) || GAME_DEFAULT_STATE;
+const initialState = GAME_DEFAULT_STATE;
 
 const gamesSlice = createSlice({
   name: GAME_NAME,
   initialState,
   reducers,
-  extraReducers,
 });
 
 export const {
@@ -25,6 +17,7 @@ export const {
   setIsEventsInDeck,
   setIsTimeStarted,
   setIsGameStarted,
+  setIsCollectingCards,
   initGame,
   endedGame,
   updatePoints,
@@ -32,6 +25,8 @@ export const {
   incrementMoves,
   incrementRedeals,
   decrementRedeals,
+  incrementShuffle,
+  decrementShuffle,
   resetCoins,
   addUndo,
   removeUndo,

@@ -40,6 +40,10 @@
   background: var(--back-color-settings-el);
   padding: 0.5em;
   border-radius: var(--border-radius-btn-input);
+  width: fit-content;
+  padding-left: 6px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .globally-volume {
@@ -107,4 +111,10 @@
 .globally-volume::-moz-range-track {
   height: 8px;
   background: transparent;
+}
+
+@media (max-height: 400px) {
+  .span-volume-change {
+    font-size: 0.6rem;
+  }
 }

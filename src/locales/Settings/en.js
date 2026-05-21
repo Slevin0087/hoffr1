@@ -27,4 +27,6 @@ export default {
   assistance_in_card_click: "Click on the cards:",
   assistance_in_card_click_p: "the ability to click on the map",
   selected_value: "selected value -",
+  info_modal_small_p: "Will be applied after the next game",
+  info_modal_small_btn: "It's clear",
 };

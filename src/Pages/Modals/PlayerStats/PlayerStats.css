@@ -1,8 +1,19 @@
+:root {
+  /* --fs-player-stats-mode-text: clamp(1rem, calc(1rem + 1vmin), 1.5rem); */
+  --fs-player-stats-mode-text: clamp(0.7rem, calc(0.6rem + 1vmin), 1.5rem);
+  --fs-player-stats-dealing-counter-container: 3vh;
+  --fs-player-stats-category-button: 3vh;
+  --fs-player-stats-wins-and-losses-state: 3vh;
+  --bw-player-stats-wins-and-losses-track: clamp(1px, 1px + 1vmin, 3px);
+  --player-stats-page-container-scrollbar-width: 6px;
+}
+
 .player-stats-page {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
   height: 100%;
   gap: 1rem;
 }
@@ -12,9 +23,11 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 1.5rem;
+  width: 100%;
+  gap: 2vh;
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-gutter: stable;
 }
 
 .player-stats-header {
@@ -23,12 +36,11 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  gap: 1rem;
+  gap: 1vh;
   border: 2px solid #ffd700;
-  margin-left: 3rem;
-  margin-right: 3em;
-  padding: 1rem;
-  border-radius: 20px;
+  margin: auto;
+  padding: 1vmin;
+  border-radius: 1vmin;
 }
 
 .player-stats-container {
@@ -37,6 +49,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 16px;
+  padding: 0;
 }
 
 .player-stats-wins-and-losses-container {
@@ -45,7 +58,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1vh;
 }
 
 .player-stats-wins-and-losses-state,
@@ -71,6 +84,7 @@
 .player-stats-losses-percent {
   color: #dd0505;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  text-align: end;
 }
 
 .player-stats-wins-and-losses-track {
@@ -83,52 +97,52 @@
   height: 1rem;
   width: 100%;
   border-radius: 0.5rem;
-  border: 3px solid yellow;
+  border: var(--bw-player-stats-wins-and-losses-track) solid yellow;
   background: linear-gradient(
     to right,
+    #4caf50 0%,
     #4caf50 var(--wins-track-percent),
-    #dd0505 var(--losses-track-percent)
+    #dd0505 var(--wins-track-percent),
+    #dd0505 calc(var(--wins-track-percent) + var(--losses-track-percent))
   );
   /* box-sizing: border-box; */
 }
 
-.player-stats-container::-webkit-scrollbar {
-  width: 6px;
+.player-stats-page-container::-webkit-scrollbar {
+  width: var(--player-stats-page-container-scrollbar-width);
 }
 
-.player-stats-container::-webkit-scrollbar-track {
+.player-stats-page-container::-webkit-scrollbar-track {
   background: rgba(255, 215, 0, 0.1);
   border-radius: 3px;
 }
 
-.player-stats-container::-webkit-scrollbar-thumb {
+.player-stats-page-container::-webkit-scrollbar-thumb {
   background: #ffd700;
   border-radius: 3px;
 }
 
 .player-stats-table {
   width: 100%;
-  margin-bottom: 20px;
-  /* background-color: brown; */
+  margin: 0;
   height: 100%;
-}
-
-.player-stats-table {
-  width: 100%;
-  margin-bottom: 20px;
 }
 
 .player-stats-achievement-section {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid rgba(255, 215, 0, 0.3);
 }
 
 .player-stats-achievement-section .achievement-btn {
+  margin: 0;
   border: none;
+  border-radius: 0.3rem;
+  text-align: center;
+  line-height: 1;
   padding: 10px 30px;
+  padding: 0.5rem 0.8rem;
   font-weight: bold;
   font-size: 16px;
   color: #1a1a2e;
@@ -139,7 +153,7 @@
 .player-stats-dealing-counter-container {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   gap: 10px;
@@ -151,22 +165,23 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  font-size: var(--fs-player-stats-mode-text);
 }
 
 .player-stats-mode-text-left {
+  text-align: start;
   color: yellow;
 }
 
 .player-stats-mode-text-right {
+  text-align: end;
   color: gold;
 }
 
 .player-stats-dealing-counter-text {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  text-align: start;
   color: yellow;
+  font-size: var(--fs-player-stats-mode-text);
 }
 
 .player-stats-category-buttons {
@@ -177,6 +192,46 @@
   flex-grow: 1;
 }
 
-.player-stats-category-buttons .btn {
-  color: black;
+.player-stats-category-button.btn {
+  font-size: var(--fs-player-stats-category-button);
+  line-height: 1;
+  color: rgb(66, 44, 1);
+  border: 2px solid rgb(66, 44, 1);
+}
+
+.player-stats-category-button.btn:active {
+  color: yellow;
+}
+
+.player-stats-category-button.btn:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+@media (max-height: 38rem) and (orientation: landscape) {
+  .player-stats-header {
+    margin: auto;
+    padding: 1vh;
+    border-radius: 1vh;
+  }
+
+  .player-stats-dealing-counter-container {
+    font-size: var(--fs-player-stats-dealing-counter-container);
+  }
+
+  .player-stats-wins-and-losses-state,
+  .player-stats-wins-and-losses-state-percents {
+    font-size: var(--fs-player-stats-wins-and-losses-state);
+  }
+
+  .player-stats-container {
+    border-radius: 1vh;
+  }
+
+  .player-stats-achievement-section {
+    padding: 0;
+    margin-top: 2vh;
+    border-top: none;
+  }
 }

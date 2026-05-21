@@ -1,5 +1,7 @@
 :root {
-  --card-width: min(12.5vw, 10vh);
+  /* --card-width: min(12.5vw, 10vh); */
+  /* --card-width: clamp(1vmin, 11vmin, 13vmin); */
+  --card-width: 10vmin;
   --card-height: calc(var(--card-width) * 1.4);
   --cards-sprite-width: calc(var(--card-width) * 13);
   --cards-sprite-height: calc(var(--card-height) * 4);
@@ -15,11 +17,34 @@
   /* --gap-field-cells находится в Pile.css */
   gap: var(--gap-field-cells);
   position: absolute;
-  top: 0;
-  left: 0;
+  /* top: 0;
+  left: 0; */
   user-select: none;
   touch-action: none;
   user-select: none;
   box-sizing: content-box;
   transform-style: preserve-3d;
+}
+
+.playing-card-container.isOver-can-drop,
+.playing-card-container.isHint-showing {
+  box-shadow: 0 0 0 calc(var(--card-width) / 20) yellow;
+}
+
+@media (min-aspect-ratio: 2/3) and (max-aspect-ratio: 3/2) {
+  :root {
+    --card-width: 10vmin;
+  }
+}
+
+@media (max-aspect-ratio: 2/3) {
+  :root {
+    --card-width: 12.5vmin;
+  }
+}
+
+@media (min-aspect-ratio: 3/2) {
+  :root {
+    --card-width: 10vmin;
+  }
 }

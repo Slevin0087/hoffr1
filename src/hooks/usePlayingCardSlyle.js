@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { calculateFacesPosition } from "../utils/facesUtils";
 import { PLAYING_CARDS_STYLE_CONSTANT } from "../Configs/PlayingCardsConfigs/PlayingCardsConfigs";
-import { selectAppearancesSelectedIdByType } from "../Store/slices/appearances/selectors";
+import { selectAppearancesActiveIdByType } from "../Store/slices/appearances/selectors";
 import {
   APPEARANCES_TYPES,
   facesAppearancesObj,
@@ -13,10 +13,10 @@ const shirtBackgroundSize = "100% 100%";
 
 export const usePlayingCardStyle = (cardSuit, cardValue) => {
   const activeFacesId = useSelector((state) =>
-    selectAppearancesSelectedIdByType(state, APPEARANCES_TYPES.FACES),
+    selectAppearancesActiveIdByType(state, APPEARANCES_TYPES.FACES),
   );
   const activeShirtsId = useSelector((state) =>
-    selectAppearancesSelectedIdByType(state, APPEARANCES_TYPES.SHIRTS),
+    selectAppearancesActiveIdByType(state, APPEARANCES_TYPES.SHIRTS),
   );
   const activeFaceAppearance = facesAppearancesObj[activeFacesId];
   const activeShirtAppearance = shirtsAppearancesObj[activeShirtsId];
