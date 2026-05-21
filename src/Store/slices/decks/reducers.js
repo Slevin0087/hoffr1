@@ -1,10 +1,5 @@
 import { field_components_type_ids } from "../../../Configs/FieldComponentsConfigs";
-import { GAME_MODE_CLASSIC } from "../../../Configs/GameModes";
-import {
-  DECK_STORAGE_KEYS,
-  DECKS_COMPONENTS_INITIAL_STATE,
-} from "../../../Configs/PlayingCardsConfigs/DecksConfigs";
-import storage from "../../../utils/Storage";
+import { DECKS_COMPONENTS_INITIAL_STATE } from "../../../Configs/DecksConfigs";
 import { getTopCardsIds, shuffle } from "../../../utils/deckUtils";
 import { reducersFns } from "../../../utils/reducersFns";
 
@@ -13,7 +8,6 @@ export const initStockCards = (state, action) => {
   for (let i = 0; i < cards.length; i++) {
     reducersFns.addCard(cards[i], state.piles[pileId]);
   }
-  storage.setItem(DECK_STORAGE_KEYS.DECK, state);
 };
 
 export const addCardOne = (state, action) => {
@@ -22,7 +16,6 @@ export const addCardOne = (state, action) => {
   const toPile = state.piles[toPileId];
   reducersFns.addCard(fromPile.cards[cardId], toPile);
   reducersFns.removeCard(cardId, fromPile);
-  storage.setItem(DECK_STORAGE_KEYS.DECK, state);
 };
 
 export const updateCardOne = (state, action) => {
@@ -31,7 +24,6 @@ export const updateCardOne = (state, action) => {
   const cardIndex = currentPile.cardsIds.indexOf(cardId);
   if (cardIndex === -1) return;
   currentPile.cards[cardId] = { ...currentPile.cards[cardId], ...changes };
-  storage.setItem(DECK_STORAGE_KEYS.DECK, state);
 };
 
 export const resetDeck = (state) => {
@@ -40,34 +32,28 @@ export const resetDeck = (state) => {
   state.currentStockId = field_components_type_ids.stocks[0];
   state.currentWasteId = field_components_type_ids.wastes[0];
   state.tableausShirtCardsIds = [];
-  storage.setItem(DECK_STORAGE_KEYS.DECK, state);
 };
 
 export const setDraggingCards = (state, action) => {
   state.draggingCards = action.payload;
-  storage.setItem(DECK_STORAGE_KEYS.DECK, state);
 };
 
 export const clearDraggingCards = (state) => {
   state.draggingCards = {};
-  storage.setItem(DECK_STORAGE_KEYS.DECK, state);
 };
 
 export const setTabsShirtCardsIds = (state, action) => {
   const { cardsIds } = action.payload;
   state.tableausShirtCardsIds = cardsIds;
-  storage.setItem(DECK_STORAGE_KEYS.DECK, state);
 };
 
 export const addTabsShirtCardIdOne = (state, action) => {
   const { cardId } = action.payload;
   state.tableausShirtCardsIds.push(cardId);
-  storage.setItem(DECK_STORAGE_KEYS.DECK, state);
 };
 
 export const removeTabsShirtCardsIds = (state) => {
   state.tableausShirtCardsIds = [];
-  storage.setItem(DECK_STORAGE_KEYS.DECK, state);
 };
 
 export const removeTabsShirtCardIdOne = (state, action) => {
@@ -75,18 +61,18 @@ export const removeTabsShirtCardIdOne = (state, action) => {
   state.tableausShirtCardsIds = state.tableausShirtCardsIds.filter(
     (id) => id !== cardId,
   );
-  storage.setItem(DECK_STORAGE_KEYS.DECK, state);
 };
 
-export const shuffleStockCardsIds = (state, action) => {
-  const { stockId } = action.payload;
-  state.piles[stockId].cardsIds = shuffle(state.piles[stockId].cardsIds);
-  const length = state.piles[stockId].cardsIds.length;
-  for (let i = 0; i < length; i++) {
-    const cardId = state.piles[stockId].cardsIds[i];
-    state.piles[stockId].cards[cardId].position = i;
+export const shuffleCardsByPileId = (state, action) => {
+  const { pileId } = action.payload;
+  if (state.piles[pileId].cardsIds.length > 1) {
+    state.piles[pileId].cardsIds = shuffle(state.piles[pileId].cardsIds);
+    const length = state.piles[pileId].cardsIds.length;
+    for (let i = 0; i < length; i++) {
+      const cardId = state.piles[pileId].cardsIds[i];
+      state.piles[pileId].cards[cardId].position = i;
+    }
   }
-  storage.setItem(DECK_STORAGE_KEYS.DECK, state);
 };
 
 export const resetIsDraggingCardsByPileId = (state, action) => {
@@ -96,7 +82,6 @@ export const resetIsDraggingCardsByPileId = (state, action) => {
     const card = pile.cards[cardId];
     if (card?.isDragging) card.isDragging = false;
   }
-  storage.setItem(DECK_STORAGE_KEYS.DECK, state);
 };
 
 export const setIsDraggingCardsByCardId = (state, action) => {
@@ -106,42 +91,40 @@ export const setIsDraggingCardsByCardId = (state, action) => {
   for (const id of draggingCardsIds) {
     pile.cards[id].isDragging = value;
   }
-  storage.setItem(DECK_STORAGE_KEYS.DECK, state);
 };
 
-export const setHintShowColorPileById = (state, action) => {
+export const setIsHintShowPileById = (state, action) => {
+  console.log("setIsHintShowPileById: ");
   const { pileId, value } = action.payload;
-  state.piles[pileId].hintShowColor = value;
-  storage.setItem(DECK_STORAGE_KEYS.DECK, state);
+  state.piles[pileId].isHintShowing = value;
 };
 
-export const setHintShowColor = (state, action) => {
+export const setIsHintShowing = (state, action) => {
   const { fromCardsIds, fromPileId, toPileId, toPileTopCardId } =
     action.payload;
-  console.log("setHintShowColor action.payload: ", action.payload);
+  console.log("setIsHintShowing action.payload: ", action.payload);
   const currentFromPile = state.piles[fromPileId];
   const currentToPile = state.piles[toPileId];
   for (const cardId of fromCardsIds) {
     const cardIndex = currentFromPile.cardsIds.indexOf(cardId);
     if (cardIndex === -1) return;
-    const changes = { hintShowColor: "green" };
+    const changes = { isHintShowing: true };
     currentFromPile.cards[cardId] = {
       ...currentFromPile.cards[cardId],
       ...changes,
     };
   }
   if (toPileTopCardId === null) {
-    state.piles[toPileId].hintShowColor = "yellow";
+    state.piles[toPileId].isHintShowing = true;
   } else {
     const cardIndex = currentToPile.cardsIds.indexOf(toPileTopCardId);
     if (cardIndex === -1) return;
-    const changes = { hintShowColor: "yellow" };
+    const changes = { isHintShowing: true };
     currentToPile.cards[toPileTopCardId] = {
       ...currentToPile.cards[toPileTopCardId],
       ...changes,
     };
   }
-  storage.setItem(DECK_STORAGE_KEYS.DECK, state);
 };
 
 export const reducers = {
@@ -155,9 +138,9 @@ export const reducers = {
   addTabsShirtCardIdOne,
   removeTabsShirtCardsIds,
   removeTabsShirtCardIdOne,
-  shuffleStockCardsIds,
+  shuffleCardsByPileId,
   resetIsDraggingCardsByPileId,
   setIsDraggingCardsByCardId,
-  setHintShowColorPileById,
-  setHintShowColor,
+  setIsHintShowPileById,
+  setIsHintShowing,
 };

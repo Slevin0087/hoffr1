@@ -26,4 +26,6 @@ export default {
   assistance_in_card_click: "Клик по картам:",
   assistance_in_card_click_p: "возможность нажать на карту",
   selected_value: "выбранное значение -",
+  info_modal_small_p: "Применится со следующей игры",
+  info_modal_small_btn: "Понятно",
 };

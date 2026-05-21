@@ -7,8 +7,8 @@ const wastePortraitConfig = {
 };
 
 const wasteLandscapeConfig = {
-  x: 20,
-  y: -11.5,
+  x: 10,
+  y: -5.5,
   maxVisibleCards: 3,
 };
 
@@ -95,6 +95,7 @@ export const span_text = {
   waste: "W",
   foundation: "A",
   tableau: "K",
+  needByRedealsText: '+↺',
 };
 
 export const field_components_default_state = {
@@ -193,14 +194,28 @@ export const field_components_default_state = {
     overlap: {
       [orientations.portrait]: {
         x: -0.5,
-        shirtY: 25,
-        faceY: 30,
+        y: {
+          shirt: 6,
+          face: 10,
+        },
       },
       [orientations.landscape]: {
         x: -0.5,
-        shirtY: 15,
-        faceY: 20,
+        y: {
+          shirt: 6,
+          face: 10,
+        },
       },
+      // [orientations.portrait]: {
+      //   x: -0.5,
+      //   shirtY: 15,
+      //   faceY: 20,
+      // },
+      // [orientations.landscape]: {
+      //   x: -0.5,
+      //   shirtY: 5,
+      //   faceY: 10,
+      // },
     },
     type: field_components_types.tableaus,
     divisionСoefficient: {
@@ -213,14 +228,28 @@ export const field_components_default_state = {
     overlap: {
       [orientations.portrait]: {
         x: -0.25,
-        shirtY: 25,
-        faceY: 30,
+        y: {
+          shirt: 6,
+          face: 10,
+        },
       },
       [orientations.landscape]: {
         x: -0.25,
-        shirtY: 15,
-        faceY: 20,
+        y: {
+          shirt: 6,
+          face: 10,
+        },
       },
+      // [orientations.portrait]: {
+      //   x: -0.25,
+      //   shirtY: 15,
+      //   faceY: 20,
+      // },
+      // [orientations.landscape]: {
+      //   x: -0.25,
+      //   shirtY: 5,
+      //   faceY: 10,
+      // },
     },
     type: field_components_types.tableaus,
     divisionСoefficient: {
@@ -233,14 +262,28 @@ export const field_components_default_state = {
     overlap: {
       [orientations.portrait]: {
         x: -0.1,
-        shirtY: 25,
-        faceY: 30,
+        y: {
+          shirt: 6,
+          face: 10,
+        },
       },
       [orientations.landscape]: {
         x: -0.1,
-        shirtY: 15,
-        faceY: 20,
+        y: {
+          shirt: 6,
+          face: 10,
+        },
       },
+      // [orientations.portrait]: {
+      //   x: -0.1,
+      //   shirtY: 15,
+      //   faceY: 20,
+      // },
+      // [orientations.landscape]: {
+      //   x: -0.1,
+      //   shirtY: 5,
+      //   faceY: 10,
+      // },
     },
     type: field_components_types.tableaus,
     divisionСoefficient: {
@@ -253,14 +296,28 @@ export const field_components_default_state = {
     overlap: {
       [orientations.portrait]: {
         x: 0,
-        shirtY: 25,
-        faceY: 30,
+        y: {
+          shirt: 6,
+          face: 10,
+        },
       },
       [orientations.landscape]: {
         x: 0,
-        shirtY: 15,
-        faceY: 20,
+        y: {
+          shirt: 6,
+          face: 10,
+        },
       },
+      // [orientations.portrait]: {
+      //   x: 0,
+      //   shirtY: 15,
+      //   faceY: 20,
+      // },
+      // [orientations.landscape]: {
+      //   x: 0,
+      //   shirtY: 5,
+      //   faceY: 10,
+      // },
     },
     type: field_components_types.tableaus,
     divisionСoefficient: {
@@ -273,14 +330,28 @@ export const field_components_default_state = {
     overlap: {
       [orientations.portrait]: {
         x: 0.1,
-        shirtY: 25,
-        faceY: 30,
+        y: {
+          shirt: 6,
+          face: 10,
+        },
       },
       [orientations.landscape]: {
         x: 0.1,
-        shirtY: 15,
-        faceY: 20,
+        y: {
+          shirt: 6,
+          face: 10,
+        },
       },
+      // [orientations.portrait]: {
+      //   x: 0.1,
+      //   shirtY: 15,
+      //   faceY: 20,
+      // },
+      // [orientations.landscape]: {
+      //   x: 0.1,
+      //   shirtY: 5,
+      //   faceY: 10,
+      // },
     },
     type: field_components_types.tableaus,
     divisionСoefficient: {
@@ -293,14 +364,28 @@ export const field_components_default_state = {
     overlap: {
       [orientations.portrait]: {
         x: 0.25,
-        shirtY: 25,
-        faceY: 30,
+        y: {
+          shirt: 6,
+          face: 10,
+        },
       },
       [orientations.landscape]: {
         x: 0.25,
-        shirtY: 15,
-        faceY: 20,
+        y: {
+          shirt: 6,
+          face: 10,
+        },
       },
+      // [orientations.portrait]: {
+      //   x: 0.25,
+      //   shirtY: 15,
+      //   faceY: 20,
+      // },
+      // [orientations.landscape]: {
+      //   x: 0.25,
+      //   shirtY: 5,
+      //   faceY: 10,
+      // },
     },
     type: field_components_types.tableaus,
     divisionСoefficient: {
@@ -313,14 +398,28 @@ export const field_components_default_state = {
     overlap: {
       [orientations.portrait]: {
         x: 0.5,
-        shirtY: 25,
-        faceY: 30,
+        y: {
+          shirt: 6,
+          face: 10,
+        },
       },
       [orientations.landscape]: {
         x: 0.5,
-        shirtY: 15,
-        faceY: 20,
+        y: {
+          shirt: 6,
+          face: 10,
+        },
       },
+      // [orientations.portrait]: {
+      //   x: 0.5,
+      //   shirtY: 15,
+      //   faceY: 20,
+      // },
+      // [orientations.landscape]: {
+      //   x: 0.5,
+      //   shirtY: 5,
+      //   faceY: 10,
+      // },
     },
     type: field_components_types.tableaus,
     divisionСoefficient: {

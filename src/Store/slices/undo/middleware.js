@@ -1,8 +1,6 @@
-import storage from "../../../utils/Storage";
 import { undoMoveStockWaste, handleUndo } from "../game/thunks/undo";
 import { addUndo } from "./slice";
 import { setIsEventsInDeck } from "../game/slice";
-import { UNDO_STORAGE_KEYS } from "../../../Configs/UndoConfigs";
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { moveStockWaste, standartMove } from "../game/thunks";
 import { moveEventsTypes } from "../../../Configs/GameConfigs";
@@ -36,11 +34,10 @@ undoListeners.startListening({
         setActiveNotification({
           id: notifications_ids.combo_bonus_time,
           params: { seconds: state.game.combo.bonusSeconds },
-        })
+        }),
       );
     }
     listenerApi.dispatch(resetCombo());
-    storage.setItem(UNDO_STORAGE_KEYS.UNDO, state.undo);
   },
 });
 
@@ -90,7 +87,7 @@ undoListeners.startListening({
         setActiveNotification({
           id: notifications_ids.combo_bonus_time,
           params: { seconds: state.game.combo.bonusSeconds },
-        })
+        }),
       );
     }
     listenerApi.dispatch(resetCombo());

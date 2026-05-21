@@ -65,6 +65,7 @@ export const animationsNames = {
   drag: "drag",
   drop: "drop",
   shuffle: "shuffle",
+  can_not_move: "can_not_move",
 };
 
 export const animationsTypes = {
@@ -72,6 +73,9 @@ export const animationsTypes = {
   standart: "standart",
   stockToWaste: "stockToWaste",
   wasteToStock: "wasteToStock",
+  collectStandart: "collectStandart",
+  collectStockToWaste: "collectStockToWaste",
+  collectWasteToStock: "collectWasteToStock",
   undoStandart: "undoStandart",
   undoStockToWaste: "undoStockToWaste",
   undoWasteToStock: "undoWasteToStock",
@@ -110,6 +114,26 @@ export const animationsData = {
           ease: "easeInOut",
         },
       },
+      [animationsTypes.collectStandart]: {
+        transition: {
+          duration: 0.25,
+          type: "spring",
+        },
+      },
+      [animationsTypes.collectStockToWaste]: {
+        transition: {
+          duration: 0.05,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+      [animationsTypes.collectWasteToStock]: {
+        transition: {
+          duration: 0.05,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
       [animationsTypes.undoStandart]: {
         transition: {
           duration: 0.2,
@@ -119,7 +143,7 @@ export const animationsData = {
       },
       [animationsTypes.undoStockToWaste]: {
         transition: {
-          duration: 0.1,
+          duration: 0.05,
           type: "spring",
           ease: "circOut",
         },
@@ -164,6 +188,27 @@ export const animationsData = {
           ease: "anticipate",
         },
       },
+      [animationsTypes.collectStandart]: {
+        transition: {
+          duration: 0.1,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+      [animationsTypes.collectStockToWaste]: {
+        transition: {
+          duration: 0.05,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
+      [animationsTypes.collectWasteToStock]: {
+        transition: {
+          duration: 0.05,
+          type: "spring",
+          ease: "circOut",
+        },
+      },
       [animationsTypes.undoStandart]: {
         transition: {
           duration: 0.25,
@@ -173,7 +218,7 @@ export const animationsData = {
       },
       [animationsTypes.undoStockToWaste]: {
         transition: {
-          duration: 0.1,
+          duration: 0.05,
           type: "spring",
           ease: "circOut",
         },
@@ -262,6 +307,19 @@ export const animationsData = {
       },
     },
   },
+  [animationsNames.can_not_move]: {
+    name: animationsNames.can_not_move,
+    types: {
+      [animationsTypes.standart]: {
+        transition: {
+          duration: 0.5,
+          type: 'tween',
+          ease: ["easeIn", "easeOut"],
+          times: [0, 0.16, 0.33, 0.5],
+        },
+      },
+    },
+  },
 };
 
 export const dndReturningDuration =
@@ -277,4 +335,5 @@ export const cardAnimations = {
   drop: animationsData.drop,
   flip: animationsData.flip,
   shuffle: animationsData.shuffle,
+  can_not_move: animationsData.can_not_move,
 };

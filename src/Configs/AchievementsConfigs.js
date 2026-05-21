@@ -406,8 +406,8 @@ export const achievements_win = {
     title: "Первая победа",
     description: "Одержать первую победу в игре",
     icon: "🏆",
-    reward: 5,
-    currency: currency.COINS,
+    reward: 250,
+    currency: currency.SCORE,
     condition: (state) => state.wins >= 1,
     modes: [
       GAME_MODES_IDS.CLASSIC,
@@ -428,8 +428,8 @@ export const achievements_win = {
     title: "Скоростная игра",
     description: "Победить менее чем за 5 минут",
     icon: "⏱️",
-    reward: 5,
-    currency: currency.COINS,
+    reward: 350,
+    currency: currency.SCORE,
     condition: (state) => {
       const currentModeId = state.modes[state.currentModeId];
       const currentDealing = currentModeId.currentDealing;
@@ -574,8 +574,8 @@ export const achievements_win = {
     title: "Король карт",
     description: "Одержать 50 побед",
     icon: "👑",
-    reward: 100,
-    currency: currency.COINS,
+    reward: 1000,
+    currency: currency.SCORE,
     condition: (state) => state.wins >= 50,
     modes: [
       GAME_MODES_IDS.CLASSIC,
@@ -596,8 +596,8 @@ export const achievements_win = {
     title: "Мастер времени",
     description: "Одержать 10 побед в режиме на время",
     icon: "⏰",
-    reward: 30,
-    currency: currency.COINS,
+    reward: 300,
+    currency: currency.SCORE,
     condition: (state) => {
       if (state.currentModeId !== GAME_MODES_IDS.TIMED) return false;
       return state.modes[state.currentModeId].wins >= 10;
@@ -633,8 +633,8 @@ export const achievements_win = {
     title: "Коллекционер релакса",
     description: "Одержать 10 побед в расслабленном режиме",
     icon: "😌",
-    reward: 15,
-    currency: currency.COINS,
+    reward: 150,
+    currency: currency.SCORE,
     condition: (state) => {
       if (state.currentModeId !== GAME_MODES_IDS.RELAXED) return false;
       return state.modes[state.currentModeId].wins >= 10;
@@ -673,8 +673,8 @@ export const achievements_win = {
     title: "Легенда классики",
     description: "Одержать 30 побед в классическом режиме",
     icon: "♠️",
-    reward: 35,
-    currency: currency.COINS,
+    reward: 350,
+    currency: currency.SCORE,
     condition: (state) => {
       if (state.currentModeId !== GAME_MODES_IDS.CLASSIC) return false;
       return state.modes[state.currentModeId].wins >= 30;
@@ -695,8 +695,8 @@ export const achievements_win = {
     title: "Мастер всех режимов",
     description: "Одержать 5 побед в каждом режиме",
     icon: "🌟",
-    reward: 100,
-    currency: currency.COINS,
+    reward: 1000,
+    currency: currency.SCORE,
     condition: (state) => {
       const requiredWins = 5;
       const modes = [
@@ -739,8 +739,8 @@ export const achievements_win = {
     title: "Быстрое мышление",
     description: "Победить в режиме на время менее чем за 2 минуты",
     icon: "⚡",
-    reward: 40,
-    currency: currency.COINS,
+    reward: 400,
+    currency: currency.SCORE,
     condition: (state) => {
       if (state.currentModeId !== GAME_MODES_IDS.TIMED) return false;
       const currentMode = state.modes[state.currentModeId];
@@ -861,7 +861,7 @@ export const achievements_win = {
     title: "Серия без подсказок",
     description: "Одержать 5 побед подряд без подсказок",
     icon: "🚫💡",
-    reward: 120,
+    reward: 320,
     currency: currency.SCORE,
     condition: (state) => {
       const currentMode = state.modes[state.currentModeId];
@@ -908,8 +908,8 @@ export const achievements_restart_and_win = {
     title: "Упорный игрок",
     description: "Сыграть 20 игр",
     icon: "🎮",
-    reward: 20,
-    currency: currency.COINS,
+    reward: 2000,
+    currency: currency.SCORE,
     condition: (state) => state.played >= 20,
     modes: [
       GAME_MODES_IDS.CLASSIC,
@@ -930,8 +930,8 @@ export const achievements_restart_and_win = {
     title: "Ветеран",
     description: "Сыграть 100 игр",
     icon: "👴",
-    reward: 50,
-    currency: currency.COINS,
+    reward: 5000,
+    currency: currency.SCORE,
     condition: (state) => state.played >= 100,
     modes: [
       GAME_MODES_IDS.CLASSIC,

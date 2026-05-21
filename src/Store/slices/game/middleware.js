@@ -2,14 +2,12 @@ import {
   addComboBonusTime,
   addUndo,
   endedGame,
+  incrementHintsUsed,
   incrementMoves,
   incrementRedeals,
-  resetCombo,
   setGameStatus,
   setIsEventsInDeck,
-  setIsFirstCardsEvent,
-  setIsGameStarted,
-  setIsTimeStarted,
+  updatePoints,
   updateTime,
 } from "./slice";
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
@@ -26,8 +24,8 @@ import {
 } from "./thunks";
 import {
   GAME_STATUSES,
-  GAME_STORAGE_KEYS,
   moveEventsTypes,
+  scoreOperations,
 } from "../../../Configs/GameConfigs";
 import { GAME_MODES_IDS } from "../../../Configs/GameModes";
 import {
@@ -37,30 +35,34 @@ import {
 } from "../../../Configs/ComboConfigs";
 import { notifications_ids } from "../../../Configs/NotificationsConfigs";
 import {
-  // selectIsFirstCardsEvent,
-  selectIsGameStarted,
-  selectIsTimeStarted,
+  selectGameCurrentModeId,
+  selectGameStatus,
+  selectIsCollectingCards,
 } from "./selectors";
 import { field_components_type_ids } from "../../../Configs/FieldComponentsConfigs";
 import {
   selectIsFoundationsCompleted,
-  selectPileCardsIds,
+  selectIsPileEmpty,
   selectStockId,
-  selectTableausShirtCardsIds,
   selectWasteId,
 } from "../decks/selectors";
-import { removeTabsShirtCardIdOne } from "../decks/slice";
-import {
-  setIsCollectCardsBtnVisible,
-  setActiveNotification,
-} from "../ui/slice";
+import { setActiveNotification, showPFModalById } from "../ui/slice";
 import { handleHints } from "./thunks/hints";
 import { selectIsCanUpTime } from "./selectors/time";
+import { selectSettingsByType } from "../settings/selectors";
+import { gameSettingsTypes } from "../../../Configs/SettingsConfigs";
+import { getAchPropertyById } from "../../../utils/achievementsUtils";
+import { addAchInUnlocked } from "../achievements/slice";
+import { P_F_MODALS_IDS } from "../../../Configs/UIConfigs";
+import { AudioName, playSound } from "../../../Services/soundService";
 
 let intervalId = null;
 let comboTimeoutId = null;
 let startTimeForCombo = 0;
 let fastMovesCountForCombo = 0;
+
+let tickCounter = 0;
+const SAVE_INTERVAL_TICKS = 10;
 
 export const gameListeners = createListenerMiddleware();
 
@@ -72,30 +74,15 @@ gameListeners.startListening({
     handleDrop.fulfilled,
     handleHints.fulfilled,
   ),
-  effect: async (_, listenerApi) => {
+  effect: async (action, listenerApi) => {
     const state = listenerApi.getState();
     const dispatch = listenerApi.dispatch;
-    const isGameStarted = selectIsGameStarted(state);
-    if (!isGameStarted) dispatch(setIsGameStarted(true));
-    dispatch(setIsFirstCardsEvent(true));
-    dispatch(setIsTimeStarted(true));
-    if (intervalId) clearInterval(intervalId);
 
-    intervalId = setInterval(() => {
-      const state = listenerApi.getState();
-      const isTimeStarted = selectIsTimeStarted(state);
-      if (isTimeStarted) {
-        const isCanUpTime = selectIsCanUpTime(state);
-        if (!isCanUpTime) {
-          clearInterval(intervalId);
-          dispatch(setIsTimeStarted(false));
-          dispatch(endedGame({ status: GAME_STATUSES.GAME_OVER }));
-          return;
-        }
-        dispatch(updateTime());
-      }
-    }, 1000);
-
+    if (handleHints.fulfilled.match(action)) {
+      dispatch(incrementHintsUsed());
+      if (action.payload?.noHintAvailable) return;
+    }
+    if (selectGameStatus(state) === GAME_STATUSES.PLAYING) return;
     dispatch(setGameStatus(GAME_STATUSES.PLAYING));
   },
 });
@@ -103,6 +90,7 @@ gameListeners.startListening({
 gameListeners.startListening({
   actionCreator: moveStockWaste.fulfilled,
   effect: (action, listenerApi) => {
+    const state = listenerApi.getState();
     const dispatch = listenerApi.dispatch;
     const { type, fromPileId, toPileId, cardsIds } = action.meta.arg;
     const payload = {
@@ -110,11 +98,13 @@ gameListeners.startListening({
       data: { fromPileId, toPileId, cardsIds },
     };
     dispatch(addUndo(payload));
+    if (selectIsCollectingCards(state)) {
+      return;
+    }
     if (type === moveEventsTypes.stockToWaste) {
-      const state = listenerApi.getState();
-      const stockId = selectStockId(state);
-      const stockCards = selectPileCardsIds(state, stockId);
-      if (stockCards.length === 0) dispatch(incrementRedeals());
+      if (selectIsPileEmpty(state, selectStockId(state))) {
+        dispatch(incrementRedeals());
+      }
     }
   },
 });
@@ -125,7 +115,63 @@ gameListeners.startListening({
     standartMove.fulfilled,
     handleShuffle.fulfilled,
   ),
-  effect: (_, listenerApi) => listenerApi.dispatch(incrementMoves()),
+  effect: (_, listenerApi) => {
+    const dispatch = listenerApi.dispatch;
+    dispatch(incrementMoves());
+  },
+});
+
+gameListeners.startListening({
+  actionCreator: endedGame,
+  effect: (action, listenerApi) => {
+    if (intervalId) {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
+    listenerApi.dispatch(setGameStatus(action.payload.status));
+  },
+});
+
+gameListeners.startListening({
+  actionCreator: setGameStatus,
+  effect: (action, listenerApi) => {
+    if (action.payload !== GAME_STATUSES.PLAYING) {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+      return;
+    }
+
+    const dispatch = listenerApi.dispatch;
+    tickCounter = 0;
+
+    if (!intervalId) {
+      intervalId = setInterval(() => {
+        const state = listenerApi.getState();
+        const isCanUpTime = selectIsCanUpTime(state);
+
+        if (!isCanUpTime) {
+          clearInterval(intervalId);
+          const isSoundsEnabled = selectSettingsByType(
+            state,
+            gameSettingsTypes.soundsEffects,
+          ).value;
+          playSound(AudioName.GAME_OVER, isSoundsEnabled);
+          dispatch(endedGame({ status: GAME_STATUSES.GAME_OVER }));
+          return;
+        }
+
+        dispatch(updateTime());
+
+        tickCounter++;
+
+        if (tickCounter >= SAVE_INTERVAL_TICKS) {
+          tickCounter = 0;
+        }
+      }, 1000);
+    }
+  },
 });
 
 // ===== COMBO LOGIC =====
@@ -133,22 +179,25 @@ gameListeners.startListening({
 gameListeners.startListening({
   actionCreator: standartMove.fulfilled,
   effect: async (action, listenerApi) => {
-    console.log("gameListeners action.payload: ", action.payload.data);
     const { moveData, isDropping, isUserMove } = action.payload.data;
+
     if (!moveData.isMoves || (!isUserMove && !isDropping)) return;
+
     const state = listenerApi.getState();
     const dispatch = listenerApi.dispatch;
-    const { currentModeId } = state.game;
+    const currentModeId = selectGameCurrentModeId(state);
+
     if (currentModeId !== GAME_MODES_IDS.TIMED) return;
 
     const currentTime = Date.now();
-    console.log("gameListeners: ", currentTime, startTimeForCombo);
+
     if (startTimeForCombo === 0) {
       startTimeForCombo = currentTime;
       return;
     }
 
     const timeSinceLastMove = currentTime - startTimeForCombo;
+
     if (timeSinceLastMove < COMBO_WINDOW) {
       fastMovesCountForCombo += 1;
       startTimeForCombo = currentTime;
@@ -171,7 +220,7 @@ gameListeners.startListening({
             id: notifications_ids.combo_bonus_time,
             params: { seconds: bonusSec },
           }),
-        );
+        ); // РАССКОМЕНТИТЬ
         dispatch(addComboBonusTime({ seconds: bonusSec }));
         comboTimeoutId = null;
         startTimeForCombo = 0;
@@ -186,7 +235,7 @@ gameListeners.startListening({
             id: notifications_ids.combo_bonus_time,
             params: { seconds: bonusSec },
           }),
-        );
+        ); // РАССКОМЕНТИТЬ
         fastMovesCountForCombo = 0;
       }
       startTimeForCombo = currentTime;
@@ -194,41 +243,24 @@ gameListeners.startListening({
   },
 });
 
-// handleCollectCards сбрасывает combo (не считая его за пользовательский ход)
+// Сброс комбо при перезапуске/инициализации игры
 gameListeners.startListening({
-  actionCreator: handleCollectCards.fulfilled,
-  effect: async (action, listenerApi) => {
-    const dispatch = listenerApi.dispatch;
-    const state = listenerApi.getState();
-
+  matcher: isAnyOf(handleGameInit.pending, handleCollectCards.pending),
+  effect: async () => {
     if (comboTimeoutId) {
       clearTimeout(comboTimeoutId);
       comboTimeoutId = null;
     }
-
-    const prevComboCount = state.game?.combo?.current || 0;
-    const bonusSeconds = COMBO_BONUS_TIMES[prevComboCount] || 0;
-    if (prevComboCount > 0) {
-      dispatch(
-        setActiveNotification({
-          id: notifications_ids.combo_bonus_time,
-          params: { seconds: bonusSeconds },
-        }),
-      );
-    }
-    dispatch(resetCombo());
   },
 });
 
-// Сброс комбо при перезапуске/инициализации игры
 gameListeners.startListening({
-  actionCreator: handleGameInit.pending,
-  effect: async (action, listenerApi) => {
-    if (comboTimeoutId) {
-      clearTimeout(comboTimeoutId);
-      comboTimeoutId = null;
+  matcher: isAnyOf(showPFModalById, handleGameInit.pending),
+  effect: async () => {
+    if (intervalId) {
+      clearInterval(intervalId);
+      intervalId = null;
     }
-    listenerApi.dispatch(resetCombo());
   },
 });
 
@@ -236,18 +268,28 @@ gameListeners.startListening({
   actionCreator: standartMove.fulfilled,
   effect: async (action, listenerApi) => {
     const dispatch = listenerApi.dispatch;
-    const { toPileId } = action.meta.arg;
     dispatch(addUndo(action.payload));
+    const toPileId = action.payload.data.toPileId;
     const foundationsIds = field_components_type_ids.foundations;
-    const isPileFromFoundation = foundationsIds.includes(toPileId);
-    if (isPileFromFoundation) {
+    const isToPileFoundation = foundationsIds.includes(toPileId);
+    if (isToPileFoundation) {
       const state = listenerApi.getState();
       const isFoundationsCompleted = selectIsFoundationsCompleted(state);
       if (isFoundationsCompleted) {
-        console.log("WIIIIIIIIIIIIIIIIIIN: FoundationsCompleted");
+        const isSoundsEnabled = selectSettingsByType(
+          state,
+          gameSettingsTypes.soundsEffects,
+        ).value;
+        playSound(AudioName.WIN, isSoundsEnabled);
         dispatch(endedGame({ status: GAME_STATUSES.WON }));
         return;
       } else {
+        const type = gameSettingsTypes.fastGame;
+        const isFastGameEnabled = selectSettingsByType(
+          listenerApi.getState(),
+          type,
+        );
+        if (!isFastGameEnabled.value) return;
         const tableausIds = field_components_type_ids.tableaus;
         for (const tableauId of tableausIds) {
           await dispatch(moveToFoundations({ fromPileId: tableauId }));
@@ -255,18 +297,6 @@ gameListeners.startListening({
         const wasteId = selectWasteId(listenerApi.getState());
         await dispatch(moveToFoundations({ fromPileId: wasteId }));
       }
-    }
-  },
-});
-
-gameListeners.startListening({
-  actionCreator: removeTabsShirtCardIdOne,
-  effect: (_, listenerApi) => {
-    const state = listenerApi.getState();
-    const dispatch = listenerApi.dispatch;
-    const tableausShirtCardsIds = selectTableausShirtCardsIds(state);
-    if (tableausShirtCardsIds.length === 0) {
-      dispatch(setIsCollectCardsBtnVisible(true));
     }
   },
 });
@@ -302,5 +332,16 @@ gameListeners.startListening({
   ),
   effect: async (_, listenerApi) => {
     listenerApi.dispatch(setIsEventsInDeck(false));
+  },
+});
+
+gameListeners.startListening({
+  actionCreator: addAchInUnlocked,
+  effect: async (action, listenerApi) => {
+    const { id } = action.payload;
+    const dispatch = listenerApi.dispatch;
+    const reward = getAchPropertyById(id, "reward");
+    const operation = scoreOperations.increment;
+    if (reward) dispatch(updatePoints({ count: reward, operation }));
   },
 });

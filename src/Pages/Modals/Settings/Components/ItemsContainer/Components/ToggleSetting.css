@@ -104,3 +104,21 @@
   width: 30px;
   margin-left: -2px;
 } */
+
+@media (max-height: 500px) {
+  :root {
+    --setting-toggle-label-width: 40px;
+    --setting-toggle-label-height: 24px;
+    --setting-toggle-slider-width: 28px;
+    --setting-toggle-slider-height: 28px;
+    --setting-toggle-slider-left: 3px;
+    --setting-toggle-slider-top: calc(
+      (var(--setting-toggle-slider-height) - var(--setting-toggle-label-height)) /
+        2
+    );
+    --setting-toggle-slider-translateX: calc(
+      var(--setting-toggle-label-width) - var(--setting-toggle-slider-width) +
+        (2 * var(--setting-toggle-slider-left))
+    );
+  }
+}

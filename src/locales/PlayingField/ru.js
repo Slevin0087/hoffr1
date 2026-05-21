@@ -19,4 +19,9 @@ export default {
   btn_game_restart_modal_cancel: "Отмена",
   game_restart_modal_cancel_content: "Уверены?",
   game_restart_modal_title: "Новая игра!",
+
+  foundations_span: "Т",
+  stock_span: "К",
+  waste_span: "С",
+  tableaus_span: "К",
 };

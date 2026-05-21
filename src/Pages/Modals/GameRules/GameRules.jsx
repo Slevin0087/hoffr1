@@ -37,19 +37,16 @@ function GameRules() {
     <Container className="game-rules-wrapper">
       <Container fluid className="game-rules-container">
         <Card className="shadow">
-          <Card.Body>
+          <Card.Body className="shadow-card-body">
             {/* Цель */}
             <Card className="mb-3 border-primary">
               <Card.Body>
-                <h5>🎯 {t("gameRules.common_goal")}</h5>
-                <p className="mb-0">
+                <h5 className="game-rules-common-goal-h5">🎯 {t("gameRules.common_goal")}</h5>
+                <p className="mb-0 game-rules-common-goal-p">
                   <Trans
                     i18nKey="gameRules.common_goal_p_all"
                     components={[<strong />]}
                   />
-                  {/* {t("gameRules.common_goal_p1")}{" "}
-                  <strong>{t("gameRules.common_goal_p2")}</strong>{" "}
-                  {t("gameRules.common_goal_p3")} */}
                 </p>
               </Card.Body>
             </Card>
@@ -169,8 +166,8 @@ function GameRules() {
             {/* Победа */}
             <Card className="mt-3 border-success">
               <Card.Body className="text-center">
-                <h5>🏆 {t("gameRules.victory_conditions")}</h5>
-                <p className="mb-0">
+                <h5 className="game-rules-victory-conditions-h5">🏆 {t("gameRules.victory_conditions")}</h5>
+                <p className="mb-0 game-rules-victory-conditions-p">
                   {/* Все карты на фундаменте, джокер последним */}
                   {t("gameRules.victory_conditions_p1")}
                 </p>
@@ -181,11 +178,11 @@ function GameRules() {
           </Card.Body>
         </Card>
       </Container>
-      <div className="text-center mt-4">
+      <div className="game-rules-clear-btn-container">
         <Button
           variant="danger"
           size="lg"
-          className="px-5"
+          className="game-rules-clear-btn"
           onClick={handleClose}
         >
           {t("gameRules.clear_btn")}

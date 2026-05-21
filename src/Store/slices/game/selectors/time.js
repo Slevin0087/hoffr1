@@ -1,8 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
-import {
-  selectActiveDealing,
-  selectGame,
-} from "../selectors";
+import { selectActiveDealing, selectGame } from "../selectors";
 import { GAME_STATUSES } from "../../../../Configs/GameConfigs";
 
 export const selectlifetimeTime = createSelector(
@@ -29,6 +26,6 @@ export const selectIsCanUpTime = createSelector(
   [(state) => selectTimeState(state)],
   (timeState) => {
     if (timeState.limit === null) return true;
-    return timeState.limit !== timeState.current;
+    return timeState.current > 0;
   },
 );

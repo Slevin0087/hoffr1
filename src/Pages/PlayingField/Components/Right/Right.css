@@ -1,0 +1,39 @@
+:root {
+    --border-field-right: 0.4rem outset rgb(105, 187, 29);
+    --background-color-field-right: rgba(70, 9, 32, 0.7);
+}
+
+.field-right {
+  display: none;
+  gap: 0;
+  flex-direction: column;
+  width: auto;
+  height: 100%;
+  margin-top: 0;
+  margin-left: auto;
+  border-top: 0;
+  border-left: var(--border-field-right);
+  border-top-left-radius: var(--br-status-bar-footer);
+  border-bottom-left-radius: var(--br-status-bar-footer);
+  background-color: var(--background-color-field-left);
+}
+
+.field-right .footer-btn {
+  flex: 1 1 0;
+  border-radius: 0;
+  border-right: none;
+}
+
+.field-right .footer-btn:first-child {
+  border-top-left-radius: var(--br-status-bar-footer);
+}
+
+.field-right .footer-btn:last-child {
+  border-bottom-left-radius: var(--br-status-bar-footer);
+}
+
+@media (max-height: 38rem) and (orientation: landscape) {
+  .field-right {
+    display: flex;
+  }
+}

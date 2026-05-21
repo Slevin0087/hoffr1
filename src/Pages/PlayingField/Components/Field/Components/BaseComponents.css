@@ -1,5 +1,33 @@
 :root {
   --gap-field-cells: 5px;
+  --stock-cards-overlapX: calc((var(--card-width) / 200) * -1);
+  --stock-cards-overlapY: calc((var(--card-width) / 200) * -1);
+
+  --foundation-0-cards-overlapX: calc((var(--card-width) / 200) * -1);
+  --foundation-0-cards-overlapY: calc((var(--card-width) / 200) * -1);
+  --foundation-1-cards-overlapX: calc((var(--card-width) / 400) * -1);
+  --foundation-1-cards-overlapY: calc((var(--card-width) / 200) * -1);
+  --foundation-2-cards-overlapX: calc(var(--card-width) / 400);
+  --foundation-2-cards-overlapY: calc((var(--card-width) / 200) * -1);
+  --foundation-3-cards-overlapX: calc(var(--card-width) / 200);
+  --foundation-3-cards-overlapY: calc((var(--card-width) / 200) * -1);
+
+  --tableau-0-cards-overlapX: calc((var(--card-width) / 600) * -1);
+  --tableau-1-cards-overlapX: calc((var(--card-width) / 400) * -1);
+  --tableau-2-cards-overlapX: calc((var(--card-width) / 200) * -1);
+  --tableau-3-cards-overlapX: 0;
+  --tableau-4-cards-overlapX: calc(var(--card-width) / 200);
+  --tableau-5-cards-overlapX: calc(var(--card-width) / 400);
+  --tableau-6-cards-overlapX: calc(var(--card-width) / 600);
+
+  --tableau-cards-overlapY: calc(var(--card-height) / 6);
+
+  --tableau-face-cards-overlapY: calc(var(--card-height) / 6);
+  --tableau-shirt-cards-overlapY: calc(var(--card-height) / 10);
+
+  --waste-0-cards-overlapX: calc(var(--card-width) / 5);
+  --waste-0-cards-overlapY: calc((var(--card-height) / 20) * -1);
+  --waste-0-max-visible: 3;
 }
 
 .pile {
@@ -11,8 +39,8 @@
   color: rgb(0, 0, 0);
   gap: var(--gap-field-cells);
   /* background-color: yellow; */
-
-  border: 1px solid #1a1a2e;
+  box-shadow: inset 0px 0px 0px 0.2rem black;
+  border: none;
   border-radius: 3px;
 
   position: relative;
@@ -24,6 +52,19 @@
 
 .pile.can-drop {
   border: 5px solid green;
+}
+
+.pile.isHint-showing {
+  box-shadow: 0 0 0 calc(var(--card-width) / 20) green;
+}
+
+.stock-0.isHint-showing {
+  box-shadow: 0 0 0 calc(var(--card-width) / 20) yellow;
+}
+
+.stock-0 .playing-card-container.isShuffling-card {
+  top: calc(var(--card-shuffle-offset-y) * var(--card-width)) !important;
+  left: calc(var(--card-shuffle-offset-x) * var(--card-width)) !important;
 }
 
 .pile::before {
@@ -43,9 +84,96 @@
   align-items: center;
   line-height: 1;
   color: rgb(16, 3, 71);
-  font-size: 2rem;
+  /* font-size: clamp(14px, 4vw, 44px); */
+  font-size: min(5vh, 5vw);
+}
+
+.pile-span-need-by-redeals {
+  color: gold;
+  font-size: clamp(12px, 3vw, 44px);
 }
 
 .stocks {
   cursor: pointer;
+}
+
+.stock-0 .playing-card-container {
+  top: calc(var(--stock-cards-overlapY) * var(--card-index));
+  left: calc(var(--stock-cards-overlapX) * var(--card-index));
+}
+
+.foundation-0 .playing-card-container {
+  top: calc(var(--foundation-0-cards-overlapY) * var(--card-index));
+  left: calc(var(--foundation-0-cards-overlapX) * var(--card-index));
+}
+
+.foundation-1 .playing-card-container {
+  top: calc(var(--foundation-1-cards-overlapY) * var(--card-index));
+  left: calc(var(--foundation-1-cards-overlapX) * var(--card-index));
+}
+
+.foundation-2 .playing-card-container {
+  top: calc(var(--foundation-2-cards-overlapY) * var(--card-index));
+  left: calc(var(--foundation-2-cards-overlapX) * var(--card-index));
+}
+
+.foundation-3 .playing-card-container {
+  top: calc(var(--foundation-3-cards-overlapY) * var(--card-index));
+  left: calc(var(--foundation-3-cards-overlapX) * var(--card-index));
+}
+
+.tableau-0 .playing-card-container {
+  left: calc(var(--tableau-0-cards-overlapX) * var(--card-index));
+}
+
+.tableau-1 .playing-card-container {
+  left: calc(var(--tableau-1-cards-overlapX) * var(--card-index));
+}
+
+.tableau-2 .playing-card-container {
+  left: calc(var(--tableau-2-cards-overlapX) * var(--card-index));
+}
+
+.tableau-3 .playing-card-container {
+  left: calc(var(--tableau-3-cards-overlapX) * var(--card-index));
+}
+
+.tableau-4 .playing-card-container {
+  left: calc(var(--tableau-4-cards-overlapX) * var(--card-index));
+}
+
+.tableau-5 .playing-card-container {
+  left: calc(var(--tableau-5-cards-overlapX) * var(--card-index));
+}
+
+.tableau-6 .playing-card-container {
+  left: calc(var(--tableau-6-cards-overlapX) * var(--card-index));
+}
+
+.tableau-0 .playing-card-container,
+.tableau-1 .playing-card-container,
+.tableau-2 .playing-card-container,
+.tableau-3 .playing-card-container,
+.tableau-4 .playing-card-container,
+.tableau-5 .playing-card-container,
+.tableau-6 .playing-card-container {
+  top: calc(var(--tableau-cards-overlapY) * var(--card-index));
+}
+
+.waste-0 .playing-card-container.isShuffling-card {
+  top: calc(var(--card-shuffle-offset-y) * var(--card-width)) !important;
+  left: calc(var(--card-shuffle-offset-x) * var(--card-width)) !important;
+}
+
+.waste-0 .playing-card-container:nth-last-child(1) {
+  top: 0;
+  left: 0;
+}
+.waste-0 .playing-card-container:nth-last-child(2) {
+  top: calc(var(--waste-0-cards-overlapY) * 1);
+  left: calc(var(--waste-0-cards-overlapX) * 1);
+}
+.waste-0 .playing-card-container:nth-last-child(n + 3) {
+  top: calc(var(--waste-0-cards-overlapY) * 2);
+  left: calc(var(--waste-0-cards-overlapX) * 2);
 }

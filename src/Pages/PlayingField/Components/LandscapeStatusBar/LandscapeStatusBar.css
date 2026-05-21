@@ -1,0 +1,38 @@
+.landscape-status-bar {
+  display: none;
+  /* position: absolute;
+  top: 0;
+  right: 0;
+  left: auto;
+  margin-left: auto; */
+  justify-content: space-between;
+  align-items: flex-start;
+  /* width: auto; */
+  flex-wrap: nowrap;
+  /* margin-left: auto; */
+  /* background-color: var(--background-color-status-bar); */
+  /* border-bottom: var(--border-status-bar); */
+  /* background-color: transparent; */
+  /* --br-status-bar-footer находится в PlayingField.css */
+  /* border-bottom-left-radius: var(--br-status-bar-footer);
+  border-bottom-right-radius: var(--br-status-bar-footer); */
+  padding: var(--padding-status-bar);
+  /* padding: 0; */
+  margin: 0;
+}
+
+.landscape-status-bar .col {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-status-bar-cols);
+  flex: 0 0 auto;
+  width: auto;
+}
+
+@media (max-height: 38rem) and (orientation: landscape) {
+  .landscape-status-bar {
+    display: flex;
+  }
+}

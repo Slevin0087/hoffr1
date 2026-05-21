@@ -1,51 +1,65 @@
-import storage from "../../../utils/Storage";
 import {
+  dealingCounts,
   directionsTypes,
   GAME_STATUSES,
-  GAME_STORAGE_KEYS,
   scoreOperations,
 } from "../../../Configs/GameConfigs";
 import { GAME_MODES_IDS } from "../../../Configs/GameModes";
 import { COMBO_MAX_COUNT, COMBO_WINDOW } from "../../../Configs/ComboConfigs";
 
-const COMBO_INITIAL = { current: 0, lastTimestamp: 0 };
+const TIME_COMBO_INITIAL = { current: 0, lastTimestamp: 0 };
 
 export const setGameStatus = (state, action) => {
+  console.log(
+    "state.status === action.payload  ",
+    state.status === action.payload,
+  );
+  if (state.status === action.payload) return;
   state.status = action.payload;
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
+
+  if (action.payload === GAME_STATUSES.PLAYING) {
+    state.isTimeStarted = true;
+    state.isGameStarted = true;
+    state.isFirstCardsEvent = true;
+    return;
+  }
+  if (action.payload === GAME_STATUSES.PAUSED) {
+    state.isTimeStarted = false;
+    state.isGameStarted = false;
+    state.isFirstCardsEvent = false;
+    return;
+  }
 };
 
 export const setPlayerName = (state, action) => {
   const { name } = action.payload;
   state.playerName = name;
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
 };
 
 export const setIsFirstCardsEvent = (state, action) => {
   state.isFirstCardsEvent = action.payload;
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
 };
 
 export const setIsEventsInDeck = (state, action) => {
   state.isEventsInDeck = action.payload;
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
 };
 
 export const setIsTimeStarted = (state, action) => {
   state.isTimeStarted = action.payload;
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
 };
 
 export const setIsGameStarted = (state, action) => {
-  console.log("setIsGameStarted", action.payload);
-  state.isStarted = action.payload;
+  state.isGameStarted = action.payload;
   if (action.payload === true) {
     const currentDealing = state.modes[state.currentModeId].currentDealing;
     state.modes[state.currentModeId][currentDealing].played += 1;
     state.modes[state.currentModeId].played += 1;
     state.played += 1;
   }
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
+};
+
+export const setIsCollectingCards = (state, action) => {
+  state.isCollectingCards = action.payload;
 };
 
 export const initGame = (state, action) => {
@@ -53,60 +67,75 @@ export const initGame = (state, action) => {
   state.currentModeId = currentModeId;
   state.isTimeStarted = false;
   state.isGameStarted = false;
-  state.isStarted = false;
   state.isFirstCardsEvent = false;
+  const isTimedMode = currentModeId === GAME_MODES_IDS.TIMED;
+  const timeCurrent = isTimedMode ? 180 : 0;
   state.modes[currentModeId].currentDealing = currentDealing;
   state.modes[currentModeId][currentDealing].undo.current = 0;
   state.modes[currentModeId][currentDealing].undo.stack = [];
   state.modes[currentModeId][currentDealing].moves.current = 0;
   state.modes[currentModeId][currentDealing].hints.current = 0;
   state.modes[currentModeId][currentDealing].redeals.current = 0;
+  state.modes[currentModeId][currentDealing].shuffle.current = 0;
   state.modes[currentModeId][currentDealing].points.current = 0;
-  state.modes[currentModeId][currentDealing].time.current =
-    currentModeId === GAME_MODES_IDS.TIMED ? 180 : 0;
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
+  state.modes[currentModeId][currentDealing].time.current = timeCurrent;
+
+  if (isTimedMode) {
+    state.modes[currentModeId][currentDealing].timeCombo = {
+      ...TIME_COMBO_INITIAL,
+    };
+  }
 };
 
 export const endedGame = (state, action) => {
   const { status } = action.payload;
   const currentModeId = state.currentModeId;
   const currentDealing = state.modes[currentModeId].currentDealing;
-  const mode = state.modes[currentModeId];
-  const dealingStats = mode[currentDealing];
-  const time = dealingStats.time;
-  const undo = dealingStats.undo;
-  const hints = dealingStats.hints;
 
-  state.status = status;
-  state.isStarted = false;
+  const currentMode = state.modes[currentModeId];
+  const dealingStats = currentMode[currentDealing];
+
   state.isGameStarted = false;
   state.isTimeStarted = false;
+  state.isFirstCardsEvent = false;
 
   if (status === GAME_STATUSES.WON) {
     state.wins += 1;
-    mode.wins += 1;
+    currentMode.wins += 1;
     dealingStats.wins.total += 1;
-    dealingStats.wins.time = time.current;
-    console.log("endedGame time.current", time.current);
-    const winTime =
-      time.limit === null ? time.current : time.limit - time.current;
+    dealingStats.wins.time = dealingStats.time.current;
 
-    if (dealingStats.time.best === null || winTime < dealingStats.time.best) {
-      dealingStats.time.best = winTime;
+    const isTimedMode = currentModeId === GAME_MODES_IDS.TIMED;
+    const hasBestTime = dealingStats.time.best !== null;
+
+    if (!isTimedMode) {
+      const isBestTime = dealingStats.time.current < dealingStats.time.best;
+      if (!hasBestTime || isBestTime) {
+        dealingStats.time.best = dealingStats.time.current;
+      }
+    } else {
+      const currentSessionTime =
+        dealingStats.time.current + dealingStats.time.bonus;
+      const remainingTime = dealingStats.time.limit - currentSessionTime;
+      const hasTimeLeft =
+        remainingTime > 0 && remainingTime < dealingStats.time.limit;
+      const isBestTime = hasTimeLeft && remainingTime > dealingStats.time.best;
+      if (!hasBestTime || isBestTime) {
+        dealingStats.time.best = remainingTime;
+      }
     }
-    if (undo.current === 0) {
+
+    if (dealingStats.undo.current === 0) {
       dealingStats.wins.no_undo += 1;
     }
-    if (hints.current === 0) {
+    if (dealingStats.hints.current === 0) {
       dealingStats.wins.no_hints += 1;
     }
   } else if (status === GAME_STATUSES.GAME_OVER) {
     state.losses += 1;
-    mode.losses += 1;
+    currentMode.losses += 1;
     dealingStats.losses += 1;
   }
-
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
 };
 
 export const updatePoints = (state, action) => {
@@ -128,7 +157,6 @@ export const updatePoints = (state, action) => {
     state.modes[state.currentModeId].points -= count;
     state.points -= count;
   }
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
 };
 
 export const updateTime = (state) => {
@@ -143,7 +171,7 @@ export const updateTime = (state) => {
   state.modes[state.currentModeId][currentDealing].time.total += 1;
   state.modes[state.currentModeId].time += 1;
   state.time += 1;
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
+  // // Сохранение времени вместе со всем остальным состоянием при каждом тике может быть слишком частым, поэтому перенесено в middleware с оптимизацией по частоте сохранения
 };
 
 export const incrementMoves = (state) => {
@@ -152,18 +180,32 @@ export const incrementMoves = (state) => {
   state.modes[state.currentModeId][currentDealing].moves.total += 1;
   state.modes[state.currentModeId].moves += 1;
   state.moves += 1;
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
 };
 
 export const incrementRedeals = (state) => {
   const currentDealing = state.modes[state.currentModeId].currentDealing;
   state.modes[state.currentModeId][currentDealing].redeals.current += 1;
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
+};
+
+export const decrementRedeals = (state) => {
+  const currentDealing = state.modes[state.currentModeId].currentDealing;
+  state.modes[state.currentModeId][currentDealing].redeals.current -= 1;
+};
+
+export const incrementShuffle = (state) => {
+  const currentDealing = state.modes[state.currentModeId].currentDealing;
+  if (currentDealing === dealingCounts.one) return;
+  state.modes[state.currentModeId][currentDealing].shuffle.current += 1;
+};
+
+export const decrementShuffle = (state) => {
+  const currentDealing = state.modes[state.currentModeId].currentDealing;
+  if (currentDealing === dealingCounts.one) return;
+  state.modes[state.currentModeId][currentDealing].shuffle.current -= 1;
 };
 
 export const resetCoins = (state) => {
   state.coins = 0;
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
 };
 
 export const removeUndo = (state, action) => {
@@ -172,13 +214,26 @@ export const removeUndo = (state, action) => {
   const undoStack = state.modes[state.currentModeId][currentDealing].undo.stack;
   state.modes[state.currentModeId][currentDealing].undo.stack =
     undoStack.filter((undo) => undo.id !== id);
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
 };
 
 export const incrementUndoUsed = (state) => {
   const currentDealing = state.modes[state.currentModeId].currentDealing;
   state.modes[state.currentModeId][currentDealing].undo.current += 1;
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
+};
+
+export const incrementHintsUsed = (state) => {
+  const currentDealing = state.modes[state.currentModeId].currentDealing;
+  state.modes[state.currentModeId][currentDealing].hints.current += 1;
+};
+
+export const resetUndoUsed = (state) => {
+  const currentDealing = state.modes[state.currentModeId].currentDealing;
+  state.modes[state.currentModeId][currentDealing].undo.current = 0;
+};
+
+export const resetHintsUsed = (state) => {
+  const currentDealing = state.modes[state.currentModeId].currentDealing;
+  state.modes[state.currentModeId][currentDealing].hints.current = 0;
 };
 
 export const addUndo = (state, action) => {
@@ -189,41 +244,40 @@ export const addUndo = (state, action) => {
   console.log("addUndo: ", action.payload);
   const undo = { id, type, data };
   state.modes[state.currentModeId][currentDealing].undo.stack.push(undo);
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
 };
 
 export const updateCombo = (state, action) => {
-  if (state.currentModeId !== GAME_MODES_IDS.TIMED) return;
-  const { count = 1 } = action.payload;
-  const currentDealing = state.modes[state.currentModeId].currentDealing;
-  const comboState = state.modes[state.currentModeId][currentDealing].combo;
+  const { count = 0 } = action.payload;
+  const currentModeId = state.currentModeId;
+  const isTimedMode = currentModeId === GAME_MODES_IDS.TIMED;
+  if (count === 0 || !isTimedMode) return;
+  const currentDealing = state.modes[currentModeId].currentDealing;
+  const comboState = state.modes[currentModeId][currentDealing].timeCombo;
 
   // Сбросом combo управляет middleware через setTimeout (comboTimeoutId)
   comboState.current = Math.min(comboState.current + count, COMBO_MAX_COUNT);
   comboState.lastTimestamp = Date.now();
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
 };
 
 export const addComboBonusTime = (state, action) => {
-  if (state.currentModeId !== GAME_MODES_IDS.TIMED) return;
   const { seconds = 0 } = action.payload;
-  const currentDealing = state.modes[state.currentModeId].currentDealing;
-  const direction =
-    state.modes[state.currentModeId][currentDealing].time.direction;
-  // Прибавляем время только если таймер идёт на убывание (как в TIMED)
+  const currentModeId = state.currentModeId;
+  const isTimedMode = currentModeId === GAME_MODES_IDS.TIMED;
+  if (seconds === 0 || !isTimedMode) return;
+  const currentDealing = state.modes[currentModeId].currentDealing;
+  const direction = state.modes[currentModeId][currentDealing].time.direction;
   if (direction === directionsTypes.decrement) {
-    state.modes[state.currentModeId][currentDealing].time.current += seconds;
+    state.modes[currentModeId][currentDealing].time.bonus += seconds;
+    state.modes[currentModeId][currentDealing].time.current += seconds;
   }
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
 };
 
 export const resetCombo = (state) => {
   if (state.currentModeId !== GAME_MODES_IDS.TIMED) return;
   const currentDealing = state.modes[state.currentModeId].currentDealing;
-  const comboState = state.modes[state.currentModeId][currentDealing].combo;
+  const comboState = state.modes[state.currentModeId][currentDealing].timeCombo;
   comboState.current = 0;
   comboState.lastTimestamp = 0;
-  storage.setItem(GAME_STORAGE_KEYS.GAME, state);
 };
 
 export const reducers = {
@@ -233,16 +287,23 @@ export const reducers = {
   setIsEventsInDeck,
   setIsTimeStarted,
   setIsGameStarted,
+  setIsCollectingCards,
   initGame,
   endedGame,
   updatePoints,
   updateTime,
   incrementMoves,
   incrementRedeals,
+  decrementRedeals,
+  incrementShuffle,
+  decrementShuffle,
   resetCoins,
   addUndo,
   removeUndo,
   incrementUndoUsed,
+  incrementHintsUsed,
+  resetUndoUsed,
+  resetHintsUsed,
   updateCombo,
   addComboBonusTime,
   resetCombo,

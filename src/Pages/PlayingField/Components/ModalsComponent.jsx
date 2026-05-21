@@ -13,6 +13,8 @@ import {
 import { P_F_MODALS_IDS } from "../../../Configs/UIConfigs";
 import ModalsComponentBody from "./ModalsComponentBody";
 import { useTranslation } from "react-i18next";
+import { setGameStatus } from "../../../Store/slices/game/slice";
+import { GAME_STATUSES } from "../../../Configs/GameConfigs";
 
 function ModalsComponent() {
   const { t } = useTranslation();
@@ -28,17 +30,15 @@ function ModalsComponent() {
     const modalMenu = P_F_MODALS_IDS.MENU;
     dispatch(setActivePFModalId(modalMenu));
   };
-  const handleClose = () =>
+  const handleClose = () => {
+    console.log("handleClose");
+      dispatch(setGameStatus(GAME_STATUSES.READY));
+    
     dispatch(hidePFModalById({ id: P_F_MODALS_IDS.MENU }));
+  };
+
   return (
-    <Modal
-      show={isShow}
-      centered
-      className="modals-component2"
-      fullscreen="md-down"
-      size="lg"
-      dialogClassName="modal-h80"
-    >
+    <Modal show={isShow} centered className="modals-component2">
       <Modal.Header>
         {!isMenuModalId && (
           <Button variant="primary" onClick={handleBackToMenu}>
@@ -53,7 +53,9 @@ function ModalsComponent() {
       <Modal.Body className={isShopModalId && "body-jc-start"}>
         <ModalsComponentBody activeModalId={activePFModalId} />
       </Modal.Body>
-      <Modal.Footer>{t("menu.menu_page_h1")}</Modal.Footer>
+      <Modal.Footer>
+        <p className="modals-component2-footer-p">{t("menu.menu_page_h1")}</p>
+      </Modal.Footer>
     </Modal>
   );
 }

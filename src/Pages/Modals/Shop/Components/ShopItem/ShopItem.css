@@ -1,42 +1,53 @@
-.shop-item {
-  background: rgba(0, 0, 0, 0.4);
+:root {
+  --shop-item-width: 10vmin;
+  --shop-item-height: calc(var(--shop-item-width) * 1.4);
+  --shop-item-fons-width: 25vmin;
+  --shop-item-fons-height: calc(var(--shop-item-fons-width) / 1.4);
+}
+
+.shop-item-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   border-radius: 12px;
   padding: 15px;
   transition: all 0.3s ease;
   position: relative;
+  width: 90%;
 }
 
-/* Стили для выбранного предмета */
-.shop-item.selected,
-.fons-shop-item.selected {
+.shop-item-container.fons {
+  aspect-ratio: 1.4/1;
+}
+
+.shop-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* width: var(--shop-item-width);
+  height: var(--shop-item-height); */
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: transform 0.3s ease;
+  border-radius: 0.5vw;
+  padding: 0;
+  width: 100%;
+  aspect-ratio: 1/1.4;
+}
+
+.shop-item.selected {
   box-shadow:
     0 0 0 2px #ffd966,
     0 0 0 4px rgba(255, 217, 102, 0.3);
 }
 
-.shop-item-container {
-  cursor: pointer;
-}
-
-.shop-item-card {
-  width: 100%;
-  aspect-ratio: 2 / 3;
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 10px;
-}
-
-.shop-item-card-bg {
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-repeat: no-repeat;
-  transition: transform 0.3s ease;
-}
-
 .shop-item-info {
   text-align: center;
   margin-top: 10px;
+}
+
+.shop-item.fons {
+  aspect-ratio: 1.4/1;
 }
 
 .price-badge {
@@ -54,7 +65,36 @@
   padding: 4px 8px;
 }
 
-.selected-indicator {
+.points-progress-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  margin-top: auto;
+}
+
+.points-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.points-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffd700, #ff8c00);
+  border-radius: 3px;
+}
+
+.points-progress-text {
+  font-size: 0.75rem;
+  color: #ffd700;
+  white-space: nowrap;
+}
+
+.shop-item-selected-indicator {
   width: 30px;
   height: 30px;
   background: #4caf50;
@@ -62,29 +102,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto;
+  margin-top: auto;
+  margin-left: auto;
   color: white;
+  border: 2px solid #357936;
 }
 
-.checkmark-circle {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  width: 32px;
-  height: 32px;
-  background: #4caf50;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid white;
-}
-
-.checkmark {
-  width: 12px;
-  height: 20px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  transform: rotate(45deg);
-  margin-top: -4px;
+@media (max-height: 38rem) and (orientation: landscape) {
+  .shop-item-container.fons {
+    width: 70%;
+  }
 }

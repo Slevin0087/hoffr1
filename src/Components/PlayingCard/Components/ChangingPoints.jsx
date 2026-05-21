@@ -23,7 +23,7 @@ function ChangingPoints(props) {
   const duration = getAnimationFlipDuration(animationsTypes.standart) / 500;
   const baseAnimation = {
     opacity: 1,
-    y: "-200%",
+    y: "-150%",
     scale: 1.2,
     rotateY: isFaceSide ? 0 : 180,
   };
@@ -40,7 +40,7 @@ function ChangingPoints(props) {
 
   const animate = baseAnimation;
   const exit = isAnimationsEnabled
-    ? { opacity: 0, y: "-200%", scale: 0.8, rotateY: isFaceSide ? 0 : 180 }
+    ? { opacity: 0, y: "-150%", scale: 0.8, rotateY: isFaceSide ? 0 : 180 }
     : baseAnimation;
 
   const transition = isAnimationsEnabled ? { duration } : { duration: 0 };

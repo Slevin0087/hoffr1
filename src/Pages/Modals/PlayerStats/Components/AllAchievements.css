@@ -1,3 +1,17 @@
+:root {
+  --pd-all-ach-container-ach-item: 1rem;
+}
+
+.all-achs-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  gap: 1rem;
+}
+
 .all-ach-container {
   display: flex;
   flex-direction: row;
@@ -8,8 +22,7 @@
   height: 100%;
   width: 100%;
   overflow-y: auto;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding: 10px;
 }
 
 .all-ach-container::-webkit-scrollbar {
@@ -26,10 +39,6 @@
   border-radius: 3px;
 }
 
-.ach-close-btn {
-  margin-bottom: 10px;
-}
-
 .all-ach-container .ach-item {
   display: flex;
   flex-direction: column;
@@ -37,13 +46,29 @@
   align-items: center;
   background: rgba(218, 196, 175, 0.4);
   border-radius: 12px;
-  padding: 15px;
   transition: all 0.3s ease;
   position: relative;
-  width: 300px;
+  width: 100%;
   height: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   opacity: 0.5;
+  padding: var(--pd-all-ach-container-ach-item);
+  line-height: 1;
+  gap: 10px;
+}
+
+.all-ach-container .ach-item .ach-item-h5 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.all-ach-container .ach-item-h5.unlocked::before {
+  content: "✓ ";
+  color: gold;
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-right: 4px;    /* отступ от текста */
+  display: inline-block; /* для margin/padding */
 }
 
 .all-ach-container .ach-item-unlocked {
@@ -54,13 +79,20 @@
 }
 
 .all-ach-container .ach-item-icon {
-  font-size: 2rem;
-  margin-bottom: 10px;
+  font-size: 1rem;
+  margin: 0;
 }
 
 .all-ach-container .ach-item p {
+  font-size: 0.8rem;
   margin: 0;
   text-align: center;
+}
+
+.all-ach-container .ach-item .ach-item-reward {
+  color: gold;
+  font-size: 0.8rem;
+  margin: 0;
 }
 
 .ach-item-progress-container {
@@ -70,7 +102,7 @@
   background: rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   overflow: hidden;
-  margin-top: 8px;
+  margin: 0;
 }
 
 .ach-item-progress-bar {

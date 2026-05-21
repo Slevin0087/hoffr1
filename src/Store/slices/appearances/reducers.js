@@ -1,19 +1,17 @@
-import { APPEARANCES_STORAGE_KEYS } from "../../../Configs/AppearancesConfigs";
-import storage from "../../../utils/Storage";
-
-export const setSelectedIdAppearanceByType = (state, action) => {
+export const setActiveIdAppearanceByType = (state, action) => {
   const { type, id } = action.payload;
-  state[type].selectedId = id;
-  storage.setItem(APPEARANCES_STORAGE_KEYS.APPEARANCES, state);
+  state[type].activeId = id;
 };
 
-export const addAppearanceIdToOwnedsIds = (state, action) => {
+export const addAppearanceIdToUnlockedsIds = (state, action) => {
   const { type, id } = action.payload;
-  state[type].ownedsIds.push(id);
-  storage.setItem(APPEARANCES_STORAGE_KEYS.APPEARANCES, state);
+  state[type].lockedsIds = state[type].lockedsIds.filter(
+    (lockedId) => lockedId !== id,
+  );
+  state[type].unlockedsIds.push(id);
 };
 
 export const reducers = {
-  setSelectedIdAppearanceByType,
-  addAppearanceIdToOwnedsIds,
+  setActiveIdAppearanceByType,
+  addAppearanceIdToUnlockedsIds,
 };

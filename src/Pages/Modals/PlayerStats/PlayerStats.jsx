@@ -5,26 +5,14 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { Modal, Container, Table, Button, ButtonGroup } from "react-bootstrap";
 import {
-  selectGameCoins,
-  // selectGameCurrentDealing,
   selectGameCurrentMode,
-  // selectGameCurrentModeId,
-  // selectGamesPlayed,
+
   selectPlayerName,
 } from "../../../Store/slices/game/selectors";
 import { getResultTime } from "../../../utils/gameSliceUtils";
 import { selectAchieventActiveId } from "../../../Store/slices/achievements/selectors";
 import { getAchIconById } from "../../../utils/achievementsUtils";
 import { useState } from "react";
-// import { selectlifetimePoints } from "../../../Store/slices/game/selectors/points";
-// import {
-//   selectCurrentMoves,
-//   selectlifetimeMoves,
-// } from "../../../Store/slices/game/selectors/moves";
-// import {
-//   selectBestTime,
-//   selectlifetimeTime,
-// } from "../../../Store/slices/game/selectors/time";
 import { GAME_MODES_IDS, gameModesLocals } from "../../../Configs/GameModes";
 import { dealingCounts } from "../../../Configs/GameConfigs";
 
@@ -36,15 +24,7 @@ const dealingCards = [
 const PlayerStats = () => {
   const { t } = useTranslation();
   const [showAllAchs, setShowAllAchs] = useState(false);
-  const coins = useSelector(selectGameCoins);
   const playerName = useSelector(selectPlayerName);
-  // const gamesPlayed = useSelector(selectGamesPlayed);
-  // const sessionMoves = useSelector(selectCurrentMoves);
-  // const lifetimeTime = useSelector(selectlifetimeTime);
-  // const lifetimeBestTime = useSelector(selectBestTime);
-  // const lifetimeMoves = useSelector(selectlifetimeMoves);
-  // const lifetimePoints = useSelector(selectlifetimePoints);
-  // const currentGameModeId = useSelector(selectGameCurrentModeId);
   const currentGameMode = useSelector(selectGameCurrentMode);
   const [showingDealingId, setShowingDealingId] = useState(
     currentGameMode.currentDealing,
@@ -53,7 +33,6 @@ const PlayerStats = () => {
   const wins = currentGameMode[showingDealingId].wins;
   const losses = currentGameMode[showingDealingId].losses;
   const time = currentGameMode[showingDealingId].time;
-  // const activeDealing = useSelector(selectGameCurrentDealing);
   const activeAchId = useSelector(selectAchieventActiveId);
   const activeAchIcon = getAchIconById(activeAchId);
 
@@ -100,7 +79,7 @@ const PlayerStats = () => {
                   key={card.id}
                   className="player-stats-category-button"
                   variant={
-                    card.id === showingDealingId ? "primary" : "outline-primary"
+                    card.id === showingDealingId ? "success" : "warning"
                   }
                   onClick={() => onClickShowingDealingId(card.id)}
                   title={card.label}
@@ -130,22 +109,14 @@ const PlayerStats = () => {
             }
           ></div>
           <div className="player-stats-wins-and-losses-state-percents">
-            <span className="player-stats-wins-percent">{`${winsStatePercent}%`}</span>
-            <span className="player-stats-losses-percent">{`${lossesStatePercent}%`}</span>
+            <span className="player-stats-wins-percent">{`${Math.round(winsStatePercent)}%`}</span>
+            <span className="player-stats-losses-percent">{`${Math.round(lossesStatePercent)}%`}</span>
           </div>
         </div>
         <Container fluid className="player-stats-container">
           <Table borderless className="player-stats-table">
             <tbody>
               <StatRow label="playerStats.name" value={playerName} />
-              <StatRow label="playerStats.coins" value={coins} />
-              {/* <StatRow label="playerStats.games_played" value={gamesPlayed} /> */}
-              {/* <StatRow
-                  label="playerStats.all_points"
-                  value={lifetimePoints}
-                /> */}
-              {/* <StatRow label="playerStats.moves" value={sessionMoves} /> */}
-              {/* <StatRow label="playerStats.all_moves" value={lifetimeMoves} /> */}
               <StatRow
                 label="playerStats.total_time"
                 value={getResultTime(time.total || 0)}
@@ -154,16 +125,6 @@ const PlayerStats = () => {
                 label="playerStats.best_time"
                 value={getResultTime(time.best || 0)}
               />
-              {/* <StatRow
-                  label="playerStats.game_mode"
-                  value={t(
-                    `playerStats.${gameModesLocals[currentGameMode.id]}`,
-                    )}
-                    /> */}
-              {/* <StatRow
-                  label="playerStats.dealing_cards_count"
-                  value={showingDealingId}
-                /> */}
               <StatRow label="playerStats.achievement" value={activeAchIcon} />
             </tbody>
           </Table>

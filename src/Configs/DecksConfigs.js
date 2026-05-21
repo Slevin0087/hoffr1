@@ -1,9 +1,9 @@
-import { joinPath } from "../../utils/helpers";
+import { joinPath } from "../utils/helpers";
 import {
   field_components_type_ids,
   field_components_types,
-} from "../FieldComponentsConfigs";
-import { GAME_MODE_CLASSIC } from "../GameModes";
+} from "./FieldComponentsConfigs";
+import { GAME_MODE_CLASSIC } from "./GameModes";
 
 export const DECKS_SLICE_NAME = "decks";
 
@@ -12,7 +12,7 @@ export const DECKS_IDS = {
 };
 
 export const DECK_STORAGE_KEYS = {
-  DECK: "deck",
+  DECKS: "decks",
 };
 
 export const typesForUndo = {
@@ -36,91 +36,91 @@ export const DECKS_COMPONENTS_INITIAL_STATE = {
     type: field_components_types.stocks,
     cards: {},
     cardsIds: [],
-    hintShowColor: "",
+    isHintShowing: false,
   },
   [field_components_type_ids.wastes[0]]: {
     id: field_components_type_ids.wastes[0],
     type: field_components_types.wastes,
     cards: {},
     cardsIds: [],
-    hintShowColor: "",
+    isHintShowing: false,
   },
   [field_components_type_ids.foundations[0]]: {
     id: field_components_type_ids.foundations[0],
     type: field_components_types.foundations,
     cards: {},
     cardsIds: [],
-    hintShowColor: "",
+    isHintShowing: false,
   },
   [field_components_type_ids.foundations[1]]: {
     id: field_components_type_ids.foundations[1],
     type: field_components_types.foundations,
     cards: {},
     cardsIds: [],
-    hintShowColor: "",
+    isHintShowing: false,
   },
   [field_components_type_ids.foundations[2]]: {
     id: field_components_type_ids.foundations[2],
     type: field_components_types.foundations,
     cards: {},
     cardsIds: [],
-    hintShowColor: "",
+    isHintShowing: false,
   },
   [field_components_type_ids.foundations[3]]: {
     id: field_components_type_ids.foundations[3],
     type: field_components_types.foundations,
     cards: {},
     cardsIds: [],
-    hintShowColor: "",
+    isHintShowing: false,
   },
   [field_components_type_ids.tableaus[0]]: {
     id: field_components_type_ids.tableaus[0],
     type: field_components_types.tableaus,
     cards: {},
     cardsIds: [],
-    hintShowColor: "",
+    isHintShowing: false,
   },
   [field_components_type_ids.tableaus[1]]: {
     id: field_components_type_ids.tableaus[1],
     type: field_components_types.tableaus,
     cards: {},
     cardsIds: [],
-    hintShowColor: "",
+    isHintShowing: false,
   },
   [field_components_type_ids.tableaus[2]]: {
     id: field_components_type_ids.tableaus[2],
     type: field_components_types.tableaus,
     cards: {},
     cardsIds: [],
-    hintShowColor: "",
+    isHintShowing: false,
   },
   [field_components_type_ids.tableaus[3]]: {
     id: field_components_type_ids.tableaus[3],
     type: field_components_types.tableaus,
     cards: {},
     cardsIds: [],
-    hintShowColor: "",
+    isHintShowing: false,
   },
   [field_components_type_ids.tableaus[4]]: {
     id: field_components_type_ids.tableaus[4],
     type: field_components_types.tableaus,
     cards: {},
     cardsIds: [],
-    hintShowColor: "",
+    isHintShowing: false,
   },
   [field_components_type_ids.tableaus[5]]: {
     id: field_components_type_ids.tableaus[5],
     type: field_components_types.tableaus,
     cards: {},
     cardsIds: [],
-    hintShowColor: "",
+    isHintShowing: false,
   },
   [field_components_type_ids.tableaus[6]]: {
     id: field_components_type_ids.tableaus[6],
     type: field_components_types.tableaus,
     cards: {},
     cardsIds: [],
-    hintShowColor: "",
+    isHintShowing: false,
   },
 };
 

@@ -17,7 +17,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   background-color: chocolate;
-  border: 1px solid rgb(75, 38, 11);
+  border: 1px solid black;
   border-radius: var(--border-radius-status-bar-cell);
   padding: var(--padding-status-bar-cell);
   font-size: var(--fs-status-bar-cell);

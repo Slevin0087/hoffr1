@@ -4,27 +4,28 @@ import { useDispatch } from "react-redux";
 import { GAME_STATUSES } from "../../../../../../Configs/GameConfigs";
 import { showPFModalById } from "../../../../../../Store/slices/ui/slice";
 import { useTranslation } from "react-i18next";
-
-const modalId = P_F_MODALS_IDS.MENU;
+import FooterBtn from "../FooterBtn";
+import { setGameStatus } from "../../../../../../Store/slices/game/slice";
 
 function Menu() {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
-  const onClickMenu = () => dispatch(showPFModalById({ id: modalId }));
+  const onClickMenu = () => {
+    dispatch(setGameStatus(GAME_STATUSES.PAUSED));
+    dispatch(showPFModalById({ id: P_F_MODALS_IDS.MENU }));
+  };
 
   const ariaLabel = t("playingField.footer_menu");
 
   return (
-    <Button
-      variant="outline-warning"
-      className="footer-btn"
+    <FooterBtn
+      variant="warning"
+      btnClassName="menu"
       onClick={onClickMenu}
-      title={ariaLabel}
-      aria-label={ariaLabel}
+      ariaLabel={ariaLabel}
     >
       ☰
-    </Button>
+    </FooterBtn>
   );
 }
 

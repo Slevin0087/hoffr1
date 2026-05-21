@@ -1,3 +1,5 @@
+import cn from "classnames";
+
 import "./PlayingCard.css";
 import FaceAndShirt from "./Components/FaceAndShirt";
 import ChangingPoints from "./Components/ChangingPoints";
@@ -12,7 +14,10 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { useDoubleTap } from "../../hooks/useDoubleTap";
 import { useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
-import { selectCard, selectOverlap } from "../../Store/slices/decks/selectors";
+import {
+  selectCard,
+  selectIsFirstFaceCardOfTableau,
+} from "../../Store/slices/decks/selectors";
 import {
   getIsCanDnD,
   getIsPointerEvents,
@@ -31,10 +36,7 @@ import {
 import { useWindowSize } from "../../hooks/useWindowSize";
 import { selectAnimationsEnabled } from "../../Store/slices/settings/selectors";
 import { handleCardClick, handleDrop } from "../../Store/slices/game/thunks";
-import {
-  dndAccepts,
-  dropTypes,
-} from "../../Configs/PlayingCardsConfigs/DecksConfigs";
+import { dndAccepts, dropTypes } from "../../Configs/DecksConfigs";
 import {
   resetIsDraggingCardsByPileId,
   setIsDraggingCardsByCardId,
@@ -49,35 +51,47 @@ const hoverAnimation = animationsData.hover.types.standart.animation;
 
 const PlayingCard = (props) => {
   const dispatch = useDispatch();
-  const { height, width } = useWindowSize();
-  const {
-    cardId,
-    pileId,
-    isTopCard = false,
-    isGhost = false,
-    isHintShowCardInTableauPile = false,
-    isHintShowCardInTableauPileOverlapY = 0,
-  } = props;
+  const { height } = useWindowSize();
+  const { cardId, pileId, isTopCard = false, isGhost = false } = props;
   const innerRef = useRef(null);
   const isEventsInDeck = useSelector(selectIsEventsInDeck);
   const card = useSelector(
     (state) => selectCard(state, pileId, cardId),
     shallowEqual,
   );
-  const overlap = useSelector(
-    (state) => selectOverlap(state, pileId, cardId, height),
-    shallowEqual,
+
+  const isFirstFaceCardOfTableau = useSelector((state) =>
+    selectIsFirstFaceCardOfTableau(state, pileId, cardId),
   );
 
   const [shuffleOffset] = useState(() => ({
-    x: ((Math.random() - 0.5) * width) / 6,
-    y: ((Math.random() - 0.5) * height) / 6,
+    x: Math.random() - 0.5,
+    y: Math.random() - 0.5,
   }));
 
   const isAnimationsEnabled = useSelector(selectAnimationsEnabled);
   const isMoveAnimation = getIsMoveAnimation(card, isAnimationsEnabled);
   const moveAnimation = getMoveAnimation(card, isAnimationsEnabled);
   const moveAnimationConfig = getMoveAnimationData(moveAnimation);
+  const isCanNotMoveAnimation = getIsAnimationByName(
+    card,
+    isAnimationsEnabled,
+    animationsData.can_not_move.name,
+  );
+  const canNotMoveAnimation = getAnimationByName(
+    card,
+    isAnimationsEnabled,
+    animationsData.can_not_move.name,
+  );
+  const canNotMoveAnimationConfig = getAnimationDataByName(
+    canNotMoveAnimation,
+    canNotMoveAnimation?.type,
+  );
+  console.log(
+    "isCanNotMoveAnimation",
+    isCanNotMoveAnimation,
+    canNotMoveAnimation,
+  );
   const isShuffleAnimation = getIsAnimationByName(
     card,
     isAnimationsEnabled,
@@ -139,44 +153,26 @@ const PlayingCard = (props) => {
   const highZIndex = 100 + card?.position;
   const isOpacity = !card.isDragging && !isGhost;
   const isHighZIndex = isMoveAnimation || isShuffleAnimation;
-  const isBorder = dropOutput.isOver && isCanDrop;
 
   const style = useMemo(() => {
-    if (isHintShowCardInTableauPile)
-      return {
-        top: isHintShowCardInTableauPileOverlapY,
-        pointerEvents: isPointerEvents ? "auto" : "none",
-        cursor: isPointerEvents ? "grab" : "auto",
-        zIndex: card?.position,
-      };
     return {
-      top: isShuffleAnimation ? overlap.y + shuffleOffset.y : overlap.y,
-      left: isShuffleAnimation ? overlap.x + shuffleOffset.x : overlap.x,
       pointerEvents: isPointerEvents ? "auto" : "none",
       cursor: isPointerEvents ? "grab" : "auto",
-      boxShadow: isBorder
-        ? "0 0 0 5px green"
-        : card.hintShowColor && !isHintShowCardInTableauPile
-          ? `0 0 0 5px ${card.hintShowColor}`
-          : "none",
       opacity: isOpacity ? 1 : 0,
       zIndex: isHighZIndex ? highZIndex : card?.position,
+      "--card-index": card.position || 0,
+      "--card-shuffle-offset-x": isShuffleAnimation ? shuffleOffset.x : 0,
+      "--card-shuffle-offset-y": isShuffleAnimation ? shuffleOffset.y : 0,
     };
   }, [
     card.position,
     isPointerEvents,
-    card.hintShowColor,
     isOpacity,
     isHighZIndex,
     highZIndex,
-    isBorder,
-    overlap.x,
-    overlap.y,
-    isShuffleAnimation,
     shuffleOffset.x,
     shuffleOffset.y,
-    isHintShowCardInTableauPile,
-    isHintShowCardInTableauPileOverlapY,
+    isShuffleAnimation,
   ]);
 
   useEffect(() => {
@@ -195,8 +191,8 @@ const PlayingCard = (props) => {
   }, [card.side, rotation]);
 
   useEffect(() => {
-    if (!card.hintShowColor) return;
-    const payload = { cardId, pileId, changes: { hintShowColor: "" } };
+    if (!card.isHintShowing) return;
+    const payload = { cardId, pileId, changes: { isHintShowing: false } };
     if (isEventsInDeck) {
       dispatch(updateCardOne(payload));
     } else {
@@ -205,11 +201,20 @@ const PlayingCard = (props) => {
       }, highlightDuration);
       return () => clearTimeout(timer);
     }
-  }, [card.hintShowColor, isEventsInDeck, dispatch, cardId, pileId]);
+  }, [card.isHintShowing, isEventsInDeck, dispatch, cardId, pileId]);
+
+  const containerClasses = cn(cardContainerClassName, pileId, {
+    "face-card": card.side === sides.face,
+    "shirt-card": card.side === sides.shirt,
+    "isFace-card-of-tableau": isFirstFaceCardOfTableau,
+    "isOver-can-drop": dropOutput.isOver && isCanDrop,
+    "isHint-showing": card.isHintShowing,
+    "isShuffling-card": isShuffleAnimation,
+  });
 
   if (isGhost) {
     return (
-      <motion.div id={card.id} className={cardContainerClassName}>
+      <motion.div id={card.id} className={containerClasses}>
         <FaceAndShirt cardSuit={card.suit} cardValue={card.value} />
       </motion.div>
     );
@@ -222,17 +227,22 @@ const PlayingCard = (props) => {
         innerRef.current = el;
       }}
       id={card.id}
-      className={cardContainerClassName}
+      className={containerClasses}
       style={{ ...style, rotateY: springRotation }}
       onDoubleClick={onDoubleClick}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
-      whileHover={
-        isPointerEvents && hoverAnimation && !isHintShowCardInTableauPile
-      }
+      whileHover={isPointerEvents && hoverAnimation}
       layout="position"
       layoutId={card.id}
-      animate={{ x: 0, y: 0 }}
+      animate={
+        isCanNotMoveAnimation
+          ? {
+              x: [0, -10, 10, 0],
+              transition: canNotMoveAnimationConfig?.transition,
+            }
+          : { x: 0, y: 0 }
+      }
       transition={{
         layout: isShuffleAnimation
           ? shuffleAnimationConfig?.transition

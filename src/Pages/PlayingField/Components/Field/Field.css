@@ -1,10 +1,8 @@
 :root {
   --gap-stock-waste: 10px;
   --gap-field-container: 10px;
-  --card-width: min(13.5vw, 10vh);
   --gap-cards-container-row: 55px;
   --gap-cards-container-column: 5px;
-  --card-height: calc(var(--card-width) * 1.4);
 }
 
 .field-container {
@@ -39,22 +37,36 @@
   gap: var(--card-width);
 }
 
+.landscape-cards-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  gap: 1.5vh;
+}
+
 /* @media (orientation: landscape) { */
-@media (max-height: 600px) {
+@media (max-height: 38rem) and (orientation: landscape) {
   .field-container {
     flex-direction: row;
+    justify-content: space-between;
     align-items: flex-start;
-    margin-top: calc(var(--card-width) / 2);
-    gap: var(--gap-cards-container-row);
   }
   .cards-swf-container-min-height {
     flex-direction: column;
-    gap: calc(var(--card-height) / 25);
+    margin-bottom: auto;
+    gap: 5vh;
   }
   .cards-fns-container {
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
     gap: calc(var(--card-height) / 25);
+    width: calc(var(--card-width) * 2 + var(--card-height) / 25);
   }
+
   :root {
     --card-width: 12vmin;
   }

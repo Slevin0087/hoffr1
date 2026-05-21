@@ -2,6 +2,7 @@
   --gap-vol-control: 0.5em;
   --back-color-settings-el: rgba(255, 255, 0, 0.308);
   --border-radius-btn-input: 0.3em;
+  --setting-items-scrollbar-width: 6px;
 }
 
 .setting-items {
@@ -9,15 +10,16 @@
   flex-direction: column;
   color: black;
   border: 1px solid #c5b310;
-  border-bottom: 0;
   width: 100%;
   padding: 0;
   margin: 0;
   overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
 }
 
 .setting-items::-webkit-scrollbar {
-  width: 6px;
+  width: var(--setting-items-scrollbar-width);
 }
 
 .setting-items::-webkit-scrollbar-track {
@@ -38,10 +40,16 @@
   align-items: center;
   gap: var(--gap-vol-control);
   width: 100%;
+  padding-left: 0;
+  padding-right: var(--setting-items-scrollbar-width);
 }
 
 .container-setting-item:nth-child(even) {
   background-color: rgb(211, 127, 67);
+}
+
+.container-setting-item:last-child {
+  border-bottom: none;
 }
 
 .setting-item-description-div {
@@ -57,4 +65,62 @@
   padding: 0.5em;
   border-radius: var(--border-radius-btn-input);
   width: fit-content;
+  padding-left: var(--setting-items-scrollbar-width);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.setting-item-description-p {
+  font-size: 1rem;
+  padding-left: var(--setting-items-scrollbar-width);
+}
+
+.setting-info-modal-small {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.setting-info-modal-small-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  max-width: 80%;
+}
+
+.setting-info-modal-small-p {
+  color: rgb(202, 105, 15);
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+  /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); */
+}
+
+@media (max-height: 400px) {
+  .setting-item-description-label,
+  .span-volume-change.setting-item-description-label {
+    font-size: 0.6rem;
+  }
+
+  .setting-item-description-p {
+    font-size: 0.5rem;
+  }
 }

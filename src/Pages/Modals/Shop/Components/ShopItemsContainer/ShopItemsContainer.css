@@ -1,23 +1,25 @@
-/* Items Carousel */
-.shop-navigation {
-  position: relative;
+.all-items-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  /* gap: 1.5rem; */
+  justify-items: center;
+  align-items: start;
+
+  /* display: flex; */
+  /* flex-wrap: wrap; */
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  width: 100%;
+  height: 100%;
 }
 
-.all-items-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  overflow-y: auto;
-  /* scroll-behavior: smooth; */
-  padding: 20px 10px;
-  scrollbar-width: thin;
-  /* flex: 1; */
-  height: 100%;
-  /* min-height: 0; */
+.all-items-container.fons {
+  grid-template-columns: repeat(1, 1fr);
 }
 
 .all-items-container::-webkit-scrollbar {
-  height: 8px;
+  width: 8px;
 }
 
 .all-items-container::-webkit-scrollbar-track {
@@ -30,21 +32,6 @@
   border-radius: 4px;
 }
 
-.item-container {
-  /* flex: 1; */
-  /* width: 180px; */
-  width: calc(var(--card-width) * 1.2);
-  cursor: pointer;
-  position: relative;
-  /* min-height: 0; */
-}
-
-.fons-item-container {
-  width: 280px;
-  cursor: pointer;
-  position: relative;
-}
-
 /* Пустое состояние */
 .empty-items {
   text-align: center;
@@ -54,13 +41,6 @@
 }
 
 /* Адаптивность для мобильных устройств */
-@media (max-width: 768px) {
-  .item-container {
-    width: 140px;
-  }
-}
-
-
 .all-items-container {
   scrollbar-width: thin;
   scrollbar-color: #ffd966 rgba(0, 0, 0, 0.2);

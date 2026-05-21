@@ -31,3 +31,15 @@
   color: #333;
   min-width: 120px;
 }
+
+@media (max-height: 500px) {
+  .setting-select-item {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+  }
+
+  .setting-select-item-option {
+    font-size: 0.8rem;
+    padding: 4px;
+  }
+}

@@ -58,7 +58,7 @@ export default {
   points_system_accrual:
     "<0>Accrual:</0> moving to foundation (5-15), flipping a card (2-10), game completion",
   points_system_fines:
-    "<0>Penalties:</0> undo (0-20), hint (0-10), time (-2/sec)",
+    "<0>Penalties:</0> undo (0-20), hint (0-10)",
 
   strategic_advice_li1: "Reveal face-down cards",
   strategic_advice_li2: "Collect aces first",

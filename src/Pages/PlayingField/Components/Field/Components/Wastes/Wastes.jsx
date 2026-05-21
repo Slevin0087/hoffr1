@@ -1,9 +1,9 @@
 import BaseWaste from "./BaseWaste";
 import {
   field_components_type_ids,
-  field_components_names,
+  // field_components_names,
   field_components_types,
-  span_text,
+  // span_text,
 } from "../../../../../../Configs/FieldComponentsConfigs";
 
 function Wastes() {
@@ -11,7 +11,7 @@ function Wastes() {
   const classNames = ["wastes"];
   const type = field_components_types.wastes;
   const ids = field_components_type_ids[type];
-  const spanText = span_text[field_components_names.waste];
+  // const spanText = span_text[field_components_names.waste];
   return (
     <>
       {ids?.map((id) => {
@@ -20,7 +20,7 @@ function Wastes() {
             key={id}
             id={id}
             classNames={classNames}
-            spanText={spanText}
+            // spanText={spanText}
           />
         );
       })}

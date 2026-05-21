@@ -1,15 +1,15 @@
+:root {
+  --bw-stat-row-tr: 1vmin;
+  --fs-stat-row-tr-left-right-td: clamp(0.8rem, 1.5vmin, 1.5rem);
+}
+
 .stat-row-tr {
-  border-bottom: 1px solid rgba(32, 32, 30, 0.5);
-  border-width: 4px;
+  border-bottom: var(--bw-stat-row-tr) solid rgba(32, 32, 30, 0.5);
   border-top: 0;
   border-left: 0;
   border-right: 0;
   height: 100%;
   /* background: linear-gradient(135deg, #076324, #0a8a2f); */
-}
-
-.stat-row-tr:last-child {
-  border-bottom: none;
 }
 
 .stat-row-tr:nth-child(odd) {
@@ -19,8 +19,8 @@
 /* Ячейки таблицы */
 .stat-row-tr .left-td,
 .stat-row-tr .right-td {
-  padding: 12px 16px;
-  font-size: 16px;
+  padding: 1vh;
+  font-size: var(--fs-stat-row-tr-left-right-td);
   color: #ffd700;
 }
 
@@ -30,11 +30,16 @@
   background-color: transparent;
 }
 
-.stat-row-tr .right-td:last-child {
+.stat-row-tr .right-td {
   text-align: right;
   font-weight: 600;
   color: #42402f;
-  font-size: 1.2rem;
-  /* background-color: cornflowerblue; */
   background-color: transparent;
+}
+
+@media (max-height: 38rem) and (orientation: landscape) {
+  .stat-row-tr .left-td,
+  .stat-row-tr .right-td {
+    font-size: 3vh;
+  }
 }

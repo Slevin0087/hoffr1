@@ -19,10 +19,7 @@ function AllAchievements({ onClickClose }) {
   const unlockedIds = useSelector(selectAchUnlockedIds);
   const gameAllState = useSelector(selectGame);
   return (
-    <>
-      <Button variant="danger" onClick={onClickClose} className="ach-close-btn">
-        {t("playerStats.close_all_achs_btn")}
-      </Button>
+    <div className="all-achs-page">
       <Container fluid className="all-ach-container">
         {all_achs_ids_arr?.map((id) => {
           const icon = getAchIconById(id);
@@ -47,30 +44,36 @@ function AllAchievements({ onClickClose }) {
 
           return (
             <Card key={id} className={achItemClasses}>
-              <h5>{t(`achievements.${id}_title`)}</h5>
+              <h5 className={`ach-item-h5 ${isUnlocked ? "unlocked" : ""}`}>
+                {t(`achievements.${id}_title`)}
+              </h5>
               <div className="ach-item-icon">{icon}</div>
               <p>{t(`achievements.${id}_description`)}</p>
               {isReward && isCurrencyData ? (
                 <div className="ach-item-reward">
-                  {`${t("achievements.reward")} ${reward}${currencyIcon}`}
+                  {`${isUnlocked ? "+" : t("achievements.reward")} ${reward}${currencyIcon}`}
                 </div>
               ) : null}
-              <div className="ach-item-progress-container">
-                <div
-                  className="ach-item-progress-bar"
-                  style={{ width: `${progessResult}%` }}
-                />
-                <span className={progressClasses}>
-                  {isUnlocked
-                    ? t("achievements.received")
-                    : `${progessResult}%/100%`}
-                </span>
-              </div>
+
+              {!isUnlocked ? (
+                <div className="ach-item-progress-container">
+                  <div
+                    className="ach-item-progress-bar"
+                    style={{ width: `${progessResult}%` }}
+                  />
+                  <span className={progressClasses}>
+                    {`${progessResult}%/100%`}
+                  </span>
+                </div>
+              ) : null}
             </Card>
           );
         })}
       </Container>
-    </>
+      <Button variant="danger" onClick={onClickClose} className="ach-close-btn">
+        {t("playerStats.close_all_achs_btn")}
+      </Button>
+    </div>
   );
 }
 

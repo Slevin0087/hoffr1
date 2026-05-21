@@ -5,14 +5,6 @@ import { createListenerMiddleware } from "@reduxjs/toolkit";
 
 export const settingsListeners = createListenerMiddleware();
 
-// settingsListeners.startListening({
-//   actionCreator: updateSettingByType.pending,
-//   effect: async (action, listenerApi) => {
-//     console.log("updateSettingByType.pending: ", action);
-//     const { settingType, value } = action.payload;
-//   },
-// });
-
 settingsListeners.startListening({
   actionCreator: updateSettingByType,
   effect: async (action) => {

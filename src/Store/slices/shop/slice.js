@@ -2,13 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   SHOP_DEFAULT_STATE,
   SHOP_SLICE_NAME,
-  SHOP_STORAGE_KEYS,
-} from "../../../../Configs/ShopConfigs";
-import storage from "../../../../utils/Storage";
+} from "../../../Configs/ShopConfigs";
 import { reducers } from "./reducers";
 
-export const initialState =
-  storage.getItem(SHOP_STORAGE_KEYS.SHOP) || SHOP_DEFAULT_STATE;
+export const initialState = SHOP_DEFAULT_STATE;
 
 export const shopSlice = createSlice({
   name: SHOP_SLICE_NAME,

@@ -11,6 +11,8 @@ import playerStatsAbaza from "./PlayerStats/abaza.js";
 import gameOverAndWinAbaza from "./GameOverAndWin/abaza.js";
 import achievementsAbaza from "./Achievements/abaza.js";
 import notificationsAbaza from "./Notifications/abaza.js";
+import needByRedealsAbaza from "./NeedByRedeals/abaza.js";
+import needByShuffleAbaza from "./NeedByShuffle/abaza.js";
 
 export default {
   translation: {
@@ -27,5 +29,7 @@ export default {
     gameOverAndWin: { ...gameOverAndWinAbaza },
     achievements: { ...achievementsAbaza },
     notifications: { ...notificationsAbaza },
+    needByRedeals: { ...needByRedealsAbaza },
+    needByShuffle: { ...needByShuffleAbaza },
   },
 };

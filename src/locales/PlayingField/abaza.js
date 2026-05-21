@@ -15,8 +15,13 @@ export default {
   footer_shuffle: "Алапсара",
 
   // модальное окно restart game
-  btn_game_restart_modal_again: "Съувереннап|",
+  btn_game_restart_modal_again: "Съувереннапӏ",
   btn_game_restart_modal_cancel: "Момо",
   game_restart_modal_cancel_content: "У(б)ъувереннума?",
-  game_restart_modal_title: "Хъвмарра ш|ыц!",
+  game_restart_modal_title: "Хъвмарра шӏыц!",
+
+  foundations_span: "Т",
+  stock_span: "К",
+  waste_span: "С",
+  tableaus_span: "К",
 };

@@ -7,13 +7,13 @@ export const SETTINGS_SLICE_NAME = "settings";
 export const gameSettingsTypes = {
   gameMode: "gameMode",
   language: "language",
-  soundEffects: "soundEffects",
+  soundsEffects: "soundsEffects",
   music: "music",
   volume: "volume",
   animations: "animations",
   dealingCards: "dealingCards",
-  assistanceInCollection: "assistanceInCollection",
-  assistanceInCardClick: "assistanceInCardClick",
+  fastGame: "fastGame",
+  canCardClick: "canCardClick",
 };
 
 export const SETTINGS_STORAGE_KEYS = {
@@ -28,7 +28,7 @@ export const defaultSettingsLanguage = {
   value: LANGUAGES.ABAZA,
 };
 
-export const defaultSettingsSoundEffects = {
+export const defaultSettingsSoundsEffects = {
   value: true,
 };
 
@@ -48,24 +48,22 @@ export const defaultSettingDealingCards = {
   value: dealingCounts.one,
 };
 
-export const defaultSettingsAssistanceInCollection = {
+export const defaultSettingsFastGame = {
   value: false,
 };
 
-export const defaultSettingsAssistanceInCardClick = {
+export const defaultSettingsCanCardClick = {
   value: false,
 };
 
 export const SETTINGS_DEFAULT_STATE = {
   [gameSettingsTypes.gameMode]: defaultSettingsGameModes,
   [gameSettingsTypes.language]: defaultSettingsLanguage,
-  [gameSettingsTypes.soundEffects]: defaultSettingsSoundEffects,
+  [gameSettingsTypes.soundsEffects]: defaultSettingsSoundsEffects,
   [gameSettingsTypes.music]: defaultSettingsMusic,
   [gameSettingsTypes.volume]: defaultSettingsVolume,
   [gameSettingsTypes.animations]: defaultSettingsAnimations,
   [gameSettingsTypes.dealingCards]: defaultSettingDealingCards,
-  [gameSettingsTypes.assistanceInCollection]:
-    defaultSettingsAssistanceInCollection,
-  [gameSettingsTypes.assistanceInCardClick]:
-    defaultSettingsAssistanceInCardClick,
+  [gameSettingsTypes.fastGame]: defaultSettingsFastGame,
+  [gameSettingsTypes.canCardClick]: defaultSettingsCanCardClick,
 };

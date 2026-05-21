@@ -83,7 +83,7 @@ export const createPlayingCard = (suit, value, side = sides.shirt) => {
     isDropping: false,
     isAnimating: false,
     activeAnimations: [],
-    hintShowColor: "",
+    isHintShowing: false,
     flipping: false,
     moving: false,
   };
@@ -123,54 +123,6 @@ export const getIsCanDnD = (card, isTopCard) => {
   return { isCanDrag: isTopCard, isCanDrop: isTopCard };
 };
 
-export const setDnDInputs = (typeAndAccept) => {
-  const dragInputs = (dragData) => ({
-    type: typeAndAccept,
-    item: () => dragData,
-    end: (item, monitor) => {
-      const dropResult = monitor.getDropResult();
-      if (dropResult) dropResult;
-    },
-    canDrag: () => dragData.isCanDrag,
-    collect: (monitor) => {
-      const isDragging = monitor.isDragging();
-      const dragItem = monitor.getItem();
-      return { isDragging, dragItem };
-    },
-  });
-  const dropInputs = (dropData) => ({
-    accept: typeAndAccept,
-    drop: (item, monitor) => {
-      console.log("item, monitor", item, monitor);
-      return dropData;
-    },
-    canDrop: (item) => dropData.isCanDrop && item.card.id !== dropData.card.id,
-    collect: (monitor) => {
-      const isOver = monitor.isOver();
-      const canDrop = monitor.canDrop();
-      return { isOver, canDrop };
-    },
-  });
-  return { dragInputs, dropInputs };
-};
-
-export const getAnimationsData = (card, isAnimationsEnabled) => {
-  if (
-    !isAnimationsEnabled ||
-    !card ||
-    !card.isAnimating ||
-    !card.activeAnimations
-  )
-    return null;
-  const animations = card.activeAnimations.map((animation) => {
-    console.log("cardAnimations animation", cardAnimations, animation);
-    return cardAnimations[animation];
-  });
-  return {
-    animations,
-  };
-};
-
 export const getIsAnimationByName = (
   card,
   isAnimationsEnabled,
@@ -204,6 +156,7 @@ export const getAnimationByName = (
 };
 
 export const getAnimationDataByName = (animation, type) => {
+  console.log('getAnimationDataByName:', animation, type);
   if (!animation || !animation.name) return null;
   const animationConfig = cardAnimations[animation.name];
   if (!animationConfig) return null;
@@ -234,16 +187,6 @@ export const getMoveAnimationData = (moveAnimation) => {
   return animationData;
 };
 
-export const getIsFlipAnimation = (card, isAnimationsEnabled) => {
-  if (!isAnimationsEnabled || !card || !card.isAnimating) return false;
-  return card.activeAnimations.includes(animationsNames.flip);
-};
-
-export const getIsFlipBackAnimation = (card, isAnimationsEnabled) => {
-  if (!isAnimationsEnabled || !card || !card.isAnimating) return false;
-  return card.activeAnimations.includes(animationsNames.flipBack);
-};
-
 export const getAnimationFlipDuration = (type) => {
   const animationFlipDuration =
     cardAnimations[animationsNames.flip].types[type].transition.duration;
@@ -260,4 +203,10 @@ export const getAnimationShuffleDuration = (type) => {
   const animationShuffleDuration =
     cardAnimations[animationsNames.shuffle].types[type].transition.duration;
   return animationShuffleDuration * 1000;
+};
+
+export const getAnimationDuration = (name, type) => {
+  const animationMoveDuration =
+    cardAnimations[name].types[type].transition.duration;
+  return animationMoveDuration * 1000;
 };

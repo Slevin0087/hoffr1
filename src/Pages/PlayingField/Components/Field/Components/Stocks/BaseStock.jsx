@@ -3,7 +3,7 @@ import PlayingCard from "../../../../../../Components/PlayingCard/PlayingCard";
 import { useDispatch, useSelector } from "react-redux";
 import { Card } from "react-bootstrap";
 import {
-  selectHintShowColorPileById,
+  selectIsHintShowPileById,
   selectPileCardsIds,
 } from "../../../../../../Store/slices/decks/selectors";
 import { handleStockClick } from "../../../../../../Store/slices/game/thunks";
@@ -13,64 +13,97 @@ import {
 } from "../../../../../../Store/slices/game/selectors";
 import { useEffect } from "react";
 import {
-  field_components_default_state,
+  // field_components_default_state,
   highlightDuration,
+  span_text,
 } from "../../../../../../Configs/FieldComponentsConfigs";
-import { setHintShowColorPileById } from "../../../../../../Store/slices/decks/slice";
-import useWindowSize from "../../../../../../hooks/useWindowSize";
+import { setIsHintShowPileById } from "../../../../../../Store/slices/decks/slice";
+// eslint-disable-next-line no-unused-vars
+import { AnimatePresence, motion } from "motion/react";
+import { decrementRedeals } from "../../../../../../Store/slices/game/slice";
+import { selectIsNeedByRedealsShowing } from "../../../../../../Store/slices/ui/selectors";
+import { setIsNeedByRedealsShowing } from "../../../../../../Store/slices/ui/slice";
 
 function BaseStock(props) {
-  const { height } = useWindowSize();
   const { id, classNames, spanText } = props;
   const dispatch = useDispatch();
   const cardsIds = useSelector((state) => selectPileCardsIds(state, id));
-  const hintShowColor = useSelector((state) =>
-    selectHintShowColorPileById(state, id),
+  const isHintShowing = useSelector((state) =>
+    selectIsHintShowPileById(state, id),
   );
+  console.log("BaseStock: ", isHintShowing);
   const isEventsInDeck = useSelector(selectIsEventsInDeck);
   const isCanRedeals = useSelector(selectIsCanRedeals);
+  const isNeedByRedealsShowing = useSelector(selectIsNeedByRedealsShowing);
   const onClickStock = () => {
-    console.log("onClickStock");
+    if (isNeedByRedealsShowing) {
+      dispatch(setIsNeedByRedealsShowing(false));
+      dispatch(decrementRedeals());
+      return;
+    }
     dispatch(handleStockClick({ stockId: id }));
   };
 
   const isEmpty = cardsIds?.length === 0;
 
-  const stockData = field_components_default_state[id];
-  const portrait = stockData.overlap.portrait;
-  const landscape = stockData.overlap.landscape;
-  const overlap = height >= 600 ? portrait : landscape;
   const isSpanText = isEmpty && isCanRedeals;
-  const isDisabled = !isCanRedeals && isEmpty;
 
-  const classes = cn("pile", classNames);
-  const opacity = isDisabled ? 0.5 : 1;
-  const pointerEvents = isDisabled ? "none" : "auto";
-  const boxShadow = hintShowColor
-    ? `0 0 0 ${Math.abs(overlap.y) * cardsIds.length * 2}px ${hintShowColor}`
-    : "";
+  const classes = cn("pile", id, classNames, {
+    "isHint-showing": isHintShowing,
+  });
+  const spanClasses = cn("pile-span", {
+    "pile-span-need-by-redeals": isNeedByRedealsShowing,
+  });
+  console.log('BaseStock: ', classes);
+  const needByRedealsText = span_text.needByRedealsText;
+
+  const resultSpanText = isSpanText ? spanText : needByRedealsText;
+  const opacity = 1;
+  const pointerEvents = "auto";
 
   useEffect(() => {
-    if (!hintShowColor) return;
-    const payload = { pileId: id, value: "" };
-    if (isEventsInDeck) {
-      dispatch(setHintShowColorPileById(payload));
-    } else {
+    if (!isHintShowing) return;
+    const payload = { pileId: id, value: false };
+    if (isEventsInDeck) dispatch(setIsHintShowPileById(payload));
+    else {
       const timer = setTimeout(() => {
-        dispatch(setHintShowColorPileById(payload));
+        dispatch(setIsHintShowPileById(payload));
       }, highlightDuration);
       return () => clearTimeout(timer);
     }
-  }, [hintShowColor, isEventsInDeck, id, dispatch]);
+  }, [isHintShowing, isEventsInDeck, id, dispatch]);
 
   return (
     <Card
       id={id}
       className={classes}
       onClick={onClickStock}
-      style={{ boxShadow, opacity, pointerEvents }}
+      style={{ opacity, pointerEvents }}
     >
-      {isSpanText && <span className="pile-span">{spanText}</span>}
+      {(isSpanText || isNeedByRedealsShowing) && (
+        <AnimatePresence mode="wait">
+          <motion.span
+            className={spanClasses}
+            initial={isNeedByRedealsShowing ? { scale: 0, opacity: 0 } : false}
+            animate={
+              isNeedByRedealsShowing
+                ? {
+                    scale: [0.8, 1.1, 0.8],
+                    opacity: [1, 1, 1],
+                    transition: {
+                      duration: 0.8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    },
+                  }
+                : { scale: 1, opacity: 1 }
+            }
+            exit={isNeedByRedealsShowing ? { scale: 0, opacity: 0 } : false}
+          >
+            {resultSpanText}
+          </motion.span>
+        </AnimatePresence>
+      )}
       {cardsIds?.map((cardId) => (
         <PlayingCard key={cardId} cardId={cardId} pileId={id} />
       ))}

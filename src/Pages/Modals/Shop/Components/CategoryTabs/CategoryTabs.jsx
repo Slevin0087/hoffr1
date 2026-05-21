@@ -5,7 +5,7 @@ import { ButtonGroup, Button } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { SHOP_CATEGORY } from "../../../../../Configs/ShopConfigs";
-import { setActiveCategoryId } from "../../../../../Store/slices/pages/shop/slice";
+import { setActiveCategoryId } from "../../../../../Store/slices/shop/slice";
 
 const categories = [
   { id: SHOP_CATEGORY.FACES, label: "shop.btn_card_face" },
@@ -25,6 +25,7 @@ function CategoryTabs(props) {
       {categories.map((category, index) => (
         <motion.div
           key={category.id}
+          className="category-button-container"
           initial={{ x: -20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.1 * index }}

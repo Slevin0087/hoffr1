@@ -3,7 +3,7 @@ import { P_F_MODALS_IDS } from "../../../Configs/UIConfigs";
 import MenuBtnsContainer from "../../Modals/Menu/Components/MenuBtnsContainer";
 import PlayerStats from "../../Modals/PlayerStats/PlayerStats";
 import ItemsContainer from "../../Modals/Settings/Components/ItemsContainer/ItemsContainer";
-import { selectShopActiveCategoryId } from "../../../Store/slices/pages/shop/selectors";
+import { selectShopActiveCategoryId } from "../../../Store/slices/shop/selectors";
 import CategoryTabs from "../../Modals/Shop/Components/CategoryTabs/CategoryTabs";
 import ShopItemsContainer from "../../Modals/Shop/Components/ShopItemsContainer/ShopItemsContainer";
 import GameRules from "../../Modals/GameRules/GameRules";

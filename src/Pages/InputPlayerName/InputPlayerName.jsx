@@ -37,7 +37,7 @@ function InputPlayerName() {
         <Form.Group className="inputPlayerName-group">
           <Form.Label
             htmlFor="playerName"
-            className="fs-5 fs-md-4 fw-bold mb-3"
+            // className="fs-5 fs-md-4 fw-bold mb-3"
             style={{ cursor: "pointer" }}
           >
             {t("inputPlayerName.input_name")}
@@ -51,16 +51,13 @@ function InputPlayerName() {
             required
           ></Form.Control>
         </Form.Group>
-        <ButtonGroup
-          aria-label={t("inputPlayerName.input_name_aria_label")}
-          className="d-flex gap-3"
-        >
-          <Button className="pages-btn" type="submit" disabled={disabled}>
+        <ButtonGroup aria-label={t("inputPlayerName.input_name_aria_label")}>
+          <button className="inputPlayerName-page-btn" type="submit" disabled={disabled}>
             {t("inputPlayerName.input_name_submit_btn")}
-          </Button>
-          <Button className="pages-btn" type="button" onClick={onClickSkip}>
+          </button>
+          <button className="inputPlayerName-page-btn" type="button" onClick={onClickSkip}>
             {t("inputPlayerName.input_name_skip_btn")}
-          </Button>
+          </button>
         </ButtonGroup>
       </Form>
     </div>

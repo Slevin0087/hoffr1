@@ -1,22 +1,60 @@
 :root {
-  --width-footer-btn: clamp(20px, calc(var(--card-width) / 1.2), 80px);
+  /* br - border-radius */
+  /* --br-status-bar-footer находится в PlayingField.css */
+  --br-footer-btn: calc(
+    (var(--br-status-bar-footer) - var(--padding-footer)) / 2
+  );
+  --width-footer-btn: clamp(1rem, calc(1rem + 6vmin), 5rem);
   /* fs - font-size */
-  --fs-footer-btn: clamp(15px, calc(var(--card-width) / 2), 50px);
+  --fs-footer-btn: clamp(1rem, calc(1rem + 3.5vmin), 3rem);
+  --pd-footer-btn: clamp(0.5rem, calc(var(--card-width) / 4), 1rem);
+  --border-color-footer-btn: rgb(46, 4, 20);
 }
 
 .footer-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
   color: yellow !important;
-  background-color: transparent;
   -webkit-text-fill-color: yellow;
   -webkit-tap-highlight-color: transparent;
   appearance: none;
   text-emphasis-color: black;
-  border: 1px outset black;
+  border: 1px inset var(--border-color-footer-btn);
+  border-radius: var(--br-footer-btn);
   width: var(--width-footer-btn);
   height: var(--width-footer-btn);
   line-height: 1;
-  padding: 0;
+  padding: var(--pd-footer-btn);
   text-align: center;
   font-size: var(--fs-footer-btn);
+  box-shadow: 0 0 0 2px black;
+}
+
+.footer-btn:disabled {
+  opacity: 0.5;
+  border-color: var(--border-color-footer-btn);
+}
+
+.footer-btn.menu {
+  -webkit-text-fill-color: rgb(46, 14, 77);
+}
+
+@media (max-width: 38rem) and (orientation: portrait) {
+  .footer-btn {
+    flex: 1 1 0;
+    border-radius: 0;
+    border-bottom: none;
+  }
+
+  .footer-btn:first-child {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: var(--br-status-bar-footer);
+  }
+
+  .footer-btn:last-child {
+    border-bottom-left-radius: 0;
+    border-top-right-radius: var(--br-status-bar-footer);
+  }
 }

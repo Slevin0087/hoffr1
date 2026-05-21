@@ -11,6 +11,8 @@ import playerStatsTr from "./PlayerStats/tr.js";
 import gameOverAndWinTr from "./GameOverAndWin/tr.js";
 import achievementsTr from "./Achievements/tr.js";
 import notificationsTr from "./Notifications/tr.js";
+import needByRedealsTr from "./NeedByRedeals/tr.js";
+import needByShuffleTr from "./NeedByShuffle/tr.js";
 
 export default {
   translation: {
@@ -27,5 +29,7 @@ export default {
     gameOverAndWin: { ...gameOverAndWinTr },
     achievements: { ...achievementsTr },
     notifications: { ...notificationsTr },
+    needByRedeals: { ...needByRedealsTr },
+    needByShuffle: { ...needByShuffleTr },
   },
 };

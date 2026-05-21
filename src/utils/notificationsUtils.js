@@ -1,6 +1,7 @@
 import { notifications_ids, notificationsMap } from "../Configs/NotificationsConfigs";
 
 export const getNotificationById = (notificationId, t, params = {}) => {
+  console.log('notificationId: ', notificationId);
   if (!notificationId) return null;
 
   const template = notificationsMap[notificationId];

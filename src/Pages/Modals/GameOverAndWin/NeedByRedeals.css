@@ -1,0 +1,135 @@
+:root {
+  --fs-need-by-redeals-modal-content: clamp(1rem, calc(1rem + 1vmin), 2rem);
+  --br-need-by-redeals-modal-content: 2vmin;
+}
+
+.need-by-redeals-modal.modal {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.need-by-redeals-modal .modal-dialog-centered {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.need-by-redeals-modal .modal-content {
+  font-size: var(--fs-need-by-redeals-modal-content);
+  border-radius: var(--br-need-by-redeals-modal-content);
+  border: none;
+  background-color: transparent;
+}
+
+.need-by-redeals-modal .modal-header {
+  justify-content: center;
+  /* background-color: rgb(167, 104, 104); */
+  background-color: rgb(185, 70, 70);
+
+  width: 100%;
+  border: none;
+}
+
+.need-by-redeals-modal .modal-title {
+  font-size: 1em;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+  /* text-shadow: 0.1em 0.1em 0.2em rgba(0, 0, 0, 0.5); */
+  text-shadow: 0.1em 0.1em 0.2em rgba(15, 63, 23, 0.5);
+
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.need-by-redeals-modal .modal-body {
+  /* background-color: rgb(134, 100, 167); */
+  background-color: rgb(34, 134, 109);
+
+  padding: 0.6em;
+  width: 100%;
+}
+
+.need-by-redeals-modal-body-p {
+  font-size: 0.7em;
+  padding: 0;
+}
+
+.need-by-redeals-modal .modal-footer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 5vh;
+  width: 100%;
+  font-size: 2rem;
+  color: rgb(30, 183, 210);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1;
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+}
+
+.need-by-redeals-modal .modal-footer .btn-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  width: 100%;
+  color: rgb(30, 183, 210);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  /* box-shadow: 0 0 0 0.1rem rgba(20, 18, 18, 0.5); */
+  border-radius: 0;
+  border: none;
+}
+
+.need-by-redeals-modal-finish-btn {
+  font-size: 0.8em;
+  line-height: 1;
+  padding: 0.6em;
+  border-radius: 0;
+  border-style: hidden;
+  text-align: center;
+  border-bottom-right-radius: var(--br-need-by-redeals-modal-content);
+  background-color: rgb(185, 70, 70);
+  color: black;
+  border-left: none;
+  flex: 50%;
+}
+
+.need-by-redeals-modal-redeals-btn {
+  border-bottom-left-radius: var(--br-need-by-redeals-modal-content);
+  /* padding: 0; */
+  font-size: 1.5em;
+  padding: 0.2em;
+  background-color: rgb(221, 130, 130);
+  border-right: none;
+  flex: 50%;
+  border-style: hidden;
+}
+
+.need-by-redeals-modal-redeals-btn:hover {
+  box-shadow:
+    inset -2px 0 0 rgb(185, 70, 70),
+    inset 0 2px 0 rgb(185, 70, 70),
+    inset 2px 0 0 transparent,
+    inset 0 -2px 0 transparent;
+}
+
+.need-by-redeals-modal-finish-btn:hover {
+  box-shadow:
+    inset 2px 0 0 rgb(153, 58, 58),
+    inset 0 2px 0 rgb(153, 58, 58),
+    inset 0 -4px 0 transparent,
+    inset -2px 0 0 transparent;
+}

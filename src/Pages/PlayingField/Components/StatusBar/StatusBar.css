@@ -2,21 +2,23 @@
   /* --padding-status-bar: clamp(0.5rem, calc(var(--card-width) / 4), 1rem); */
   --padding-status-bar: calc(var(--card-width) / 30);
   --gap-status-bar-cols: calc(var(--card-width) / 30);
+  --border-status-bar: 0.4rem inset rgb(70, 9, 32);
+  --background-color-status-bar: rgba(70, 9, 32, 0.7);
 }
 
 .status-bar {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
-  background-color: rgba(70, 9, 9, 0.7);
-
-  border-bottom: outset black;
-  /* background-color: transparent; */
+  flex-wrap: nowrap;
+  background-color: var(--background-color-status-bar);
+  border-bottom: var(--border-status-bar);
   /* --br-status-bar-footer находится в PlayingField.css */
   border-bottom-left-radius: var(--br-status-bar-footer);
   border-bottom-right-radius: var(--br-status-bar-footer);
   padding: var(--padding-status-bar);
+  margin: 0;
 }
 
 .status-bar .col {
@@ -25,18 +27,40 @@
   justify-content: center;
   align-items: center;
   gap: var(--gap-status-bar-cols);
+  padding: 0;
+  width: auto;
+  flex: 0 0 auto;
 }
 
-@media (max-height: 600px) {
+@media (max-height: 38rem) and (orientation: portrait) {
   .status-bar {
-    flex-direction: column;
-    justify-content: space-between;
-    width: fit-content;
-    height: 100%;
-    border-bottom: none;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: var(--br-status-bar-footer);
-    border-top-right-radius: var(--br-status-bar-footer);
-    border-right: outset black;
+    gap: var(--padding-status-bar);
+    padding-left: calc(var(--br-status-bar-footer) / 1.8);
+    padding-right: calc(var(--br-status-bar-footer) / 1.8);
+  }
+}
+
+@media (orientation: landscape) {
+  .status-bar {
+    padding-left: calc(var(--br-status-bar-footer) / 1.8);
+    padding-right: calc(var(--br-status-bar-footer) / 1.8);
+    /* justify-content: center; */
+  }
+
+  .status-bar .col {
+    flex: 0 0 33%;
+  }
+}
+
+@media (orientation: portrait) {
+  .status-bar {
+    padding-left: calc(var(--br-status-bar-footer) / 1.8);
+    padding-right: calc(var(--br-status-bar-footer) / 1.8);
+  }
+}
+
+@media (max-height: 38rem) and (orientation: landscape) {
+  .status-bar {
+    display: none;
   }
 }

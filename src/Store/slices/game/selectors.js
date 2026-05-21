@@ -42,7 +42,12 @@ export const selectIsTimeStarted = createSelector(
 
 export const selectIsGameStarted = createSelector(
   [(state) => selectGame(state)],
-  (game) => game?.isStarted,
+  (game) => game?.isGameStarted,
+);
+
+export const selectIsCollectingCards = createSelector(
+  [(state) => selectGame(state)],
+  (game) => game?.isCollectingCards,
 );
 
 export const selectGameStatus = createSelector(
@@ -81,4 +86,14 @@ export const selectIsCanRedeals = createSelector(
 export const selectGameStatusByType = createSelector(
   [(state) => selectGameStatus(state), (_, statusType) => statusType],
   (gameStatus, statusType) => gameStatus === statusType,
+);
+
+export const selectTimeComboState = createSelector(
+  [(state) => selectActiveDealing(state)],
+  (activeDealing) => activeDealing?.timeCombo,
+);
+
+export const selectTimeComboCurrent = createSelector(
+  [(state) => selectTimeComboState(state)],
+  (timeComboState) => timeComboState?.current,
 );

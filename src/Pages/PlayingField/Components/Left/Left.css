@@ -1,0 +1,42 @@
+:root {
+  --border-field-left: 0.4rem inset rgb(105, 187, 29);
+  --background-color-field-left: rgba(70, 9, 32, 0.7);
+}
+
+.field-left {
+  display: none;
+  gap: 0;
+  flex-direction: column;
+  height: 100%;
+  margin-right: auto;
+  border-top: 0;
+  border-right: var(--border-field-left);
+  /* --br-left-right-components находится в PlayingField.css */
+  border-top-right-radius: var(--br-left-right-components);
+  border-bottom-right-radius: var(--br-left-right-components);
+  background-color: var(--background-color-field-left);
+}
+
+.field-left .footer-btn {
+  flex: 1 1 0;
+  border-radius: 0;
+  border-left: none;
+}
+
+.field-left .footer-btn:first-child {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: var(--br-status-bar-footer);
+}
+
+.field-left .footer-btn:last-child {
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: var(--br-status-bar-footer);
+}
+
+@media (max-height: 38rem) and (orientation: landscape) {
+  .field-left {
+    display: flex;
+  }
+}

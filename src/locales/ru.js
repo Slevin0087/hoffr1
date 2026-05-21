@@ -11,6 +11,8 @@ import playerStatsRu from "./PlayerStats/ru.js";
 import gameOverAndWinRu from "./GameOverAndWin/ru.js";
 import achievementsRu from "./Achievements/ru.js";
 import notificationsRu from "./Notifications/ru.js";
+import needByRedealsRu from "./NeedByRedeals/ru.js";
+import needByShuffleRu from "./NeedByShuffle/ru.js";
 
 export default {
   translation: {
@@ -27,5 +29,7 @@ export default {
     gameOverAndWin: { ...gameOverAndWinRu },
     achievements: { ...achievementsRu },
     notifications: { ...notificationsRu },
+    needByRedeals: { ...needByRedealsRu },
+    needByShuffle: { ...needByShuffleRu },
   },
 };

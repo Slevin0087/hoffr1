@@ -15,9 +15,23 @@ export const selectIsCanUseUndo = createSelector(
     const pointsCounter = pointsState.current;
     const undoUsedCounter = undoState.current;
 
-    if (pointsCounter < undoPenalty) return false;
     if (undoLimit === null) return true;
+    if (pointsCounter < undoPenalty) return false;
     return undoUsedCounter < undoLimit;
+  },
+);
+
+export const selectUndoLimit = createSelector(
+  [(state) => selectUndoState(state)],
+  (undoState) => undoState.limit,
+);
+
+export const selectRemainingUndo = createSelector(
+  [(state) => selectUndoState(state)],
+  (undoState) => {
+    return undoState.limit === null
+      ? null
+      : undoState.limit - undoState.current;
   },
 );
 

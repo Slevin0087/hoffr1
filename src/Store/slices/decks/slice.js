@@ -1,14 +1,11 @@
-import storage from "../../../utils/Storage";
 import {
   DECKS_SLICE_NAME,
   DECKS_DEFAULT_STATE,
-  DECK_STORAGE_KEYS,
-} from "../../../Configs/PlayingCardsConfigs/DecksConfigs";
+} from "../../../Configs/DecksConfigs";
 import { reducers } from "./reducers";
 import { createSlice } from "@reduxjs/toolkit";
 
-export const initialState =
-  storage.getItem(DECK_STORAGE_KEYS.DECK) || DECKS_DEFAULT_STATE;
+export const initialState = DECKS_DEFAULT_STATE;
 
 const decksSlice = createSlice({
   name: DECKS_SLICE_NAME,
@@ -28,10 +25,10 @@ export const {
   addTabsShirtCardIdOne,
   removeTabsShirtCardsIds,
   removeTabsShirtCardIdOne,
-  shuffleStockCardsIds,
+  shuffleCardsByPileId,
   setIsDraggingCardsByCardId,
-  setHintShowColorPileById,
-  setHintShowColor,
+  setIsHintShowPileById,
+  setIsHintShowing,
 } = decksSlice.actions;
 
 export default decksSlice.reducer;
